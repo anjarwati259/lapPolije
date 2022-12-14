@@ -1,4 +1,4 @@
-<?php include(APPPATH.'views\layout\header.php'); ?>
+<?php include(APPPATH.'views/layout/header.php'); ?>
 <div class="container">
 
   <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
@@ -91,4 +91,4 @@
   </section>
 
 </div>
-<?php include(APPPATH.'views\layout\footer.php'); ?>
+<?php include(APPPATH.'views/layout/footer.php'); ?>

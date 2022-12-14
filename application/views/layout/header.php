@@ -28,6 +28,13 @@
 
   <!-- Template Main CSS File -->
   <link href="<?php echo base_url() ?>template/NiceAdmin/assets/css/style.css" rel="stylesheet">
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <style type="text/css">
+    .is_invalid{
+      color: red;
+    }
+  </style>
 </head>
 
   <body>

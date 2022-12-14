@@ -1,4 +1,4 @@
-<?php include(APPPATH.'views\layout\header.php'); ?>
+<?php include(APPPATH.'views/layout/header.php'); ?>
 <div class="container">
 
   <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
@@ -21,8 +21,14 @@
                 <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
                 <p class="text-center small">Enter your username & password to login</p>
               </div>
-
-              <form class="row g-3 needs-validation" novalidate>
+              <!-- if success -->
+              <?php if($this->session->flashdata('error')){ ?>
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <?php echo $this->session->flashdata('error') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            <?php } ?>
+              <form action="<?php echo base_url('login') ?>" method="POST" class="row g-3 needs-validation" novalidate>
 
                 <div class="col-12">
                   <label for="yourUsername" class="form-label">Username</label>
@@ -59,4 +65,4 @@
   </section>
 
 </div>
-<?php include(APPPATH.'views\layout\footer.php'); ?>
+<?php include(APPPATH.'views/layout/footer.php'); ?>
