@@ -3,7 +3,7 @@
     	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal">Tambah</button>
     </div>
     <div class="card-body">
-      <table class="table datatable">
+      <table class="table" id="customer-data">
             <thead>
               <tr>
                 <th scope="col">No</th>
@@ -13,21 +13,6 @@
                 <th scope="col">Action</th>
               </tr>
             </thead>
-            <tbody>
-              <?php $no = 1; foreach ($customer as $key => $value) {?>
-              <tr>
-                <th scope="row"><?= $no ?></th>
-                <td><?= $value->nama_customer; ?></td>
-                <td><?= $value->alamat; ?></td>
-                <td><?= $value->no_telp; ?></td>
-                <td>
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#largeModal" onclick="editcustomer('<?= $value->id ?>')">Edit</button>
-                  <button type="button" class="btn btn-danger btn-sm" onclick="hapuscustomer('<?= $value->id ?>')">Hapus</button>
-                </td>
-              </tr>
-            <?php } ?>
-
-            </tbody>
           </table>
     </div>
 </div>
@@ -41,7 +26,7 @@
         </div>
         <div class="modal-body">
 	        <form class="row g-3" id="form-customer">
-            <input type="text" class="form-control" name="id" id="id">
+            <input type="hidden" class="form-control" name="id" id="id">
 	            <div class="col-md-12">
 	              <label for="nama_customer" class="form-label">Nama Customer</label>
 	              <input type="text" class="form-control" name="nama_customer" id="nama_customer" required>
@@ -61,8 +46,8 @@
 	        </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" onclick="SubmitCustomer()">Save changes</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="SubmitCustomer()">Simpan</button>
         </div>
       </div>
     </div>

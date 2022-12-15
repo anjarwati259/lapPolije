@@ -9,6 +9,7 @@ class Admin extends CI_Controller {
 		//proteksi halaman
 		$this->simple_login->cek_login();
 		$this->load->model('customer_model');
+		$this->load->model('datatables_model');
 		$this->load->library('form_validation');
 	}
 
@@ -26,6 +27,29 @@ class Admin extends CI_Controller {
 					  'customer' => $customer,
                       'isi' => 'admin/data_customer' );
         $this->load->view('layout/wrapper',$data, FALSE);
+	}
+
+	// ambil data customer untuk datatable
+	public function getDataCustomer(){
+		$fetch_data = $this->customer_model->getDatacustomer();  
+        $data = array();  
+        foreach($fetch_data as $row)  
+        {  
+            $sub_array = array();                  
+            $sub_array[] = $row->nama_customer;  
+            $sub_array[] = $row->alamat;
+            $sub_array[] = $row->no_telp;
+            $sub_array[] = $row->email;  
+            $sub_array[] = '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#largeModal" onclick="editcustomer('.$row->id.')">Edit</button> <button type="button" class="btn btn-danger btn-sm" onclick="hapuscustomer('.$row->id.')">Hapus</button>';
+            $data[] = $sub_array;  
+        }  
+        $output = array(  
+            "draw"				=> intval($_POST["draw"]),  
+            "recordsTotal"		=> $this->datatables_model->get_all_data('tb_customer'),  
+            "recordsFiltered"	=> count($data),
+            "data"				=> $data  
+        );  
+        echo json_encode($output);
 	}
 
 	public function addCustomer(){
@@ -89,5 +113,13 @@ class Admin extends CI_Controller {
     					'message' => 'Data Berhasil Dihapus',
     					'atribute' => '');
 		echo json_encode($result);
+	}
+
+	public function pegawai(){
+		// $customer = $this->customer_model->listCustomer();
+		$data = array('title' => 'Data Customer',
+					  // 'customer' => $customer,
+                      'isi' => 'admin/data_customer' );
+        $this->load->view('layout/wrapper',$data, FALSE);
 	}
 }

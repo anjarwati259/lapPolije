@@ -42,6 +42,33 @@ class Customer_model extends CI_Model
 		return $query->result();
 	}
 
+	// untuk datatable
+	public function getDatacustomer(){
+		$this->db->select('id, nama_customer, alamat, no_telp, email');  
+       	$this->db->from('tb_customer');  
+       	if(isset($_POST["search"]["value"]))  
+       	{  
+            $this->db->like("nama_customer", $_POST["search"]["value"]);  
+            $this->db->or_like("alamat", $_POST["search"]["value"]);  
+            $this->db->or_like("no_telp", $_POST["search"]["value"]);
+            $this->db->or_like("email", $_POST["search"]["value"]);
+       	}  
+       	if(isset($_POST["order"]))  
+       	{  
+            // $this->db->order_by($this->order_column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);  
+       	}  
+       	else  
+       	{  
+            $this->db->order_by('id', 'DESC');  
+       	}  
+       	if($_POST["length"] != -1)  
+        {  
+            $this->db->limit($_POST['length'], $_POST['start']);  
+        }  
+        $query = $this->db->get();  
+        return $query->result();
+	}
+
 	public function getCustomer($id){
 		$this->db->select('*');
 		$this->db->from('tb_customer');

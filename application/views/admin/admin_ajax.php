@@ -5,6 +5,26 @@
         Swal.fire('Success',pesan,'success')
         localStorage.clear();
     }
+
+    dataCustomer();
+
+    function dataCustomer(){
+        var dataTable = $('#customer-data').DataTable({  
+           "processing":true,  
+           "serverSide":true,  
+           "order":[],  
+           "ajax":{  
+                url:"<?php echo base_url('admin/getDataCustomer'); ?>",  
+                type:"POST"  
+           },  
+           "columnDefs":[  
+                {  
+                     "targets":[0],  // sesuaikan order table dengan jumlah column
+                     "orderable":false,  
+                },  
+           ],  
+      });
+    }
 	function SubmitCustomer(){
 		var data = new FormData(document.getElementById("form-customer"));
         for (const keyinput of data.keys()){

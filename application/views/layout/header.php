@@ -24,12 +24,14 @@
   <link href="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/quill/quill.snow.css" rel="stylesheet">
   <link href="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
   <link href="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+  <!-- <link href="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/simple-datatables/style.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css"/>
 
   <!-- Template Main CSS File -->
   <link href="<?php echo base_url() ?>template/NiceAdmin/assets/css/style.css" rel="stylesheet">
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
   <style type="text/css">
     .is_invalid{
       color: red;

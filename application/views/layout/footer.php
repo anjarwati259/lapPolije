@@ -8,7 +8,7 @@
   <script src="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/chart.js/chart.min.js"></script>
   <script src="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/echarts/echarts.min.js"></script>
   <script src="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/quill/quill.min.js"></script>
-  <script src="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/simple-datatables/simple-datatables.js"></script>
+  <!-- <script src="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/simple-datatables/simple-datatables.js"></script> -->
   <script src="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/tinymce/tinymce.min.js"></script>
   <script src="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/php-email-form/validate.js"></script>
 
