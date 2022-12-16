@@ -184,7 +184,7 @@
         </a>
         <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="#">
+            <a href="<?php echo base_url('admin/pegawai') ?>">
               <i class="bi bi-circle"></i><span>Data Pegawai</span>
             </a>
           </li>
@@ -194,17 +194,17 @@
             </a>
           </li>
           <li>
-            <a href="forms-layouts.html">
+            <a href="<?php echo base_url('admin/jabatan') ?>">
               <i class="bi bi-circle"></i><span>Data Jabatan</span>
             </a>
           </li>
           <li>
-            <a href="forms-editors.html">
+            <a href="<?php echo base_url('admin/unit') ?>">
               <i class="bi bi-circle"></i><span>Data Unit Kerja</span>
             </a>
           </li>
           <li>
-            <a href="forms-validation.html">
+            <a href="<?php echo base_url('admin/jenis_analisa') ?>">
               <i class="bi bi-circle"></i><span>Jenis Analis</span>
             </a>
           </li>

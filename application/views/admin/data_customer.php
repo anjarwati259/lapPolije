@@ -9,6 +9,7 @@
                 <th scope="col">No</th>
                 <th scope="col">Nama Customer</th>
                 <th scope="col">Alamat Customer</th>
+                <th scope="col">Email</th>
                 <th scope="col">Nomor Telpon</th>
                 <th scope="col">Action</th>
               </tr>
