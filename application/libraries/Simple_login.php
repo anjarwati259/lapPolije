@@ -19,23 +19,22 @@ class Simple_login
       $check = $this->CI->user_model->login($username, $password);
       //jika ada data user, maka create session login
       if($check){
-    
-      $id_user  = $check->id;
-      // $nama_user  = $check->nama;
-      // $nip  = $check->nip;
-      $hak_akses  = $check->hak_akses;
-      //create session
-      $this->CI->session->set_userdata('id_user',$id_user);
-      // $this->CI->session->set_userdata('nama',$nama_user);
-      // $this->CI->session->set_userdata('nip',$nip);
-      $this->CI->session->set_userdata('username',$username);
-      $this->CI->session->set_userdata('hak_akses',$hak_akses);
+        $user = $this->CI->user_model->getUser($check->id);
+        if($user['status'] == 'success'){
+          $this->CI->session->set_userdata('id_user',$user['id_user']);
+          $this->CI->session->set_userdata('nama_user',$user['nama']);
+          $this->CI->session->set_userdata('username',$user['username']);
+          $this->CI->session->set_userdata('hak_akses',$user['hak_akses']);
+        }else{
+          $this->CI->session->set_flashdata('error','Anda Tidak Memiliki Akses');
+          redirect(base_url('login'),'refresh');
+        }
       //redirect ke halaman admin yang diproteksi
-      if($hak_akses=='1'){
+      if($user['hak_akses']=='1'){
         redirect(base_url('admin'),'refresh');
-      }else  if($hak_akses=='2'){
+      }else  if($user['hak_akses']=='2'){
         redirect(base_url('analist'),'refresh');
-      }else  if($hak_akses=='3'){
+      }else  if($user['hak_akses']=='3'){
         redirect(base_url('customer'),'refresh');
       }
     }else{

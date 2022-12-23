@@ -22,15 +22,15 @@
                 <p class="text-center small">Enter your personal details to create account</p>
               </div>
 
-              <form action="" method="POST" class="row g-3 needs-validation" novalidate>
+              <form action="<?php echo base_url('login/Addregister') ?>" method="POST" class="row g-3 needs-validation" novalidate>
                 <div class="col-6">
-                  <label for="yourName" class="form-label">Nama Lengkap</label>
-                  <input type="text" name="name" class="form-control" id="yourName" required>
+                  <label for="nama_customer" class="form-label">Nama Lengkap</label>
+                  <input type="text" name="nama_customer" class="form-control" id="nama_customer" required>
                   <div class="invalid-feedback">Please, enter your name!</div>
                 </div>
 
                 <div class="col-6">
-                  <label for="yourName" class="form-label">Username</label>
+                  <label for="username" class="form-label">Username</label>
                   <input type="text" name="username" class="form-control" id="username" required>
                   <div class="invalid-feedback">Please, enter your Username!</div>
                 </div>
@@ -77,7 +77,6 @@
 
             </div>
           </div>
-
           <div class="credits">
             Designed by <a href="#">Polije 2022</a>
           </div>

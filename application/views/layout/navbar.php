@@ -157,7 +157,7 @@
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
             <img src="<?php echo base_url() ?>template/NiceAdmin/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block ps-2"><?= $this->session->userdata('username') ?></span>
+            <span class="d-none d-md-block ps-2"><?= ($this->session->userdata('nama_user')) ? ($this->session->userdata('nama_user')) : ($this->session->userdata('username')) ?></span>
           </a><!-- End Profile Iamge Icon -->
         </li><!-- End Profile Nav -->
 
