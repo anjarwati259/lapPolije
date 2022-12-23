@@ -1,58 +1,49 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Admin extends CI_Controller {
+class Jabatan extends CI_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
 		//proteksi halaman
 		$this->simple_login->cek_login();
-		$this->load->model('customer_model');
 		$this->load->model('jabatan_model');
-		$this->load->model('unit_model');
-		$this->load->model('pegawai_model');
 		$this->load->model('datatables_model');
 		$this->load->library('form_validation');
 	}
 
 	public function index()
 	{
-		$data = array('title' => 'Dashboard Admin',
-                      'isi' => 'admin/dashboard' );
+		$data = array('title' => 'Data Jabatan',
+                      'isi' => 'jabatan/data_jabatan' );
         $this->load->view('layout/wrapper',$data, FALSE);
 	}
 
-	public function jenis_analis(){
-		$data = array('title' => 'Data Unit',
-                      'isi' => 'admin/data_analis' );
-        $this->load->view('layout/wrapper',$data, FALSE);
-	}
-
-	public function addAnalis(){
-		$nama_analis = $this->input->post('nama_analis');
+	public function addJabatan(){
+		$nama_jabatan = $this->input->post('nama_jabatan');
 		$id = $this->input->post('id');
 
 		// validation form
-		$this->form_validation->set_rules('nama_analis', 'Nama Analis', 'required');
+		$this->form_validation->set_rules('nama_jabatan', 'Nama Jabatan', 'required');
 
 		if($this->form_validation->run()){
 			if(empty($id)){
-				$data = array(	'nama_analis' => $nama_analis,
+				$data = array(	'nama_jabatan' => $nama_jabatan,
 								'status'		=> '1',
 								'created_at'	=> date('Y-m-d H:i:sa')
 						);
-				$result = $this->unit_model->insertanalis($data);
+				$result = $this->jabatan_model->insertjabatan($data);
 			}else{
-				$data = array(	'nama_analis' => $nama_analis,
+				$data = array(	'nama_jabatan' => $nama_jabatan,
 								'status'		=> '1',
 								'id'			=> $id
 						);
-				$result = $this->unit_model->editanalis($data);
+				$result = $this->jabatan_model->editjabatan($data);
 			}
 		}else{
 			$atribute = array(
-			    'nama_analis' => form_error('nama_analis'),
+			    'nama_jabatan' => form_error('nama_jabatan'),
 			);
 
 			$result = array('status' => 'error',
@@ -64,38 +55,38 @@ class Admin extends CI_Controller {
 	}
 
 	// ambil data customer untuk datatable
-	public function getDataAnalis(){
-		$fetch_data = $this->analis_model->getDataanalis();  
+	public function getDataJabatan(){
+		$fetch_data = $this->jabatan_model->getDatajabatan();  
         $data = array();  
         $no = 1;
         foreach($fetch_data as $row)  
         {  
             $sub_array = array();     
             $sub_array[] = $no;             
-            $sub_array[] = $row->nama_analis; 
-            $sub_array[] = '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#largeModal" onclick="editunit('.$row->id.')">Edit</button> <button type="button" class="btn btn-danger btn-sm" onclick="hapusunit('.$row->id.')">Hapus</button>';
+            $sub_array[] = $row->nama_jabatan; 
+            $sub_array[] = '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#largeModal" onclick="editjabatan('.$row->id.')">Edit</button> <button type="button" class="btn btn-danger btn-sm" onclick="hapusjabatan('.$row->id.')">Hapus</button>';
             $data[] = $sub_array;  
             $no++;
         }  
         $output = array(  
             "draw"				=> intval($_POST["draw"]),  
-            "recordsTotal"		=> $this->datatables_model->get_all_data('tb_analis'),  
+            "recordsTotal"		=> $this->datatables_model->get_all_data('tb_jabatan'),  
             "recordsFiltered"	=> count($data),
             "data"				=> $data  
         );  
         echo json_encode($output);
 	}
 
-	public function getAnalis(){
+	public function getJabatan(){
 		$id 	= $this->input->post('id');
-		$analis = $this->analis_model->getAnalis($id);
+		$jabatan = $this->jabatan_model->getJabatan($id);
 
-		echo json_encode($analis);
+		echo json_encode($jabatan);
 	}
 
-	public function delAnalis(){
+	public function delJabatan(){
 		$id 	= $this->input->post('id');
-		$this->analis_model->delAnalis($id);
+		$this->jabatan_model->delJabatan($id);
 		$result = array('status' => 'success',
     					'message' => 'Data Berhasil Dihapus',
     					'atribute' => '');

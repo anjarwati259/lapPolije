@@ -75,4 +75,4 @@
       </div>
     </div>
 </div><!-- End Large Modal-->
-<?php include('admin_ajax.php'); ?>
+<?php include('pegawai_ajax.php'); ?>

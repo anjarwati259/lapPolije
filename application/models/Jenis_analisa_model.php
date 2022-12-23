@@ -3,7 +3,7 @@
 /**
  * 
  */
-class Unit_model extends CI_Model
+class Jenis_analisa_model extends CI_Model
 {
 	
 	function __construct()
@@ -12,10 +12,10 @@ class Unit_model extends CI_Model
 		$this->load->database();
 	}
 
-	public function insertunit($data){
+	public function insertjenis_analisa($data){
 		try {
 	        $this->db->trans_begin();
-	        $this->db->insert('tb_unit', $data);
+	        $this->db->insert('tb_jenis_analisa', $data);
 
 	        $db_error = $this->db->error();
 	        if (!empty($db_error['message'])) {
@@ -34,22 +34,22 @@ class Unit_model extends CI_Model
 	    return $result;
 	}
 
-	public function listUnit(){
+	public function listJenisanalisa(){
 		$this->db->select('*');
-		$this->db->from('tb_unit');
+		$this->db->from('tb_jenis_analisa');
 		$this->db->order_by('id','asc');
 		$query = $this->db->get();
 		return $query->result();
 	}
 
 	// untuk datatable
-	public function getDataunit(){
+	public function getDatajenis_analisa(){
 		$this->db->select('*');  
-       	$this->db->from('tb_unit');
+       	$this->db->from('tb_jenis_analisa');
        	$this->db->where('status','1');  
        	if(!empty($_POST["search"]["value"]))  
        	{  
-            $this->db->like("nama_unit", $_POST["search"]["value"]);  
+            $this->db->like("jenis_analisa", $_POST["search"]["value"]);  
        	}  
        	if(isset($_POST["order"]))  
        	{  
@@ -67,19 +67,19 @@ class Unit_model extends CI_Model
         return $query->result();
 	}
 
-	public function getUnit($id){
+	public function getJenisanalisa($id){
 		$this->db->select('*');
-		$this->db->from('tb_unit');
+		$this->db->from('tb_jenis_analisa');
 		$this->db->where('id',$id);
 		$query = $this->db->get();
 		return $query->row();
 	}
 
-	public function editunit($data){
+	public function editjenis_analisa($data){
 		try {
 	        $this->db->trans_begin();
 	        $this->db->where('id', $data['id']);
-			$this->db->update('tb_unit',$data);
+			$this->db->update('tb_jenis_analisa',$data);
 
 	        $db_error = $this->db->error();
 	        if (!empty($db_error['message'])) {
@@ -98,8 +98,8 @@ class Unit_model extends CI_Model
 	    return $result;
 	}
 
-	public function delUnit($id){
+	public function delJenisanalisa($id){
 		$this->db->where('id', $id);
-		$this->db->update('tb_unit', array('status' => '0'));
+		$this->db->update('tb_jenis_analisa', array('status' => '0'));
 	}
 }

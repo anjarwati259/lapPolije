@@ -4,7 +4,7 @@
 
 	"default": {
 
-		"host": "files.000webhost.com",
+		//"host": "files.000webhost.com",
 		"username": "devsoftwarelap",  // or null for anonymous login
 		"password": "PcdKBX#quDY%MzHnSjCo",
 		"path": "/public_html",

@@ -53,4 +53,4 @@
       </div>
     </div>
 </div><!-- End Large Modal-->
-<?php include('admin_ajax.php'); ?>
+<?php include('customer_ajax.php'); ?>

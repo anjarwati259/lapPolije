@@ -45,8 +45,9 @@ class Jabatan_model extends CI_Model
 	// untuk datatable
 	public function getDatajabatan(){
 		$this->db->select('*');  
-       	$this->db->from('tb_jabatan');  
-       	if(isset($_POST["search"]["value"]))  
+       	$this->db->from('tb_jabatan');
+       	$this->db->where('status','1');  
+       	if(!empty($_POST["search"]["value"]))  
        	{  
             $this->db->like("nama_jabatan", $_POST["search"]["value"]);  
        	}  
@@ -99,6 +100,6 @@ class Jabatan_model extends CI_Model
 
 	public function delJabatan($id){
 		$this->db->where('id', $id);
-		$this->db->delete('tb_jabatan');
+		$this->db->update('tb_jabatan', array('status' => '0'));
 	}
 }

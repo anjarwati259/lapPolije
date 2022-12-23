@@ -3,7 +3,7 @@
 /**
  * 
  */
-class Unit_model extends CI_Model
+class Metode_analisa_model extends CI_Model
 {
 	
 	function __construct()
@@ -12,10 +12,10 @@ class Unit_model extends CI_Model
 		$this->load->database();
 	}
 
-	public function insertunit($data){
+	public function insertmetode_analisa($data){
 		try {
 	        $this->db->trans_begin();
-	        $this->db->insert('tb_unit', $data);
+	        $this->db->insert('tb_metode_analisa', $data);
 
 	        $db_error = $this->db->error();
 	        if (!empty($db_error['message'])) {
@@ -34,22 +34,23 @@ class Unit_model extends CI_Model
 	    return $result;
 	}
 
-	public function listUnit(){
+	public function listMetodeanalisa(){
 		$this->db->select('*');
-		$this->db->from('tb_unit');
+		$this->db->from('tb_metode_analisa');
 		$this->db->order_by('id','asc');
 		$query = $this->db->get();
 		return $query->result();
 	}
 
 	// untuk datatable
-	public function getDataunit(){
-		$this->db->select('*');  
-       	$this->db->from('tb_unit');
-       	$this->db->where('status','1');  
+	public function getDatametode_analisa(){
+		$this->db->select('tb_metode_analisa.*, tb_jenis_analisa.jenis_analisa');  
+       	$this->db->from('tb_metode_analisa');
+       	$this->db->join('tb_jenis_analisa','tb_jenis_analisa.id = tb_metode_analisa.id_jenis_analisa', 'left');
+       	$this->db->where('tb_metode_analisa.status','1');  
        	if(!empty($_POST["search"]["value"]))  
        	{  
-            $this->db->like("nama_unit", $_POST["search"]["value"]);  
+            $this->db->like("tb_metode_analisa.metode_analisa", $_POST["search"]["value"]);  
        	}  
        	if(isset($_POST["order"]))  
        	{  
@@ -57,7 +58,7 @@ class Unit_model extends CI_Model
        	}  
        	else  
        	{  
-            $this->db->order_by('id', 'DESC');  
+            $this->db->order_by('tb_metode_analisa.id', 'DESC');  
        	}  
        	if($_POST["length"] != -1)  
         {  
@@ -67,19 +68,19 @@ class Unit_model extends CI_Model
         return $query->result();
 	}
 
-	public function getUnit($id){
+	public function getMetodeanalisa($id){
 		$this->db->select('*');
-		$this->db->from('tb_unit');
+		$this->db->from('tb_metode_analisa');
 		$this->db->where('id',$id);
 		$query = $this->db->get();
 		return $query->row();
 	}
 
-	public function editunit($data){
+	public function editmetode_analisa($data){
 		try {
 	        $this->db->trans_begin();
 	        $this->db->where('id', $data['id']);
-			$this->db->update('tb_unit',$data);
+			$this->db->update('tb_metode_analisa',$data);
 
 	        $db_error = $this->db->error();
 	        if (!empty($db_error['message'])) {
@@ -98,8 +99,8 @@ class Unit_model extends CI_Model
 	    return $result;
 	}
 
-	public function delUnit($id){
+	public function delMetodeanalisa($id){
 		$this->db->where('id', $id);
-		$this->db->update('tb_unit', array('status' => '0'));
+		$this->db->update('tb_metode_analisa', array('status' => '0'));
 	}
 }

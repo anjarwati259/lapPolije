@@ -22,7 +22,7 @@
                 <p class="text-center small">Enter your personal details to create account</p>
               </div>
 
-              <form class="row g-3 needs-validation" novalidate>
+              <form action="" method="POST" class="row g-3 needs-validation" novalidate>
                 <div class="col-6">
                   <label for="yourName" class="form-label">Nama Lengkap</label>
                   <input type="text" name="name" class="form-control" id="yourName" required>
@@ -36,15 +36,16 @@
                 </div>
 
                 <div class="col-6">
-                  <label for="yourName" class="form-label">Alamat</label>
-                  <input type="text" name="alamat" class="form-control" id="alamat" required>
-                  <div class="invalid-feedback">Please, enter your Address!</div>
+                  <label for="yourEmail" class="form-label">Your Email</label>
+                  <input type="email" name="email" class="form-control" id="yourEmail" required>
+                  <div class="invalid-feedback">Please enter a valid Email adddress!</div>
                 </div>
 
                 <div class="col-6">
-                  <label for="yourPassword" class="form-label">Password</label>
-                  <input type="password" name="password" class="form-control" id="yourPassword" required>
+                  <label for="password" class="form-label">Password</label>
+                  <input type="password" name="password" class="form-control" id="password" required>
                   <div class="invalid-feedback">Please enter your password!</div>
+                  <div id="msgPass"></div>
                 </div>
 
                 <div class="col-6">
@@ -54,15 +55,16 @@
                 </div>
 
                 <div class="col-6">
-                  <label for="yourName" class="form-label">Verification Password</label>
-                  <input type="text" name="Verification" class="form-control" id="Verification" required>
+                  <label for="rep_pass" class="form-label">Ulangi Password</label>
+                  <input type="password" name="rep_pass" class="form-control" id="rep_pass" required>
                   <div class="invalid-feedback">Please, enter your password!</div>
+                  <div id="msgRep"></div>
                 </div>
 
-                <div class="col-6">
-                  <label for="yourEmail" class="form-label">Your Email</label>
-                  <input type="email" name="email" class="form-control" id="yourEmail" required>
-                  <div class="invalid-feedback">Please enter a valid Email adddress!</div>
+                <div class="col-12">
+                  <label for="yourName" class="form-label">Alamat</label>
+                  <textarea class="form-control" name="alamat" id="alamat" style="height: 100px;" required></textarea>
+                  <div class="invalid-feedback">Please, enter your Address!</div>
                 </div>
 
                 <div class="col-12 text-end">
@@ -77,10 +79,6 @@
           </div>
 
           <div class="credits">
-            <!-- All the links in the footer should remain intact. -->
-            <!-- You can delete the links only if you purchased the pro version. -->
-            <!-- Licensing information: https://bootstrapmade.com/license/ -->
-            <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
             Designed by <a href="#">Polije 2022</a>
           </div>
 
@@ -92,3 +90,23 @@
 
 </div>
 <?php include(APPPATH.'views/layout/footer.php'); ?>
+
+<script type="text/javascript">
+  $('#password, #rep_pass').on('keyup', function () {
+    if ($('#password').val() == $('#rep_pass').val()) {
+      $('#msgRep').html('Password Matching').css('color', 'green');
+    } else {
+      $('#msgRep').html('Password Not Matching').css('color', 'red');
+    }
+  });
+
+  $('#password').on('keyup', function () {
+    var password = $('#password').val();
+    var panjang = password.length;
+    if(panjang < 6){
+      $('#msgPass').html('Panjang Password Minimal 6 Karakter').css('color', 'red');
+    }else{
+      $('#msgPass').html('').css('color', 'red');
+    }
+  });
+</script>

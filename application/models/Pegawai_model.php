@@ -48,7 +48,8 @@ class Pegawai_model extends CI_Model
        	$this->db->from('tb_pegawai');  
        	$this->db->join('tb_unit','tb_unit.id = tb_pegawai.id_unit', 'left');
        	$this->db->join('tb_jabatan','tb_jabatan.id = tb_pegawai.id_jabatan', 'left');
-       	if(isset($_POST["search"]["value"]))  
+       	$this->db->where('tb_pegawai.status','1');
+       	if(!empty($_POST["search"]["value"]))  
        	{  
             $this->db->like("nama_pegawai", $_POST["search"]["value"]); 
             $this->db->like("nip", $_POST["search"]["value"]); 
@@ -102,6 +103,6 @@ class Pegawai_model extends CI_Model
 
 	public function delPegawai($id){
 		$this->db->where('id', $id);
-		$this->db->delete('tb_pegawai');
+		$this->db->update('tb_pegawai', array('status' => '0'));
 	}
 }

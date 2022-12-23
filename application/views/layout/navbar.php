@@ -184,28 +184,33 @@
         </a>
         <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="<?php echo base_url('admin/pegawai') ?>">
+            <a href="<?php echo base_url('pegawai') ?>">
               <i class="bi bi-circle"></i><span>Data Pegawai</span>
             </a>
           </li>
           <li>
-            <a href="<?php echo base_url('admin/customer') ?>">
+            <a href="<?php echo base_url('customer/customer') ?>">
               <i class="bi bi-circle"></i><span>Data Customer</span>
             </a>
           </li>
           <li>
-            <a href="<?php echo base_url('admin/jabatan') ?>">
+            <a href="<?php echo base_url('jabatan') ?>">
               <i class="bi bi-circle"></i><span>Data Jabatan</span>
             </a>
           </li>
           <li>
-            <a href="<?php echo base_url('admin/unit') ?>">
+            <a href="<?php echo base_url('unit') ?>">
               <i class="bi bi-circle"></i><span>Data Unit Kerja</span>
             </a>
           </li>
           <li>
-            <a href="<?php echo base_url('admin/jenis_analisa') ?>">
+            <a href="<?php echo base_url('jenis_analisa') ?>">
               <i class="bi bi-circle"></i><span>Jenis Analis</span>
+            </a>
+          </li>
+          <li>
+            <a href="<?php echo base_url('metode_analisa') ?>">
+              <i class="bi bi-circle"></i><span>Metode Analisa</span>
             </a>
           </li>
         </ul>

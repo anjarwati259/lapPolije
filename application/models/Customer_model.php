@@ -37,22 +37,26 @@ class Customer_model extends CI_Model
 	public function listCustomer(){
 		$this->db->select('*');
 		$this->db->from('tb_customer');
+		$this->db->where('status','1');
 		$this->db->order_by('id','asc');
 		$query = $this->db->get();
 		return $query->result();
 	}
 
 	// untuk datatable
-	public function getDatacustomer(){
+	public function getDatacustomer(){ 
 		$this->db->select('id, nama_customer, alamat, no_telp, email');  
-       	$this->db->from('tb_customer');  
-       	if(isset($_POST["search"]["value"]))  
-       	{  
-            $this->db->like("nama_customer", $_POST["search"]["value"]);  
+   		$this->db->from('tb_customer'); 
+   		$this->db->where('status','1');
+		if(!empty($_POST["search"]["value"]))  
+       	{
+       		// return 'post'; 
+       		$this->db->like("nama_customer", $_POST["search"]["value"]);  
             $this->db->or_like("alamat", $_POST["search"]["value"]);  
             $this->db->or_like("no_telp", $_POST["search"]["value"]);
             $this->db->or_like("email", $_POST["search"]["value"]);
-       	}  
+       	}
+
        	if(isset($_POST["order"]))  
        	{  
             // $this->db->order_by($this->order_column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);  
@@ -64,7 +68,8 @@ class Customer_model extends CI_Model
        	if($_POST["length"] != -1)  
         {  
             $this->db->limit($_POST['length'], $_POST['start']);  
-        }  
+        } 
+
         $query = $this->db->get();  
         return $query->result();
 	}
@@ -102,6 +107,6 @@ class Customer_model extends CI_Model
 
 	public function delCustomer($id){
 		$this->db->where('id', $id);
-		$this->db->delete('tb_customer');
+		$this->db->update('tb_customer', array('status' => '0'));
 	}
 }
