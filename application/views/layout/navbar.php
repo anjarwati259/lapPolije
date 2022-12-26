@@ -171,79 +171,36 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
-      <li class="nav-item">
-        <a class="nav-link " href="index.html">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-journal-text"></i><span>Master Data</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="<?php echo base_url('pegawai') ?>">
-              <i class="bi bi-circle"></i><span>Data Pegawai</span>
+      <?php 
+        $dataMenu = getMenu($this->session->userdata('hak_akses'));
+        $menu = $dataMenu['mainMenu'];
+        $subMenu = $dataMenu['subMenu'];
+        foreach ($menu as $kMenu => $vMenu) {
+          if($vMenu['isParent'] != 1){?>
+          <li class="nav-item">
+            <a class="nav-link " href="<?php echo base_url() ?><?= $vMenu['url']; ?>">
+              <?= $vMenu['icon']; ?>
+              <span><?= $vMenu['menu']; ?></span>
             </a>
           </li>
-          <li>
-            <a href="<?php echo base_url('customer/customer') ?>">
-              <i class="bi bi-circle"></i><span>Data Customer</span>
+        <?php }else{ ?>
+          <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+              <?= $vMenu['icon']; ?><span><?= $vMenu['menu']; ?></span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
-          </li>
-          <li>
-            <a href="<?php echo base_url('jabatan') ?>">
-              <i class="bi bi-circle"></i><span>Data Jabatan</span>
-            </a>
-          </li>
-          <li>
-            <a href="<?php echo base_url('unit') ?>">
-              <i class="bi bi-circle"></i><span>Data Unit Kerja</span>
-            </a>
-          </li>
-          <li>
-            <a href="<?php echo base_url('jenis_analisa') ?>">
-              <i class="bi bi-circle"></i><span>Jenis Analis</span>
-            </a>
-          </li>
-          <li>
-            <a href="<?php echo base_url('metode_analisa') ?>">
-              <i class="bi bi-circle"></i><span>Metode Analisa</span>
-            </a>
-          </li>
-        </ul>
-      </li><!-- End Forms Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="users-profile.html">
-          <i class="bi bi-person"></i>
-          <span>Permohonan Pengujian</span>
-        </a>
-      </li><!-- End Profile Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="users-profile.html">
-          <i class="bi bi-person"></i>
-          <span>Data Permohonan</span>
-        </a>
-      </li><!-- End Profile Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="users-profile.html">
-          <i class="bi bi-person"></i>
-          <span>Profile</span>
-        </a>
-      </li><!-- End Profile Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="<?php echo base_url('login/logout') ?>">
-          <i class="ri-logout-circle-r-line"></i>
-          <span>Logout</span>
-        </a>
-      </li><!-- End Profile Page Nav -->
-
+            <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <?php
+         foreach ($subMenu as $key => $value) {
+           if($vMenu['idParent'] == $value['parent']){ ?>
+             <li>
+              <a href="<?php echo base_url() ?><?= $value['url']; ?>">
+                <i class="bi bi-circle"></i><span><?= $value['menu']; ?></span>
+              </a>
+            </li>
+      <?php } } ?>
+          </ul>
+        </li>
+      <?php } } ?>
     </ul>
 
   </aside><!-- End Sidebar-->
