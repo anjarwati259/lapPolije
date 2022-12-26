@@ -15,7 +15,7 @@ class Customer extends CI_Controller {
 
 	public function index()
 	{
-		$data = array('title' => 'Dashboard Admin',
+		$data = array('title' => 'Dashboard Customer',
                       'isi' => 'customer/dashboard' );
         $this->load->view('layout/wrapper',$data, FALSE);
 	}

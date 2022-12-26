@@ -82,6 +82,14 @@ class Customer_model extends CI_Model
 		return $query->row();
 	}
 
+	public function getCustomerByUser($id_user){
+		$this->db->select('*');
+		$this->db->from('tb_customer');
+		$this->db->where('id_user',$id_user);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
 	public function editcustomer($data){
 		try {
 	        $this->db->trans_begin();

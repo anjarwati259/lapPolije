@@ -26,3 +26,15 @@
 		}
     	return $menu;
 	}
+
+	function getKodeRegistrasi(){
+		$CI = get_instance();
+    	$CI->load->model('user_model');
+    	$tempNomor = $CI->permohonan_model->getTempNomor('Registrasi');
+    	$randID = substr(str_shuffle('123456789'),1,4);
+    	$findWord = ['{nomor}', '{tahun}'];
+		$replace = [$randID, date('Y')];
+		$kode_registrasi = str_replace($findWord, $replace, $tempNomor->temp_nomor);
+		
+		return $kode_registrasi;
+	}

@@ -103,4 +103,12 @@ class Metode_analisa_model extends CI_Model
 		$this->db->where('id', $id);
 		$this->db->update('tb_metode_analisa', array('status' => '0'));
 	}
+
+	public function getMetodeByid($id){
+		$this->db->select('*');
+		$this->db->from('tb_metode_analisa');
+		$this->db->where('id_jenis_analisa',$id);
+		$query = $this->db->get();
+		return $query->result();
+	}
 }
