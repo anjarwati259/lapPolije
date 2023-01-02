@@ -38,4 +38,117 @@ class Permohonan_model extends CI_Model
 		$query = $this->db->get();
 		return $query->row();
 	}
+
+	private function getKodeRegistrasi($kode){
+		$this->db->select('*');
+		$this->db->from('tb_permohonan');
+		$this->db->where('kode_registrasi', $kode);
+		$query = $this->db->get()->row();
+		return $query->kode_registrasi;
+	}
+
+	public function insertPermohonan($data){
+		$this->db->insert('tb_permohonan', $data);
+		$kode_registrasi = $this->getKodeRegistrasi($data['kode_registrasi']);
+		return $kode_registrasi;
+	}
+
+	public function insertDetailpermohonan($data){
+		$this->db->insert_batch('tb_detail_permohonan', $data);
+	}
+
+	public function getDatapermohonan(){
+		$this->db->select('tb_permohonan.*, tb_status.keterangan, tb_status.class_color, tb_customer.nama_customer');  
+       	$this->db->from('tb_permohonan');
+       	$this->db->join('tb_status','tb_status.status = tb_permohonan.status', 'left');
+       	$this->db->join('tb_customer','tb_customer.id = tb_permohonan.id_customer', 'left');
+       	$this->db->where('tb_permohonan.status !=','7');  
+       	if(!empty($_POST["search"]["value"]))  
+       	{  
+            $this->db->like("tb_permohonan.kode_registrasi", $_POST["search"]["value"]);  
+            $this->db->like("tb_permohonan.jenis_sample", $_POST["search"]["value"]); 
+       	}  
+       	if(!empty($_POST["order"]))  
+       	{  
+            // $this->db->order_by($this->order_column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);  
+       	}  
+       	else  
+       	{  
+            $this->db->order_by('tb_permohonan.update_at', 'DESC');  
+       	}  
+       	if($_POST["length"] != -1)  
+        {  
+            $this->db->limit($_POST['length'], $_POST['start']);  
+        }  
+        $query = $this->db->get();  
+        return $query->result();
+	}
+
+	public function editpermohonan($data){
+		try {
+	        $this->db->trans_begin();
+	        $this->db->where('kode_registrasi', $data['kode_registrasi']);
+			$this->db->update('tb_permohonan',$data);
+
+	        $db_error = $this->db->error();
+	        if (!empty($db_error['message'])) {
+	            throw new Exception($db_error['message']);
+	        }
+	        $this->db->trans_commit();
+	        $result = array('status' => 'success',
+	    					'message' => 'Data Berhasil Disimpan',
+	    					'atribute' => '');
+	    }catch (Exception $e) {
+	    	$this->db->trans_rollback();
+	    	$result = array('status' => 'error',
+	    					'message' => $e->getMessage(),
+	    					'atribute' => '');
+	    }
+	    return $result;
+	}
+
+	public function permohonanByID($kode_registrasi){
+		$this->db->select('tb_permohonan.*, tb_status.keterangan, tb_status.class_color, tb_customer.nama_customer, tb_customer.no_telp');
+		$this->db->from('tb_permohonan');
+		$this->db->join('tb_status','tb_status.status = tb_permohonan.status', 'left');
+		$this->db->join('tb_customer','tb_customer.id = tb_permohonan.id_customer', 'left');
+		$this->db->where('kode_registrasi', $kode_registrasi);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function detailPermohonanByID($kode_registrasi){
+		$this->db->select('tb_detail_permohonan.*, tb_jenis_analisa.jenis_analisa, tb_metode_analisa.metode_analisa, tb_pegawai.nama_pegawai');
+		$this->db->from('tb_detail_permohonan');
+		$this->db->join('tb_jenis_analisa','tb_jenis_analisa.id = tb_detail_permohonan.id_jenis_analisa', 'left');
+		$this->db->join('tb_metode_analisa','tb_metode_analisa.id = tb_detail_permohonan.id_metode_analisa', 'left');
+		$this->db->join('tb_analist','tb_analist.id = tb_detail_permohonan.id_analist', 'left');
+		$this->db->join('tb_pegawai','tb_pegawai.id = tb_analist.id_pegawai', 'left');
+		$this->db->where('kode_registrasi', $kode_registrasi);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function getLastId(){
+		$this->db->order_by('kode_sample', 'DESC');
+
+		$query = $this->db->get("tb_permohonan",1,0);
+		return $query->row();
+	}
+
+	public function editDetailpermohonan($data){
+		$this->db->where('id', $data['id']);
+		$this->db->update('tb_detail_permohonan',$data);
+	}
+
+	public function addJmlAnalist($id){
+		$this->db->set('jml_analist', 'jml_analist+1', FALSE);
+		$this->db->where('id', $id);
+		$this->db->update('tb_analist');
+	}
+	public function lastNoSurat(){
+		$this->db->order_by('no_surat', 'DESC');
+		$query = $this->db->get("tb_detail_permohonan",1,0);
+		return $query->row();
+	}
 }

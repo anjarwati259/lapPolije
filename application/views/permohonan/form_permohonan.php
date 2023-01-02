@@ -22,13 +22,13 @@
 			                <div class="row mb-3">
 			                  <label for="inputEmail3" class="col-sm-4 col-form-label">Jenis Sample</label>
 			                  <div class="col-sm-8">
-			                    <input type="text" value="jenis_sample" class="form-control" id="jenis_sample">
+			                    <input type="text" name="jenis_sample" class="form-control" id="jenis_sample">
 			                  </div>
 			                </div>
 			                <div class="row mb-3">
 			                  <label for="inputEmail3" class="col-sm-4 col-form-label">Jumlah Sample</label>
 			                  <div class="col-sm-8">
-			                    <input type="text" value="jml_sample" class="form-control" id="jml_sample">
+			                    <input type="text" name="jml_sample" class="form-control" id="jml_sample">
 			                  </div>
 			                </div>
 			                <div class="row mb-3">
@@ -37,7 +37,7 @@
 			                    <select name="penyimpanan" id="penyimpanan" class="form-select" aria-label="Default select example">
 				                  <option selected disabled>Open this select menu</option>
 				                  <?php foreach ($penyimpanan_sample as $kpSample => $vpSample) {?>
-				                  <option value="<?= $vpSample->id ?>"><?= $vpSample->nama_penyimpanan ?></option>
+				                  <option value="<?= $vpSample->nama_penyimpanan ?>"><?= $vpSample->nama_penyimpanan ?></option>
 				                  <?php } ?>
 				                </select>
 			                  </div>
@@ -49,7 +49,7 @@
 			                    <select name="keterangan_sample" id="keterangan_sample" class="form-select" aria-label="Default select example">
 				                  <option selected disabled>Open this select menu</option>
 				                  <?php foreach ($ket_sample as $kkSample => $vkSample) {?>
-				                  <option value="<?= $vkSample->id ?>"><?= $vkSample->keterangan_sample ?></option>
+				                  <option value="<?= $vkSample->keterangan_sample ?>"><?= $vkSample->keterangan_sample ?></option>
 				                  <?php } ?>
 				                </select>
 			                  </div>
@@ -122,8 +122,9 @@
 				                    	</select>
 				                    </td>
 				                    <td>
-				                    	<button type="button" class="btn btn-danger btn-sm"> Hapus</button>
+				                    	<button type="button" class="btn btn-danger btn-sm" onclick="delPermohonan('1')"> Hapus</button>
 				                    </td>
+				                    <input type="hidden" value="0" name="status1" id="status1">
 				                </tr>
 			                </tbody>
 			                <tbody style="border: none; border-color: #a6a8ab;" id="addForm">
@@ -134,7 +135,7 @@
 
 		          </div>
 		          <div class="text-center">
-	                  <button type="submit" class="btn btn-success">Submit</button>
+	                  <button type="submit" class="btn btn-success" onclick="simpan('submit')">Submit</button>
 	                  <button type="reset" class="btn btn-primary" onclick="addFrom()">Tambah</button>
 	              </div>
 	            </div>
