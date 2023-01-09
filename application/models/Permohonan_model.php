@@ -151,4 +151,56 @@ class Permohonan_model extends CI_Model
 		$query = $this->db->get("tb_detail_permohonan",1,0);
 		return $query->row();
 	}
+
+	public function saveDokumen($data){
+		$this->db->insert('tb_daftar_dokumen', $data);
+	}
+
+	public function getKodeSample($kode_registrasi){
+		$this->db->select('*');
+		$this->db->from('tb_permohonan');
+		$this->db->where('kode_registrasi', $kode_registrasi);
+		$query = $this->db->get()->row();
+		return $query->kode_sample;
+	}
+
+	public function getTemplateSurat($key){
+		$this->db->select('*');
+		$this->db->from('tb_temp_surat');
+		$this->db->where('key', $key);
+		$this->db->where('status', '1');
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function getPermohonanBYorder($kode_order){
+		$this->db->select('tb_permohonan.*, tb_status.keterangan, tb_status.class_color, tb_customer.nama_customer, tb_customer.no_telp, tb_customer.alamat');
+		$this->db->from('tb_permohonan');
+		$this->db->join('tb_status','tb_status.status = tb_permohonan.status', 'left');
+		$this->db->join('tb_customer','tb_customer.id = tb_permohonan.id_customer', 'left');
+		$this->db->where('kode_order', $kode_order);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function getKalab(){
+		$this->db->select('tb_pegawai.*, tb_jabatan.nama_jabatan, tb_unit.nama_unit');
+		$this->db->from('tb_pegawai');
+		$this->db->join('tb_jabatan','tb_jabatan.id = tb_pegawai.id_jabatan', 'left');
+		$this->db->join('tb_unit','tb_unit.id = tb_pegawai.id_unit', 'left');
+		$this->db->where('tb_jabatan.kode', 'KALAB');
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function getDetail($kode_surat){
+		$this->db->select('a.*,b.jenis_sample, b.jml_sample, c.jenis_analisa, d.metode_analisa');
+		$this->db->from('tb_detail_permohonan a');
+		$this->db->join('tb_permohonan b','b.kode_registrasi = a.kode_registrasi', 'left');
+		$this->db->join('tb_jenis_analisa c','c.id = a.id_jenis_analisa', 'left');
+		$this->db->join('tb_metode_analisa d','d.id = a.id_metode_analisa', 'left');
+		$this->db->where('a.surat_tugas', $kode_surat);
+		$query = $this->db->get();
+		return $query->row();
+	}
 }

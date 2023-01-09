@@ -106,16 +106,63 @@ class Analist extends CI_Controller {
         $ulangan1 = $this->input->post('ulangan1');
         $ulangan2 = $this->input->post('ulangan2');
         $rata_rata = $this->input->post('rata_rata');
+        $id_analist = $this->input->post('id_analist');
+        $kode_registrasi = $this->input->post('kode_registrasi');
         $data = array('id' => $id,
                       'pengulangan_1' => (float)$ulangan1,
                       'pengulangan_2' => (float)$ulangan2,
                       'rata_rata' => (float)$rata_rata,
                       'status'  => '1'
                     );
-        $result = $this->analis_model->saveHasilAnalisa($data);
+        $result = $this->analis_model->upDetailPermohonan($data);
 
         if($result['status'] == 'success'){
-            
+            $dataUp = array('id' => $id,
+                            'kode_registrasi' => $kode_registrasi,
+                            'status_detail' => '0',
+                            'status_up'     => '3'
+                            );
+            $this->analis_model->updateStatus($dataUp);
+            $this->analis_model->updateMinAnalist($id_analist);
+        }
+        echo json_encode($result);
+    }
+
+    public function ApprovedAnalisa(){
+        $id = $this->input->post('id');
+        $kode_registrasi = $this->input->post('kode_registrasi');
+        $data = array('id' => $id,
+                      'status' => '3',
+                    );
+        $result = $this->analis_model->upDetailPermohonan($data);
+        if($result['status'] == 'success'){
+            $dataUp = array('id' => $id,
+                            'kode_registrasi' => $kode_registrasi,
+                            'status_detail' => '1',
+                            'status_up'     => '4'
+                            );
+            $hasil = $this->analis_model->updateStatus($dataUp);
+            $kode_sample = $this->permohonan_model->getKodeSample($kode_registrasi);
+            $kode_doc = generateKode('selesai_tugas', $id);
+            $dataDoc = array('id_detail_permohonan' => $id,
+                             'kode_registrasi' => $kode_registrasi,
+                             'type' => 'selesai_tugas',
+                             'kode_dokumen' => $kode_doc,
+                             'status'   => '1',
+                             'created_at' => date('Y-m-d H:i:sa')
+                            );
+            $this->permohonan_model->saveDokumen($dataDoc);
+
+            if($hasil == true){
+                $kode_doc = generateKode('sertifikat', $kode_sample);
+                $dataDoc = array('kode_registrasi' => $kode_registrasi,
+                                'type' => 'sertifikat',
+                                'kode_dokumen' => $kode_doc,
+                                'status' => '1',
+                                'created_at' => date('Y-m-d H:i:sa')
+                            );
+                $this->permohonan_model->saveDokumen($dataDoc);
+            }
         }
         echo json_encode($result);
     }

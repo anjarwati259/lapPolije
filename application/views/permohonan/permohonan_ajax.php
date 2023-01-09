@@ -209,15 +209,38 @@
         var ulangan1 = $('#ulangan1').val();
         var ulangan2 = $('#ulangan2').val();
         var rata_rata = $('#rata_rata').val();
+        var id_analist = $('#id_analist').val();
+        var kode_registrasi = $('#kode_registrasi').val();
 
         var data = {id:id_detail,
+                    kode_registrasi:kode_registrasi,
                     ulangan1:ulangan1,
                     ulangan2:ulangan2,
+                    id_analist:id_analist,
                     rata_rata: rata_rata };
         $.ajax({
             type: 'POST',
             url: "<?php echo base_url('analist/submitAnalisa'); ?>",
             data:data,
+            dataType : 'json',
+            success: function(hasil) {
+                console.log(hasil)
+                if(hasil.status == 'success'){
+                    localStorage.setItem("sukses",hasil.message)
+                    window.location.reload();
+                }else{
+                    // localStorage.setItem("error",data.message)
+                    Swal.fire('Oppss...',hasil.message,'error')
+                } 
+            }
+        });
+    }
+
+    function appAnalist(id, kode_registrasi){
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url('analist/ApprovedAnalisa'); ?>",
+            data:{id:id, kode_registrasi:kode_registrasi},
             dataType : 'json',
             success: function(hasil) {
                 console.log(hasil)

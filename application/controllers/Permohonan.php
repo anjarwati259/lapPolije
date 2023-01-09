@@ -12,6 +12,7 @@ class Permohonan extends CI_Controller {
 		$this->load->model('customer_model');
 		$this->load->model('jenis_analisa_model');
 		$this->load->model('metode_analisa_model');
+		$this->load->model('analis_model');
 		$this->load->library('form_validation');
 		$this->load->model('datatables_model');
 	}
@@ -178,7 +179,7 @@ class Permohonan extends CI_Controller {
             $sub_array[] = $row->jenis_sample;
             $sub_array[] = $row->nama_customer;
             $sub_array[] = '<span class="badge '.$row->class_color.'">'.$row->keterangan.'</span>';
-            // $sub_array[] = '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#largeModal" onclick="kirimSampel(\''.generateUrl($row->kode_registrasi).'\')">Terima Sample</button>';
+            $sub_array[] = '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#largeModal" onclick="kirimSampel(\''.generateUrl($row->kode_registrasi).'\')">Invoice</button>';
             $data[] = $sub_array;
             $no++;  
         }  
@@ -230,5 +231,57 @@ class Permohonan extends CI_Controller {
 							'message' => 'Data Permohoan Tidak Berhasil Disimpan');
 		}
 		echo json_encode($return);
+	}
+
+	public function blankoPermohonan($kode_order){
+		$kode_order = base64_decode(urldecode($kode_order));
+		$tempSurat = $this->permohonan_model->getTemplateSurat('surat_permohonan');
+		$suratPermohonan = str_replace(['{base_url}', '{title}','{date}'],[base_url(),'Blanko Permohonan', dateDefault(date('Y-m-d'))],$tempSurat->template_surat);
+
+		$data = $this->permohonan_model->getPermohonanBYorder($kode_order);
+		$detail = $this->permohonan_model->detailPermohonanByID($data->kode_registrasi);
+		$dataKalab = $this->permohonan_model->getKalab();
+
+		$find = ['{kode_order}','{tgl_terima_sample}','{tgl_perkiraan_selesai}','{nama_pemohon}','{alamat}','{no_telp}','{jenis_sample}','{kode_sample}','{jml_sample}','{penyimpanan}','{keterangan_sample}','{nip}', '{kalab}'];
+		$replace = [$kode_order, dateDefault($data->tgl_terima_sample), dateDefault($data->tgl_perkiraan_selesai), $data->nama_customer, $data->alamat, $data->no_telp, $data->jenis_sample, $data->kode_sample, $data->jml_sample, $data->penyimpanan, $data->keterangan_sample,$dataKalab->nip, $dataKalab->nama_pegawai];
+		$suratPermohonan = str_replace($find,$replace,$suratPermohonan);
+
+		// $total = count($detail);
+		for ($index=0; $index < 10 ; $index++) { 
+			$no = '{no'.$index.'}';
+			$analisa = '{analisa'.$index.'}';
+			$metode = '{metode'.$index.'}';
+			$find = [$no, $analisa, $metode];
+			if($index < count($detail)){
+				$replace = [$index+1, $detail[$index]->jenis_analisa, $detail[$index]->metode_analisa];
+			}else{
+				$replace = ['', '', ''];
+			}
+
+			$suratPermohonan = str_replace($find,$replace,$suratPermohonan);
+		}
+		$data = array('title' => 'Blanko Permohonan',
+						'isi' => $suratPermohonan
+					);
+        $this->load->view('permohonan/blanko_permohonan',$data, FALSE);
+	}
+
+	public function suratTugas($surat_tugas){
+		$kode_surat = base64_decode(urldecode($surat_tugas));
+		$tempSurat = $this->permohonan_model->getTemplateSurat('surat_tugas');
+		$surat_tugas = str_replace(['{base_url}', '{title}','{date}'],[base_url(),'Surat Tugas', dateDefault(date('Y-m-d'))],$tempSurat->template_surat);
+
+		$data = $this->permohonan_model->getDetail($kode_surat);
+		$analist = $this->analis_model->getAnalistByID($data->id_analist);
+		$dataKalab = $this->permohonan_model->getKalab();
+
+		$find = ['{nomor_tugas}','{nama_analist}','{nip_analist}','{jabatan_analist}','{unit_analist}','{nama_kalab}','{nip_kalab}','{jabatan_kalab}','{unit_kalab}','{analisa}','{sample}','{jml_sample}'];
+		$replace = [$kode_surat, $analist->nama_pegawai, $analist->nip, $analist->nama_jabatan, $analist->nama_unit, $dataKalab->nama_pegawai, $dataKalab->nip, $dataKalab->nama_jabatan, $dataKalab->nama_unit, $data->jenis_analisa, $data->jenis_sample, $data->jml_sample];
+		$surat_tugas = str_replace($find,$replace,$surat_tugas);
+
+		$data = array('title' => 'Surat Tugas',
+						'isi' => $surat_tugas
+					);
+        $this->load->view('permohonan/blanko_permohonan',$data, FALSE);
 	}
 }

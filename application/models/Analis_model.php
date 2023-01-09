@@ -64,7 +64,7 @@ class analis_model extends CI_Model
 		return $query->result();
 	}
 
-	public function saveHasilAnalisa($data){
+	public function upDetailPermohonan($data){
 		try {
 	        $this->db->trans_begin();
 	        $this->db->where('id', $data['id']);
@@ -85,5 +85,39 @@ class analis_model extends CI_Model
 	    					'atribute' => '');
 	    }
 	    return $result;
+	}
+
+	public function updateMinAnalist($id){
+		$this->db->set('jml_analist', 'jml_analist-1', FALSE);
+		$this->db->where('id', $id);
+		$this->db->update('tb_analist');
+	}
+	public function updateStatus($data){
+		$this->db->select('count(*) as total');
+		$this->db->from('tb_detail_permohonan');
+		$this->db->where('kode_registrasi', $data['kode_registrasi']);
+		$this->db->where('status', $data['status_detail']);
+		$query = $this->db->get()->row();
+
+		if($query->total == 0){
+			$this->db->set('status', $data['status_up'], FALSE);
+			$this->db->where('kode_registrasi', $data['kode_registrasi']);
+			$this->db->update('tb_permohonan');
+			$result = true;
+		}else{
+			$result = false;
+		}
+		return $result;
+	}
+
+	public function getAnalistByID($id){
+		$this->db->select('tb_analist.*, tb_pegawai.nama_pegawai, tb_pegawai.nip, tb_jabatan.nama_jabatan, tb_unit.nama_unit');
+		$this->db->from('tb_analist');
+		$this->db->join('tb_pegawai','tb_pegawai.id = tb_analist.id_pegawai', 'left');
+		$this->db->join('tb_jabatan','tb_jabatan.id = tb_pegawai.id_jabatan', 'left');
+		$this->db->join('tb_unit','tb_unit.id = tb_pegawai.id_unit', 'left');
+		$this->db->where('tb_analist.id', $id);
+		$query = $this->db->get();
+		return $query->row();
 	}
 }

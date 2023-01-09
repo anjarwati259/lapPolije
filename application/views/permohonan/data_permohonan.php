@@ -14,7 +14,7 @@
                       <th scope="col">Jenis Sample</th>
                       <th scope="col">Nama Pemohon</th>
                       <th scope="col">Status</th>
-                      <!-- <th scope="col">Action</th> -->
+                      <th scope="col">Action</th>
                     </tr>
                   </thead>
                 </table>

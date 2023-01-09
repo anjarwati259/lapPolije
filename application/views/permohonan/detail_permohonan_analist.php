@@ -9,7 +9,7 @@
               <tr>
                 <input type="hidden" id="kode_registrasi" value="<?= $dataPermohonan->kode_registrasi ?>">
                 <th style="width: 250px;">Kode Registrasi</th>
-                <td>: <?= $dataPermohonan->kode_registrasi ?></td>
+                <td id="kode_registrasi">: <?= $dataPermohonan->kode_registrasi ?></td>
               </tr>
               <tr>
                 <th style="width: 250px;">Tanggal Kirim</th>
@@ -180,6 +180,7 @@
                 <td><?= ($value->status) ? ($viewStatus) : '-' ?></td>
               </tr>
               <input type="hidden" name="id" id="id_detail" value="<?= $value->id ?>">
+              <input type="hidden" name="id_analist" id="id_analist" value="<?= $value->id_analist ?>">
             <?php $no++;} ?>
             </tbody>
           </table>

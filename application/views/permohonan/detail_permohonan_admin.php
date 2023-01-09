@@ -53,8 +53,9 @@
                 <td>: <?= ($dataPermohonan->kode_sample) ? ($dataPermohonan->kode_sample) : '-' ?></td>
               </tr>
               <tr>
+                <a href=""></a>
                 <th style="width: 250px;">Kode Order</th>
-                <td>: <?= ($dataPermohonan->kode_order) ? ($dataPermohonan->kode_order) : '-' ?></td>
+                <td>: <a href="<?= base_url('permohonan/blankoPermohonan/').generateUrl($dataPermohonan->kode_order) ?>"><?= ($dataPermohonan->kode_order) ? ($dataPermohonan->kode_order) : '-' ?></a></td>
               </tr>
             <?php } ?>
               <tr>
@@ -148,6 +149,10 @@
                 <th scope="col">Nama Analist</th>
                 <?php if($dataPermohonan->status != '1' or $dataPermohonan->status != '0'){ ?>
                   <th scope="col">Surat Tugas</th>
+                  <th scope="col">Ulangan 1</th>
+                  <th scope="col">Ulangan 2</th>
+                  <th scope="col">Rata - Rata</th>
+                  <th scope="col">Action</th>
                 <?php } ?>
               </tr>
             </thead>
@@ -170,7 +175,14 @@
                 <input type="hidden" id="id<?= $no; ?>" value="<?= $value->id ?>">
               <?php }else{ ?>
                 <td><?= ($value->nama_pegawai) ? ($value->nama_pegawai) : '-' ?></td>
-                <td><?= ($value->surat_tugas) ? ($value->surat_tugas) : '-' ?></td>
+                <td><a href="<?= base_url('permohonan/suratTugas/').generateUrl($value->surat_tugas) ?>"><?= ($value->surat_tugas) ? ($value->surat_tugas) : '-' ?></a></td>
+                <td><?= ($value->pengulangan_1) ? ($value->pengulangan_1) : '-' ?></td>
+                <td><?= ($value->pengulangan_2) ? ($value->pengulangan_2) : '-' ?></td>
+                <td><?= ($value->rata_rata) ? ($value->rata_rata) : '-' ?></td>
+                <td>
+                  <?php $disabled = ($value->status == 1) ? '':('disabled'); ?>
+                  <button type="submit" class="btn btn-primary btn-sm" onclick="appAnalist('<?= $value->id ?>', '<?= $value->kode_registrasi ?>');" <?= $disabled; ?>>Approved</button>
+                </td>
               <?php } ?>
               </tr>
             <?php $no++;} ?>
@@ -179,10 +191,12 @@
           <!-- End Tables without borders -->
 
         </div>
+        <?php if($dataPermohonan->status == '1' or $dataPermohonan->status == '0'){ ?>
         <div class="text-center">
           <button type="submit" class="btn btn-primary" onclick="simpanAdmin();">Submit</button>
           <a href="<?php echo base_url('admin/permohonan'); ?>" class="btn btn-danger">Cancel</a>
         </div>
+      <?php } ?>
       </div>
     </div>
   </div>
