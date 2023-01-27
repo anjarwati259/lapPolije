@@ -49,7 +49,8 @@ class Permohonan extends CI_Controller {
 			}
 		}else if($type == 'add'){
 			$index	= $this->input->post('index');
-			$dataHtml = '<select name="jenis_analisa'.$index.'" id="jenis_analisa'.$index.'" class="form-select" onchange="setMetode('.$index.')">';
+			$idtable = $this->input->post('idtable');
+			$dataHtml = '<select name="jenis_analisa'.$index.'" id="jenis_analisa'.$index.'" class="form-select" onchange="setMetode('.$idtable.','.$index.')">';
 			foreach ($jenis_analisa as $key => $value) {
 				$dataHtml .= "<option value='$value->id'>$value->jenis_analisa</option>";
 			}
@@ -83,27 +84,74 @@ class Permohonan extends CI_Controller {
 		$result = $this->permohonan_model->insertPermohonan($data);
 		if(!empty($result)){
 			$dataDetail =[];
-			for ($index=1; $index <= $totalIndex; $index++) { 
-				$jenis_analisa = $index.'[jenis_analisa]';
-				$metode_analisa = $index.'[metode_analisa]';
-				$dataDetail[] = array('kode_registrasi' 	=> $kode_registrasi,
-									'id_user'			=> $this->session->userdata('id_user'),
-									'id_jenis_analisa' 	=> $this->input->post($jenis_analisa),
-									'id_metode_analisa'	=> $this->input->post($metode_analisa),
-									'created_at' 		=> date('Y-m-d H:i:sa')
-								);
-
+			for ($i=1; $i <= $jml_sample ; $i++) { 
+				$data = $this->input->post($i);
+				foreach ($data as $key => $value) {
+					$dataDetail[] = array('id_jenis_analisa' => $value['jenis_analisa'],
+										'id_metode_analisa' => $value['metode_analisa'],
+										'id_user' => $this->session->userdata('id_user'),
+										'no_sampel' => $i,
+										'kode_registrasi' 	=> $kode_registrasi,
+										'created_at' 		=> date('Y-m-d H:i:sa')
+									);
+				}
 			}
 			$this->permohonan_model->insertDetailpermohonan($dataDetail);
 			$return = array('status' => 'success',
 							'message' => 'Data Permohoan Berhasil Disimpan');
-
 		}else{
 			$return = array('status' => 'error',
 							'message' => 'Data Permohoan Tidak Berhasil Disimpan');
 		}
 		echo json_encode($return);
 	}
+
+	// public function simpanPermohonan1(){
+	// 	$action = $this->input->post('action');
+	// 	$status = ($action == 'submit') ? '0' : '5';
+	// 	$totalIndex = $this->input->post('0[totalIndex]');
+	// 	$kode_registrasi = $this->input->post('0[kode_registrasi]');
+	// 	$id_customer = $this->input->post('0[id_customer]');
+	// 	$tgl_kirim = $this->input->post('0[tgl_kirim]');
+	// 	$jenis_sample = $this->input->post('0[jenis_sample]');
+	// 	$jml_sample = $this->input->post('0[jml_sample]');
+	// 	$penyimpanan = $this->input->post('0[penyimpanan]');
+	// 	$keterangan_sample = $this->input->post('0[keterangan_sample]');
+
+	// 	$data = array('kode_registrasi' => $kode_registrasi,
+	// 				  'id_user'			=> $this->session->userdata('id_user'),
+	// 				  'id_customer'		=> $id_customer,
+	// 				  'tgl_kirim'		=> $tgl_kirim,
+	// 				  'jenis_sample'	=> $jenis_sample,
+	// 				  'jml_sample'		=> $jml_sample,
+	// 				  'penyimpanan'		=> $penyimpanan,
+	// 				  'keterangan_sample' => $keterangan_sample,
+	// 				  'status'			=> $status
+	// 				);
+	// 	$result = $this->permohonan_model->insertPermohonan($data);
+	// 	if(!empty($result)){
+	// 		$dataDetail =[];
+	// 		for ($index=1; $index <= $totalIndex; $index++) { 
+	// 			$jenis_analisa = $index.'[jenis_analisa]';
+	// 			$metode_analisa = $index.'[metode_analisa]';
+	// 			$dataDetail[] = array('kode_registrasi' 	=> $kode_registrasi,
+	// 								'id_user'			=> $this->session->userdata('id_user'),
+	// 								'id_jenis_analisa' 	=> $this->input->post($jenis_analisa),
+	// 								'id_metode_analisa'	=> $this->input->post($metode_analisa),
+	// 								'created_at' 		=> date('Y-m-d H:i:sa')
+	// 							);
+
+	// 		}
+	// 		$this->permohonan_model->insertDetailpermohonan($dataDetail);
+	// 		$return = array('status' => 'success',
+	// 						'message' => 'Data Permohoan Berhasil Disimpan');
+
+	// 	}else{
+	// 		$return = array('status' => 'error',
+	// 						'message' => 'Data Permohoan Tidak Berhasil Disimpan');
+	// 	}
+	// 	echo json_encode($return);
+	// }
 
 	public function riwayatPermohonan(){
 		$data = array('title' => 'Riwayat Permohonan',
@@ -283,5 +331,14 @@ class Permohonan extends CI_Controller {
 						'isi' => $surat_tugas
 					);
         $this->load->view('permohonan/blanko_permohonan',$data, FALSE);
+	}
+
+	public function tambahFormAnalisa(){
+		$jml_sample = $this->input->post('jml_sample');
+		$jenis_analisa = $this->jenis_analisa_model->listJenisanalisa();
+		$data = array('jenis_analisa' => $jenis_analisa,
+					  'jml_sample' => $jml_sample
+					);
+		$this->load->view('permohonan/form_analisa',$data, FALSE);
 	}
 }

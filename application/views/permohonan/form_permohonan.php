@@ -8,7 +8,7 @@
 	              	<div class="col-md-6">
 	              		<form>
 			                <div class="row mb-3">
-			                  <label for="kode_registrasi" class="col-sm-4 col-form-label">Kode Registrasi</label>
+			                  <label for="kode_registrasi" class="col-sm-4 col-form-label">No. Permohonan</label>
 			                  <div class="col-sm-8">
 			                    <input type="text" value="<?= $kode_registrasi ?>" class="form-control" id="kode_registrasi" readOnly>
 			                  </div>
@@ -28,7 +28,7 @@
 			                <div class="row mb-3">
 			                  <label for="inputEmail3" class="col-sm-4 col-form-label">Jumlah Sample</label>
 			                  <div class="col-sm-8">
-			                    <input type="text" name="jml_sample" class="form-control" id="jml_sample">
+			                    <input type="number" name="jml_sample" class="form-control" id="jml_sample" onkeyup="jmlSample()">
 			                  </div>
 			                </div>
 			                <div class="row mb-3">
@@ -94,54 +94,172 @@
 	              	</div>
 	              </div>
 
-	              <div class="card">
-		            <div class="card-body">
-		            	<h5 class="card-title">Informasi Analisa</h5>
-		            	<table class="table table-striped">
-			                <thead>
-			                  	<tr>
-				                    <th scope="col">No</th>
-				                    <th scope="col">Jenis Analisa</th>
-				                    <th scope="col">Metode Analisa</th>
-				                    <th scope="col">Action</th>
-			                  	</tr>
-			                </thead>
-			                <tbody style="border: none; border-color: #a6a8ab;">
-			                  	<tr id="tr1">
-				                	<th scope="row">1</th>
-				                    <td>
-				                    	<select name="jenis_analisa1" id="jenis_analisa1" class="form-select" onchange="setMetode('1')">
-				                    		<?php foreach ($jenis_analisa as $key => $value) { ?>
-				                    			<option value="<?= $value->id ?>"><?= $value->jenis_analisa ?></option>
-				                    		<?php } ?>
-				                    	</select>
-				                    </td>
-				                    <td>
-				                    	<select name="metode_analisa1" id="metode_analisa1" class="form-select">
-				                    		
-				                    	</select>
-				                    </td>
-				                    <td>
-				                    	<button type="button" class="btn btn-danger btn-sm" onclick="delPermohonan('1')"> Hapus</button>
-				                    </td>
-				                    <input type="hidden" value="0" name="status1" id="status1">
-				                </tr>
-			                </tbody>
-			                <tbody style="border: none; border-color: #a6a8ab;" id="addForm">
-			                	
-			                </tbody>
-			            </table>
-		            </div>
+            	<h5 class="card-title">Informasi Analisa</h5>
+            	<div class="tbl-analisa" id="tbl-analisa">
+            		<div class="card border-secondary">
+	            		<h5 class="card-header"><b>Analisa Sample 1</b></h5>
+			            <div class="card-body">
+			            	<table class="table table-striped" id="tbl-1">
+				                <thead>
+				                  	<tr>
+					                    <th scope="col">No</th>
+					                    <th scope="col">Jenis Analisa</th>
+					                    <th scope="col">Metode Analisa</th>
+					                    <th scope="col" width="200">Action</th>
+				                  	</tr>
+				                </thead>
+				                <tbody style="border: none; border-color: #a6a8ab;">
+				                  	<tr id="tr1">
+					                	<th scope="row">1</th>
+					                    <td>
+					                    	<select name="jenis_analisa1" id="jenis_analisa1" class="form-select" onchange="setMetode('1','1')">
+					                    		<?php foreach ($jenis_analisa as $key => $value) { ?>
+					                    			<option value="<?= $value->id ?>"><?= $value->jenis_analisa ?></option>
+					                    		<?php } ?>
+					                    	</select>
+					                    </td>
+					                    <td>
+					                    	<select name="metode_analisa1" id="metode_analisa1" class="form-select">
+					                    		
+					                    	</select>
+					                    </td>
+					                    <td>
+					                    	<button type="button" class="btn btn-danger btn-sm" onclick="delPermohonan('1','1')"> Hapus</button>
+					                    </td>
+					                    <input type="hidden" value="0" name="status1" id="status1">
+					                </tr>
+				                </tbody>
+				                <tbody style="border: none; border-color: #a6a8ab;" id="addForm">
+				                	
+				                </tbody>
+				            </table>
+				            <div class="button-tambah text-center">
+				            	<button type="button" class="btn btn-primary btn-md" onclick="addFrom('1')"> Tambah Analisa</button>
+				            </div>
+				            
+			            </div>
+			        </div>
+            	</div>
+            	
 
-		          </div>
-		          <div class="text-center">
-	                  <button type="submit" class="btn btn-success" onclick="simpan('submit')">Submit</button>
-	                  <button type="reset" class="btn btn-primary" onclick="addFrom()">Tambah</button>
-	              </div>
+		        <div class="text-center group-button">
+	                <button type="submit" class="btn btn-success" onclick="simpan('submit')">Submit</button>
+	                <button type="reset" class="btn btn-primary" onclick="">Draft</button>
+	                <button type="reset" class="btn btn-secondary" onclick="">Cancel</button>
+	            </div>
 	            </div>
 	        </div>
 	    </div>
 	</div>
 </section>
+<script type="text/javascript">
+	function setMetode(idtable,id){
+		var idJenisanalisa = $("#tbl-"+idtable+" #jenis_analisa"+id).val();
+		// console.log(idJenisanalisa);
+		$.ajax({
+            type: 'POST',
+            url: "<?php echo base_url('permohonan/getMetodeanalisa'); ?>",
+            data:{id:idJenisanalisa, type:'analisa'},
+            dataType : 'html',
+            success: function(hasil) {
+                $("#tbl-"+idtable+" #metode_analisa"+id).html(hasil);
+            }
+        });
+	}
 
-<?php include('permohonan_ajax.php'); ?>
+	function addFrom(id){
+		let jmlAnalisa = $("#tbl-"+id+">tbody>tr").length;
+		let index = jmlAnalisa+1;
+		$.ajax({
+            type: 'POST',
+            url: "<?php echo base_url('permohonan/getMetodeanalisa'); ?>",
+            data:{index:index, type:'add', idtable:id},
+            dataType : 'html',
+            success: function(hasil) {
+            	var html = '<tr id="tr'+index+'"><th scope="row">'+index+'</th><td>'+hasil+'</td><td><select name="metode_analisa'+index+'" id="metode_analisa'+index+'" class="form-select"></>select></td> <td><button type="button" class="btn btn-danger btn-sm" onclick="delPermohonan('+"\'"+id+"\'"+","+"\'"+index+"\'"+')"> Hapus</button></td>';
+                var input = '<input type="hidden" value="0" name="status'+index+'" id="status'+index+'">';
+                $("#tbl-"+id+" #addForm").append(html);
+                $("#tbl-"+id+" #addForm").append(input);
+                // console.log(html);
+            }
+        });
+	}
+
+	function delPermohonan(idtable,id){
+        $("#tbl-"+idtable+" #tr"+id).hide();
+        $("#tbl-"+idtable+" #status"+id).val('1');
+        // index = index-1;
+    }
+
+    function jmlSample(){
+    	var jml_sample = $('#jml_sample').val();
+    	$.ajax({
+            type: 'POST',
+            url: "<?php echo base_url('permohonan/tambahFormAnalisa'); ?>",
+            data:{jml_sample:jml_sample},
+            dataType : 'html',
+            success: function(hasil) {
+                // console.log(hasil) 
+                $("#tbl-analisa").html(hasil);
+            }
+        });
+    }
+
+    function simpan(action){
+    	var data = {}
+    	var jml_sample = $('#jml_sample').val();
+    	var kode_registrasi = $('#kode_registrasi').val();
+        var tgl_kirim = $('#tgl_kirim').val();
+        var jenis_sample = $('#jenis_sample').val();
+        var jml_sample = $('#jml_sample').val();
+        var penyimpanan = $('#penyimpanan').val();
+        var keterangan_sample = $('#keterangan_sample').val();
+        var id_customer = $('#id_customer').val();
+
+        data['0'] = {['kode_registrasi']:kode_registrasi, 
+                     ['id_customer']:id_customer, 
+                     ['tgl_kirim']: tgl_kirim,
+                     ['jenis_sample']: jenis_sample,
+                     ['jml_sample']: jml_sample,
+                     ['penyimpanan']: penyimpanan,
+                     ['keterangan_sample']: keterangan_sample,
+                 }
+
+    	data.action = action;
+    	for (var i = 1; i <= jml_sample; i++) {
+    		var dataAnalisa = {}
+    		var row = 0;
+    		$("#tbl-"+i+">tbody>tr").each(function(index, val){
+	        	index+=1;
+	        	let jenis_analisa = $('#jenis_analisa'+index).val();
+		        let metode_analisa = $('#metode_analisa'+index).val();
+		        let status = $('#status'+index).val();
+		        if(status == '0'){
+		        	row+=1;
+		        	dataAnalisa[row] = {['jenis_analisa']:jenis_analisa,
+		        						  ['metode_analisa']:metode_analisa}
+			    }
+		    });
+		    data[i] = dataAnalisa;
+    	}
+    	console.log(data);
+    	$.ajax({
+            type: 'POST',
+            url: "<?php echo base_url('permohonan/simpanPermohonan'); ?>",
+            data:data,
+            dataType : 'json',
+            success: function(hasil) {
+                // console.log(hasil)
+                var url = "<?php echo base_url('permohonan/riwayatPermohonan'); ?>";
+                if(hasil.status == 'success'){
+                    localStorage.setItem("sukses",hasil.message)
+                    window.location.replace(url);
+                }else{
+                    // localStorage.setItem("error",data.message)
+                    Swal.fire('Oppss...',hasil.message,'error')
+                } 
+            }
+        });
+    }
+</script>
+<?php //include('permohonan_ajax.php'); ?>

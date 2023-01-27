@@ -36,6 +36,14 @@
     .is_invalid{
       color: red;
     }
+    .border-secondary{
+        border: solid 1px !important;
+        border-color: darkgray !important;
+    }
+    .card-header{
+        color: #363535;
+        font-size: 22px;
+    }
   </style>
 </head>
 
