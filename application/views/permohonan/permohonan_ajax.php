@@ -52,7 +52,7 @@
         var data = {}
         var row = 0;
 
-        var kode_registrasi = $('#kode_registrasi').val();
+        var no_permohonan = $('#no_permohonan').val();
         var tgl_kirim = $('#tgl_kirim').val();
         var jenis_sample = $('#jenis_sample').val();
         var jml_sample = $('#jml_sample').val();
@@ -72,7 +72,7 @@
             }
         }
         data['0'] = {['totalIndex']:row, 
-                     ['kode_registrasi']:kode_registrasi, 
+                     ['no_permohonan']:no_permohonan, 
                      ['id_customer']:id_customer, 
                      ['tgl_kirim']: tgl_kirim,
                      ['jenis_sample']: jenis_sample,
@@ -117,27 +117,27 @@
         });
     }
 
-    function action(kode_registrasi, action){
+    function action(no_permohonan, action){
         if(action == 'konfirmApproved'){
-            var url = "<?php echo base_url('admin/penawaran/'); ?>"+kode_registrasi;
+            var url = "<?php echo base_url('admin/penawaran/'); ?>"+no_permohonan;
             window.location.replace(url);
         }
     }
 
     function kirimSampel(kode){
-        var kode_registrasi = atob(kode);
-        $('#judul-kode').html('Kode #'+kode_registrasi);
-        $('#kode_registrasi').val(kode);
+        var no_permohonan = atob(kode);
+        $('#judul-kode').html('Kode #'+no_permohonan);
+        $('#no_permohonan').val(kode);
     }
 
     function kirimResi(){
-        var kode_registrasi = $('#kode_registrasi').val();
+        var no_permohonan = $('#no_permohonan').val();
         var tgl_kirim = $('#tgl_kirim').val();
         var no_resi = $('#no_resi').val();
         $.ajax({
             type: 'POST',
             url: "<?php echo base_url('permohonan/kirimResi'); ?>",
-            data:{kode_registrasi:kode_registrasi, tgl_kirim:tgl_kirim, no_resi:no_resi},
+            data:{no_permohonan:no_permohonan, tgl_kirim:tgl_kirim, no_resi:no_resi},
             dataType : 'json',
             success: function(hasil) {
                 console.log(hasil) 
@@ -177,7 +177,7 @@
         var tgl_perkiraan_selesai = $('#tgl_perkiraan_selesai').val();
         var kode_sample = $('#kode_sample').val();
         var kode_order = $('#kode_order').val();
-        var kode_registrasi = $('#kode_registrasi').val();
+        var no_permohonan = $('#no_permohonan').val();
 
         var totalAnalist = '<?php echo count($dataAnalist) ?>';
 
@@ -187,7 +187,7 @@
             data[i] = {['id']: id,
                         ['id_analist']: id_analist}
         }
-        data['0'] = {['kode_registrasi']:kode_registrasi, 
+        data['0'] = {['no_permohonan']:no_permohonan, 
                      ['tgl_terima_sample']:tgl_terima_sample, 
                      ['tgl_perkiraan_selesai']:tgl_perkiraan_selesai, 
                      ['kode_sample']: kode_sample,
@@ -217,10 +217,10 @@
         var ulangan2 = $('#ulangan2').val();
         var rata_rata = $('#rata_rata').val();
         var id_analist = $('#id_analist').val();
-        var kode_registrasi = $('#kode_registrasi').val();
+        var no_permohonan = $('#no_permohonan').val();
 
         var data = {id:id_detail,
-                    kode_registrasi:kode_registrasi,
+                    no_permohonan:no_permohonan,
                     ulangan1:ulangan1,
                     ulangan2:ulangan2,
                     id_analist:id_analist,
@@ -243,11 +243,11 @@
         });
     }
 
-    function appAnalist(id, kode_registrasi){
+    function appAnalist(id, no_permohonan){
         $.ajax({
             type: 'POST',
             url: "<?php echo base_url('analist/ApprovedAnalisa'); ?>",
-            data:{id:id, kode_registrasi:kode_registrasi},
+            data:{id:id, no_permohonan:no_permohonan},
             dataType : 'json',
             success: function(hasil) {
                 console.log(hasil)

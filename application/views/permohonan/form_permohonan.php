@@ -8,9 +8,9 @@
 	              	<div class="col-md-6">
 	              		<form>
 			                <div class="row mb-3">
-			                  <label for="kode_registrasi" class="col-sm-4 col-form-label">No. Permohonan</label>
+			                  <label for="no_permohonan" class="col-sm-4 col-form-label">No. Permohonan</label>
 			                  <div class="col-sm-8">
-			                    <input type="text" value="<?= $kode_registrasi ?>" class="form-control" id="kode_registrasi" readOnly>
+			                    <input type="text" value="<?= $no_permohonan ?>" class="form-control" id="no_permohonan" readOnly>
 			                  </div>
 			                </div>
 			                <div class="row mb-3">
@@ -133,10 +133,13 @@
 				                	
 				                </tbody>
 				            </table>
-				            <div class="button-tambah text-center">
+				            <div class="row">
+			                  	<label for="inputEmail3" class="col-sm-4 col-form-label"><b>Catatan</b></label>
+			                  	<textarea style="height: 100px;" type="text" class="form-control" id="catatan1" placeholder="Bisa diisi varian dari sample. contoh: "></textarea>
+			                </div>
+			                <div class="button-tambah text-center mt-3">
 				            	<button type="button" class="btn btn-primary btn-md" onclick="addFrom('1')"> Tambah Analisa</button>
 				            </div>
-				            
 			            </div>
 			        </div>
             	</div>
@@ -208,7 +211,7 @@
     function simpan(action){
     	var data = {}
     	var jml_sample = $('#jml_sample').val();
-    	var kode_registrasi = $('#kode_registrasi').val();
+    	var no_permohonan = $('#no_permohonan').val();
         var tgl_kirim = $('#tgl_kirim').val();
         var jenis_sample = $('#jenis_sample').val();
         var jml_sample = $('#jml_sample').val();
@@ -216,7 +219,7 @@
         var keterangan_sample = $('#keterangan_sample').val();
         var id_customer = $('#id_customer').val();
 
-        data['0'] = {['kode_registrasi']:kode_registrasi, 
+        data['0'] = {['no_permohonan']:no_permohonan, 
                      ['id_customer']:id_customer, 
                      ['tgl_kirim']: tgl_kirim,
                      ['jenis_sample']: jenis_sample,
@@ -243,23 +246,23 @@
 		    data[i] = dataAnalisa;
     	}
     	console.log(data);
-    	$.ajax({
-            type: 'POST',
-            url: "<?php echo base_url('permohonan/simpanPermohonan'); ?>",
-            data:data,
-            dataType : 'json',
-            success: function(hasil) {
-                // console.log(hasil)
-                var url = "<?php echo base_url('permohonan/riwayatPermohonan'); ?>";
-                if(hasil.status == 'success'){
-                    localStorage.setItem("sukses",hasil.message)
-                    window.location.replace(url);
-                }else{
-                    // localStorage.setItem("error",data.message)
-                    Swal.fire('Oppss...',hasil.message,'error')
-                } 
-            }
-        });
+    	// $.ajax({
+     //        type: 'POST',
+     //        url: "<?php echo base_url('permohonan/simpanPermohonan'); ?>",
+     //        data:data,
+     //        dataType : 'json',
+     //        success: function(hasil) {
+     //            // console.log(hasil)
+     //            var url = "<?php echo base_url('permohonan/riwayatPermohonan'); ?>";
+     //            if(hasil.status == 'success'){
+     //                localStorage.setItem("sukses",hasil.message)
+     //                window.location.replace(url);
+     //            }else{
+     //                // localStorage.setItem("error",data.message)
+     //                Swal.fire('Oppss...',hasil.message,'error')
+     //            } 
+     //        }
+     //    });
     }
 </script>
 <?php //include('permohonan_ajax.php'); ?>

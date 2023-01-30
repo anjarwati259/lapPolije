@@ -31,12 +31,12 @@ class Admin extends CI_Controller {
                       'isi' => 'permohonan/data_permohonan' );
         $this->load->view('layout/wrapper',$data, FALSE);
 	}
-	public function penawaran($kode_registrasi)
+	public function penawaran($no_permohonan)
 	{
-		$kode_registrasi = base64_decode(urldecode($kode_registrasi));
-		$dataPermohonan = $this->permohonan_model->permohonanByID($kode_registrasi);
-		$detailPermohonan = $this->permohonan_model->detailPermohonanByID($kode_registrasi);
-		$totalHarga = $this->permohonan_model->getTotal($kode_registrasi);
+		$no_permohonan = base64_decode(urldecode($no_permohonan));
+		$dataPermohonan = $this->permohonan_model->permohonanByID($no_permohonan);
+		$detailPermohonan = $this->permohonan_model->detailPermohonanByID($no_permohonan);
+		$totalHarga = $this->permohonan_model->getTotal($no_permohonan);
 		$data = array('title' => 'Form Penawaran',
 					  'dataPermohonan' => $dataPermohonan,
 					  'detailPermohonan' => $detailPermohonan,
@@ -50,11 +50,11 @@ class Admin extends CI_Controller {
 						'dataAnalist' => array());
         $this->load->view('permohonan/permintaan_permohonan',$data, FALSE);
 	}
-	public function detailPermohonan($kode_registrasi)
+	public function detailPermohonan($no_permohonan)
 	{
-		$kode_registrasi = base64_decode(urldecode($kode_registrasi));
-		$dataPermohonan = $this->permohonan_model->permohonanByID($kode_registrasi);
-		$detailPermohonan = $this->permohonan_model->detailPermohonanByID($kode_registrasi);
+		$no_permohonan = base64_decode(urldecode($no_permohonan));
+		$dataPermohonan = $this->permohonan_model->permohonanByID($no_permohonan);
+		$detailPermohonan = $this->permohonan_model->detailPermohonanByID($no_permohonan);
 		$dataAnalist = $this->analis_model->listAnalist();
 		$batasAnalist = $this->analis_model->getBatasAnalist();
 		// $batas_analist = $batasAnalist->batas_analist; 

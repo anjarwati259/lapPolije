@@ -8,7 +8,7 @@
             <tbody>
               <tr>
                 <th style="width: 250px;">Kode Registrasi</th>
-                <td>: <?= $dataPermohonan->kode_registrasi ?></td>
+                <td>: <?= $dataPermohonan->no_permohonan ?></td>
               </tr>
               <tr>
                 <th style="width: 250px;">Tanggal Kirim</th>

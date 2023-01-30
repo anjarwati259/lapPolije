@@ -7,9 +7,9 @@
           <table class="table table-borderless">
             <tbody>
               <tr>
-                <input type="hidden" id="kode_registrasi" value="<?= $dataPermohonan->kode_registrasi ?>">
+                <input type="hidden" id="no_permohonan" value="<?= $dataPermohonan->no_permohonan ?>">
                 <th style="width: 250px;">Kode Registrasi</th>
-                <td id="kode_registrasi">: <?= $dataPermohonan->kode_registrasi ?></td>
+                <td id="no_permohonan">: <?= $dataPermohonan->no_permohonan ?></td>
               </tr>
               <tr>
                 <th style="width: 250px;">Tanggal Kirim</th>

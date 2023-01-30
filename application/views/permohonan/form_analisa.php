@@ -36,7 +36,11 @@
             	
             </tbody>
         </table>
-        <div class="button-tambah text-center">
+        <div class="row">
+            <label for="inputEmail3" class="col-sm-4 col-form-label"><b>Catatan</b></label>
+            <textarea style="height: 100px;" type="text" class="form-control" id="catatan<?= $i; ?>" placeholder="Bisa diisi varian dari sample. contoh: "></textarea>
+        </div>
+        <div class="button-tambah text-center mt-3">
         	<button type="button" class="btn btn-primary btn-md" onclick="addFrom('<?= $i; ?>')"> Tambah Analisa</button>
         </div>
         

@@ -34,9 +34,9 @@ function getKodeRegistrasi(){
 	$randID = substr(str_shuffle('123456789'),1,4);
 	$findWord = ['{nomor}', '{tahun}'];
 	$replace = [$randID, date('Y')];
-	$kode_registrasi = str_replace($findWord, $replace, $tempNomor->temp_nomor);
+	$no_permohonan = str_replace($findWord, $replace, $tempNomor->temp_nomor);
 	
-	return $kode_registrasi;
+	return $no_permohonan;
 }
 
 function dateDefault($date)
@@ -83,12 +83,12 @@ function generateSuratTugas(){
 	return $result;
 }
 
-function generateNomorSample($kode_registrasi, $no_sample){
-	$kode = substr($kode_registrasi,0,4);
+function generateNomorSample($no_permohonan, $no_sample){
+	$kode = substr($no_permohonan,0,4);
 	$result = $kode.'-'.$no_sample;
 	return $result;
 }
 
-// function hitungTotalHarga($kode_registrasi){
-// 	$tempNomor = $CI->permohonan_model->getTotal($kode_registrasi);
+// function hitungTotalHarga($no_permohonan){
+// 	$tempNomor = $CI->permohonan_model->getTotal($no_permohonan);
 // }

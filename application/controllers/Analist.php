@@ -32,16 +32,16 @@ class Analist extends CI_Controller {
         $no=1; 
         foreach($fetch_data as $row)  
         {  
-        	$kode_registrasi = base64_encode($row->kode_registrasi);
-        	$urlKode = urlencode($kode_registrasi);
+        	$no_permohonan = base64_encode($row->no_permohonan);
+        	$urlKode = urlencode($no_permohonan);
         	$disabled = ($row->status =='0') ? '' : 'disabled';
             $sub_array = array(); 
             $sub_array[] = $no;               
-            $sub_array[] = '<a href="'.base_url('permohonan/detailPermohonan/').$urlKode.'">'.$row->kode_registrasi.'</a>';               
+            $sub_array[] = '<a href="'.base_url('permohonan/detailPermohonan/').$urlKode.'">'.$row->no_permohonan.'</a>';               
             $sub_array[] = $row->tgl_kirim;  
             $sub_array[] = $row->jenis_sample;
             $sub_array[] = '<span class="badge '.$row->class_color.'target="_blank"">'.$row->keterangan.'</span>';
-            $sub_array[] = '<button type="button" class="btn btn-primary btn-sm" '.$disabled.' data-bs-toggle="modal" data-bs-target="#largeModal" onclick="kirimSampel(\''.$kode_registrasi.'\')">Kirim Sample</button>';
+            $sub_array[] = '<button type="button" class="btn btn-primary btn-sm" '.$disabled.' data-bs-toggle="modal" data-bs-target="#largeModal" onclick="kirimSampel(\''.$no_permohonan.'\')">Kirim Sample</button>';
             $data[] = $sub_array;
             $no++;  
         }  
@@ -62,21 +62,21 @@ class Analist extends CI_Controller {
         $no=1; 
         foreach($fetch_data as $row)  
         {  
-            $kode_registrasi = base64_encode($row->kode_registrasi);
-            $urlKode = urlencode($kode_registrasi);
+            $no_permohonan = base64_encode($row->no_permohonan);
+            $urlKode = urlencode($no_permohonan);
             $class_color = ($row->status_analist == 0) ? ('bg-warning text-dark') : ('bg-success text-dark');
             $status_analist = ($row->status_analist == 0) ? ('Belum Selesai') : ('Selesai');
             // $disabled = ($row->status =='0') ? '' : 'disabled';
             $sub_array = array(); 
             $sub_array[] = $no;               
-            $sub_array[] = '<a href="'.base_url('analist/detailPermohonan/').$urlKode.'/'.$row->id_jenis_analisa.'/'.$row->id_metode_analisa.'">'.$row->kode_registrasi.'</a>';               
+            $sub_array[] = '<a href="'.base_url('analist/detailPermohonan/').$urlKode.'/'.$row->id_jenis_analisa.'/'.$row->id_metode_analisa.'">'.$row->no_permohonan.'</a>';               
             $sub_array[] = $row->kode_sample;  
             $sub_array[] = $row->jenis_sample;
             $sub_array[] = $row->jenis_analisa;
             $sub_array[] = $row->metode_analisa;
             // $sub_array[] = $row->status_analist;
             $sub_array[] = '<span class="badge '.$class_color.'target="_blank"">'.$status_analist.'</span>';
-            // $sub_array[] = '<button type="button" class="btn btn-primary btn-sm" '.$disabled.' data-bs-toggle="modal" data-bs-target="#largeModal" onclick="kirimSampel(\''.$kode_registrasi.'\')">Kirim Sample</button>';
+            // $sub_array[] = '<button type="button" class="btn btn-primary btn-sm" '.$disabled.' data-bs-toggle="modal" data-bs-target="#largeModal" onclick="kirimSampel(\''.$no_permohonan.'\')">Kirim Sample</button>';
             $data[] = $sub_array;
             $no++;  
         }  
@@ -89,10 +89,10 @@ class Analist extends CI_Controller {
         echo json_encode($output);
     }
 
-    public function detailPermohonan($kode_registrasi, $jenis_analisa, $metode_analisa){
-        $kode_registrasi = base64_decode(urldecode($kode_registrasi));
-        $dataPermohonan = $this->permohonan_model->permohonanByID($kode_registrasi);
-        $detailPermohonan = $this->analis_model->detailPermohonan($kode_registrasi, $metode_analisa, $jenis_analisa);
+    public function detailPermohonan($no_permohonan, $jenis_analisa, $metode_analisa){
+        $no_permohonan = base64_decode(urldecode($no_permohonan));
+        $dataPermohonan = $this->permohonan_model->permohonanByID($no_permohonan);
+        $detailPermohonan = $this->analis_model->detailPermohonan($no_permohonan, $metode_analisa, $jenis_analisa);
         $data = array('title' => 'Detail Permohonan',
                       'dataPermohonan' => $dataPermohonan,
                       'detailPermohonan' => $detailPermohonan,
@@ -107,7 +107,7 @@ class Analist extends CI_Controller {
         $ulangan2 = $this->input->post('ulangan2');
         $rata_rata = $this->input->post('rata_rata');
         $id_analist = $this->input->post('id_analist');
-        $kode_registrasi = $this->input->post('kode_registrasi');
+        $no_permohonan = $this->input->post('no_permohonan');
         $data = array('id' => $id,
                       'pengulangan_1' => (float)$ulangan1,
                       'pengulangan_2' => (float)$ulangan2,
@@ -118,7 +118,7 @@ class Analist extends CI_Controller {
 
         if($result['status'] == 'success'){
             $dataUp = array('id' => $id,
-                            'kode_registrasi' => $kode_registrasi,
+                            'no_permohonan' => $no_permohonan,
                             'status_detail' => '0',
                             'status_up'     => '3'
                             );
@@ -130,22 +130,22 @@ class Analist extends CI_Controller {
 
     public function ApprovedAnalisa(){
         $id = $this->input->post('id');
-        $kode_registrasi = $this->input->post('kode_registrasi');
+        $no_permohonan = $this->input->post('no_permohonan');
         $data = array('id' => $id,
                       'status' => '3',
                     );
         $result = $this->analis_model->upDetailPermohonan($data);
         if($result['status'] == 'success'){
             $dataUp = array('id' => $id,
-                            'kode_registrasi' => $kode_registrasi,
+                            'no_permohonan' => $no_permohonan,
                             'status_detail' => '1',
                             'status_up'     => '4'
                             );
             $hasil = $this->analis_model->updateStatus($dataUp);
-            $kode_sample = $this->permohonan_model->getKodeSample($kode_registrasi);
+            $kode_sample = $this->permohonan_model->getKodeSample($no_permohonan);
             $kode_doc = generateKode('selesai_tugas', $id);
             $dataDoc = array('id_detail_permohonan' => $id,
-                             'kode_registrasi' => $kode_registrasi,
+                             'no_permohonan' => $no_permohonan,
                              'type' => 'selesai_tugas',
                              'kode_dokumen' => $kode_doc,
                              'status'   => '1',
@@ -155,7 +155,7 @@ class Analist extends CI_Controller {
 
             if($hasil == true){
                 $kode_doc = generateKode('sertifikat', $kode_sample);
-                $dataDoc = array('kode_registrasi' => $kode_registrasi,
+                $dataDoc = array('no_permohonan' => $no_permohonan,
                                 'type' => 'sertifikat',
                                 'kode_dokumen' => $kode_doc,
                                 'status' => '1',

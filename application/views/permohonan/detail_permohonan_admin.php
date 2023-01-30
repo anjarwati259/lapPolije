@@ -7,9 +7,9 @@
           <table class="table table-borderless">
             <tbody>
               <tr>
-                <input type="hidden" id="kode_registrasi" value="<?= $dataPermohonan->kode_registrasi ?>">
+                <input type="hidden" id="no_permohonan" value="<?= $dataPermohonan->no_permohonan ?>">
                 <th style="width: 250px;">Kode Registrasi</th>
-                <td>: <?= $dataPermohonan->kode_registrasi ?></td>
+                <td>: <?= $dataPermohonan->no_permohonan ?></td>
               </tr>
               <tr>
                 <th style="width: 250px;">Tanggal Kirim</th>
@@ -181,7 +181,7 @@
                 <td><?= ($value->rata_rata) ? ($value->rata_rata) : '-' ?></td>
                 <td>
                   <?php $disabled = ($value->status == 1) ? '':('disabled'); ?>
-                  <button type="submit" class="btn btn-primary btn-sm" onclick="appAnalist('<?= $value->id ?>', '<?= $value->kode_registrasi ?>');" <?= $disabled; ?>>Approved</button>
+                  <button type="submit" class="btn btn-primary btn-sm" onclick="appAnalist('<?= $value->id ?>', '<?= $value->no_permohonan ?>');" <?= $disabled; ?>>Approved</button>
                 </td>
               <?php } ?>
               </tr>

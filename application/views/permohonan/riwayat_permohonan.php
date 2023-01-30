@@ -29,7 +29,7 @@
               <div class="modal-body">
       	        <form class="row g-3" id="form-tgl_kirim">
       	            <div class="col-md-12">
-                      <input type="hidden" name="kode_registrasi" id="kode_registrasi">
+                      <input type="hidden" name="no_permohonan" id="no_permohonan">
       	              <label for="tgl_kirim" class="form-label">Tanggal Kirim</label>
       	              <input type="date" class="form-control" name="tgl_kirim" id="tgl_kirim" required>
       	            </div>

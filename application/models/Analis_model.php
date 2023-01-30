@@ -41,7 +41,7 @@ class analis_model extends CI_Model
 	public function getDaftaranalisis($id_analist){
 		$this->db->select('a.*, b.id_jenis_analisa, b.id_metode_analisa, b.status as status_analist, c.jenis_analisa, d.metode_analisa');
 		$this->db->from('tb_permohonan a');
-		$this->db->join('tb_detail_permohonan b','b.kode_registrasi = a.kode_registrasi', 'left');
+		$this->db->join('tb_detail_permohonan b','b.no_permohonan = a.no_permohonan', 'left');
 		$this->db->join('tb_jenis_analisa c','c.id = b.id_jenis_analisa', 'left');
 		$this->db->join('tb_metode_analisa d','d.id = b.id_metode_analisa', 'left');
 		$this->db->where('b.id_analist', $id_analist);
@@ -50,14 +50,14 @@ class analis_model extends CI_Model
 		return $query->result();
 	}
 
-	public function detailPermohonan($kode_registrasi, $metode, $jenis_analisa){
+	public function detailPermohonan($no_permohonan, $metode, $jenis_analisa){
 		$this->db->select('tb_detail_permohonan.*, tb_jenis_analisa.jenis_analisa, tb_metode_analisa.metode_analisa, tb_pegawai.nama_pegawai');
 		$this->db->from('tb_detail_permohonan');
 		$this->db->join('tb_jenis_analisa','tb_jenis_analisa.id = tb_detail_permohonan.id_jenis_analisa', 'left');
 		$this->db->join('tb_metode_analisa','tb_metode_analisa.id = tb_detail_permohonan.id_metode_analisa', 'left');
 		$this->db->join('tb_analist','tb_analist.id = tb_detail_permohonan.id_analist', 'left');
 		$this->db->join('tb_pegawai','tb_pegawai.id = tb_analist.id_pegawai', 'left');
-		$this->db->where('tb_detail_permohonan.kode_registrasi', $kode_registrasi);
+		$this->db->where('tb_detail_permohonan.no_permohonan', $no_permohonan);
 		$this->db->where('tb_detail_permohonan.id_jenis_analisa', $jenis_analisa);
 		$this->db->where('tb_detail_permohonan.id_metode_analisa', $metode);
 		$query = $this->db->get();
@@ -95,13 +95,13 @@ class analis_model extends CI_Model
 	public function updateStatus($data){
 		$this->db->select('count(*) as total');
 		$this->db->from('tb_detail_permohonan');
-		$this->db->where('kode_registrasi', $data['kode_registrasi']);
+		$this->db->where('no_permohonan', $data['no_permohonan']);
 		$this->db->where('status', $data['status_detail']);
 		$query = $this->db->get()->row();
 
 		if($query->total == 0){
 			$this->db->set('status', $data['status_up'], FALSE);
-			$this->db->where('kode_registrasi', $data['kode_registrasi']);
+			$this->db->where('no_permohonan', $data['no_permohonan']);
 			$this->db->update('tb_permohonan');
 			$result = true;
 		}else{

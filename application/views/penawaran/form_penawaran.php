@@ -7,9 +7,9 @@
           <table class="table table-borderless">
             <tbody>
               <tr>
-                <input type="hidden" id="kode_registrasi" value="<?= $dataPermohonan->kode_registrasi ?>">
+                <input type="hidden" id="no_permohonan" value="<?= $dataPermohonan->no_permohonan ?>">
                 <th style="width: 250px;">Kode Penawaran</th>
-                <td>: <?= $dataPermohonan->kode_registrasi ?></td>
+                <td>: <?= $dataPermohonan->no_permohonan ?></td>
               </tr>
               <tr>
                 <th style="width: 250px;">Tanggal Kirim</th>
@@ -100,7 +100,7 @@
                 <th scope="row"><?= $no ?></th>
                 <td><?= ($value->jenis_analisa) ? ($value->jenis_analisa) : '-' ?></td>
                 <td><?= ($value->metode_analisa) ? ($value->metode_analisa) : '-' ?></td>
-                <td><?= generateNomorSample($dataPermohonan->kode_registrasi, $value->id_sampel) ?></td>
+                <td><?= generateNomorSample($dataPermohonan->no_permohonan, $value->id_sampel) ?></td>
                 <td id="harga" data-id ="<?= $value->id; ?>"><?= number_format($value->harga,0,',','.'); ?></td>
               </tr>
               <?php $no++;} ?>
@@ -151,10 +151,10 @@
 	$('.btn-approved').click();
 	function simpan(action){
 		var data = {};
-		var kode_registrasi = '<?= $dataPermohonan->kode_registrasi ?>';
+		var no_permohonan = '<?= $dataPermohonan->no_permohonan ?>';
 		var total_harga = $('#total').text();
 
-		data.kode_registrasi = kode_registrasi;
+		data.no_permohonan = no_permohonan;
 		data.total_harga = total_harga;
 		dataharga = {}
 		$("#tbl-penawaran>tbody>tr").each(function(index, val){
@@ -184,11 +184,11 @@
 	}
 
 	function konfirm(action){
-		var kode_registrasi = '<?= $dataPermohonan->kode_registrasi; ?>';
+		var no_permohonan = '<?= $dataPermohonan->no_permohonan; ?>';
 		$.ajax({
             type: 'POST',
             url: "<?php echo base_url('permohonan/appPenawaran'); ?>",
-            data:{kode_registrasi:kode_registrasi, action:action},
+            data:{no_permohonan:no_permohonan, action:action},
             dataType : 'json',
             success: function(hasil) {
                 console.log(hasil)

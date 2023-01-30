@@ -22,7 +22,7 @@ class Permohonan extends CI_Controller {
 		$ket_sample = $this->permohonan_model->keterangan_sample();
 		$penyimpanan_sample = $this->permohonan_model->penyimpanan_sample();
 		$customer = $this->customer_model->getCustomerByUser($id_user);
-		$kode_registrasi = getKodeRegistrasi();
+		$no_permohonan = getKodeRegistrasi();
 		$jenis_analisa = $this->jenis_analisa_model->listJenisanalisa();
 
 		$data = array('title' => 'Form Permohonan',
@@ -30,7 +30,7 @@ class Permohonan extends CI_Controller {
 					  'dataAnalist' => array(),
 					  'penyimpanan_sample' =>$penyimpanan_sample,
 					  'customer' => $customer,
-					  'kode_registrasi' => $kode_registrasi,
+					  'no_permohonan' => $no_permohonan,
 					  'jenis_analisa' => $jenis_analisa,
                       'isi' => 'permohonan/form_permohonan');
         $this->load->view('layout/wrapper',$data, FALSE);
@@ -62,7 +62,7 @@ class Permohonan extends CI_Controller {
 	public function simpanPermohonan(){
 		$action = $this->input->post('action');
 		$status = ($action == 'submit') ? '0' : '5';
-		$kode_registrasi = $this->input->post('0[kode_registrasi]');
+		$no_permohonan = $this->input->post('0[no_permohonan]');
 		$id_customer = $this->input->post('0[id_customer]');
 		$tgl_kirim = $this->input->post('0[tgl_kirim]');
 		$jenis_sample = $this->input->post('0[jenis_sample]');
@@ -70,7 +70,7 @@ class Permohonan extends CI_Controller {
 		$penyimpanan = $this->input->post('0[penyimpanan]');
 		$keterangan_sample = $this->input->post('0[keterangan_sample]');
 
-		$data = array('kode_registrasi' => $kode_registrasi,
+		$data = array('no_permohonan' => $no_permohonan,
 					  'id_user'			=> $this->session->userdata('id_user'),
 					  'id_customer'		=> $id_customer,
 					  'tgl_kirim'		=> $tgl_kirim,
@@ -90,7 +90,7 @@ class Permohonan extends CI_Controller {
 										'id_metode_analisa' => $value['metode_analisa'],
 										'id_user' => $this->session->userdata('id_user'),
 										'id_sampel' => $i,
-										'kode_registrasi' 	=> $kode_registrasi,
+										'no_permohonan' 	=> $no_permohonan,
 										'created_at' 		=> date('Y-m-d H:i:sa')
 									);
 				}
@@ -109,7 +109,7 @@ class Permohonan extends CI_Controller {
 	// 	$action = $this->input->post('action');
 	// 	$status = ($action == 'submit') ? '0' : '5';
 	// 	$totalIndex = $this->input->post('0[totalIndex]');
-	// 	$kode_registrasi = $this->input->post('0[kode_registrasi]');
+	// 	$no_permohonan = $this->input->post('0[no_permohonan]');
 	// 	$id_customer = $this->input->post('0[id_customer]');
 	// 	$tgl_kirim = $this->input->post('0[tgl_kirim]');
 	// 	$jenis_sample = $this->input->post('0[jenis_sample]');
@@ -117,7 +117,7 @@ class Permohonan extends CI_Controller {
 	// 	$penyimpanan = $this->input->post('0[penyimpanan]');
 	// 	$keterangan_sample = $this->input->post('0[keterangan_sample]');
 
-	// 	$data = array('kode_registrasi' => $kode_registrasi,
+	// 	$data = array('no_permohonan' => $no_permohonan,
 	// 				  'id_user'			=> $this->session->userdata('id_user'),
 	// 				  'id_customer'		=> $id_customer,
 	// 				  'tgl_kirim'		=> $tgl_kirim,
@@ -133,7 +133,7 @@ class Permohonan extends CI_Controller {
 	// 		for ($index=1; $index <= $totalIndex; $index++) { 
 	// 			$jenis_analisa = $index.'[jenis_analisa]';
 	// 			$metode_analisa = $index.'[metode_analisa]';
-	// 			$dataDetail[] = array('kode_registrasi' 	=> $kode_registrasi,
+	// 			$dataDetail[] = array('no_permohonan' 	=> $no_permohonan,
 	// 								'id_user'			=> $this->session->userdata('id_user'),
 	// 								'id_jenis_analisa' 	=> $this->input->post($jenis_analisa),
 	// 								'id_metode_analisa'	=> $this->input->post($metode_analisa),
@@ -165,13 +165,13 @@ class Permohonan extends CI_Controller {
         $no=1; 
         foreach($fetch_data as $row)  
         {  
-        	$kode_registrasi = base64_encode($row->kode_registrasi);
-        	$urlKode = urlencode($kode_registrasi);
+        	$no_permohonan = base64_encode($row->no_permohonan);
+        	$urlKode = urlencode($no_permohonan);
         	// $disabled = ($row->status =='0') ? '' : 'disabled';
         	$action = $this->buttonAction($row->status);
             $sub_array = array(); 
             $sub_array[] = $no;               
-            $sub_array[] = '<a href="'.base_url('permohonan/detailPermohonan/').$urlKode.'">'.$row->kode_registrasi.'</a>';               
+            $sub_array[] = '<a href="'.base_url('permohonan/detailPermohonan/').$urlKode.'">'.$row->no_permohonan.'</a>';               
             $sub_array[] = $row->tgl_kirim;  
             $sub_array[] = $row->jenis_sample;
             $sub_array[] = '<span class="badge '.$row->class_color.'target="_blank"">'.$row->keterangan.'</span>';
@@ -223,10 +223,10 @@ class Permohonan extends CI_Controller {
 	}
 
 	public function appPenawaran(){
-		$kode_registrasi = $this->input->post('kode_registrasi');
+		$no_permohonan = $this->input->post('no_permohonan');
 		$action = $this->input->post('action');
 		$status = ($action == 'approved') ? ('2') : ('20');
-		$data = array('kode_registrasi' => $kode_registrasi,
+		$data = array('no_permohonan' => $no_permohonan,
 					  'status' 	=> $status);
 		$result = $this->permohonan_model->editpermohonan($data);
 		
@@ -234,11 +234,11 @@ class Permohonan extends CI_Controller {
 	}
 
 	public function kirimResi(){
-		$kode_registrasi = $this->input->post('kode_registrasi');
+		$no_permohonan = $this->input->post('no_permohonan');
 		$tgl_kirim = $this->input->post('tgl_kirim');
 		$no_resi = $this->input->post('no_resi');
 
-		$data = array('kode_registrasi' => base64_decode($kode_registrasi),
+		$data = array('no_permohonan' => base64_decode($no_permohonan),
 					  'tgl_kirim' 		=> $tgl_kirim,
 					  'no_resi'			=> $no_resi,
 					  'status'			=> '1'
@@ -247,10 +247,10 @@ class Permohonan extends CI_Controller {
 		echo json_encode($result);
 	}
 
-	public function detailPermohonan($kode_registrasi){
-		$kode_registrasi = base64_decode(urldecode($kode_registrasi));
-		$dataPermohonan = $this->permohonan_model->permohonanByID($kode_registrasi);
-		$detailPermohonan = $this->permohonan_model->detailPermohonanByID($kode_registrasi);
+	public function detailPermohonan($no_permohonan){
+		$no_permohonan = base64_decode(urldecode($no_permohonan));
+		$dataPermohonan = $this->permohonan_model->permohonanByID($no_permohonan);
+		$detailPermohonan = $this->permohonan_model->detailPermohonanByID($no_permohonan);
 		$data = array('title' => 'Detail Permohonan',
 					  'dataPermohonan' => $dataPermohonan,
 					  'detailPermohonan' => $detailPermohonan,
@@ -267,12 +267,12 @@ class Permohonan extends CI_Controller {
         	$disabled = ($row->status == '0') ? ('') :('disabled');  
             $sub_array = array();
             $sub_array[] = $no;                
-            $sub_array[] = '<a href="'.base_url('admin/detailPermohonan/').generateUrl($row->kode_registrasi).'">'.$row->kode_registrasi.'</a>'; 
+            $sub_array[] = '<a href="'.base_url('admin/detailPermohonan/').generateUrl($row->no_permohonan).'">'.$row->no_permohonan.'</a>'; 
             $sub_array[] = $row->jenis_sample;
             $sub_array[] = $row->jml_sample;
             $sub_array[] = $row->nama_customer;
             $sub_array[] = '<span class="badge '.$row->class_color.'">'.$row->keterangan.'</span>';
-            $sub_array[] = '<a href="'.base_url('admin/penawaran/').generateUrl($row->kode_registrasi).'" class="btn btn-primary btn-sm '.$disabled.'">Penawaran</a>';
+            $sub_array[] = '<a href="'.base_url('admin/penawaran/').generateUrl($row->no_permohonan).'" class="btn btn-primary btn-sm '.$disabled.'">Penawaran</a>';
             $data[] = $sub_array;
             $no++;  
         }  
@@ -286,15 +286,15 @@ class Permohonan extends CI_Controller {
 	}
 
 	public function saveAnalist(){
-		$kode_registrasi = $this->input->post('0[kode_registrasi]');
+		$no_permohonan = $this->input->post('0[no_permohonan]');
 		$tgl_terima_sample = $this->input->post('0[tgl_terima_sample]');
 		$tgl_perkiraan_selesai = $this->input->post('0[tgl_perkiraan_selesai]');
 		$kode_sample = $this->input->post('0[kode_sample]');
 		$kode_order = $this->input->post('0[kode_order]');
 
-		$detailPermohonan = $this->permohonan_model->detailPermohonanByID($kode_registrasi);
+		$detailPermohonan = $this->permohonan_model->detailPermohonanByID($no_permohonan);
 
-		$data = array('kode_registrasi' 	=> $kode_registrasi,
+		$data = array('no_permohonan' 	=> $no_permohonan,
 					  'tgl_terima_sample'	=> $tgl_terima_sample,
 					  'tgl_perkiraan_selesai' => $tgl_perkiraan_selesai,
 					  'kode_sample'			=> $kode_sample,
@@ -332,7 +332,7 @@ class Permohonan extends CI_Controller {
 		$suratPermohonan = str_replace(['{base_url}', '{title}','{date}'],[base_url(),'Blanko Permohonan', dateDefault(date('Y-m-d'))],$tempSurat->template_surat);
 
 		$data = $this->permohonan_model->getPermohonanBYorder($kode_order);
-		$detail = $this->permohonan_model->detailPermohonanByID($data->kode_registrasi);
+		$detail = $this->permohonan_model->detailPermohonanByID($data->no_permohonan);
 		$dataKalab = $this->permohonan_model->getKalab();
 
 		$find = ['{kode_order}','{tgl_terima_sample}','{tgl_perkiraan_selesai}','{nama_pemohon}','{alamat}','{no_telp}','{jenis_sample}','{kode_sample}','{jml_sample}','{penyimpanan}','{keterangan_sample}','{nip}', '{kalab}'];
@@ -388,12 +388,12 @@ class Permohonan extends CI_Controller {
 	}
 
 	public function simpanPenawaran(){
-		$kode_registrasi = $this->input->post('kode_registrasi');
+		$no_permohonan = $this->input->post('no_permohonan');
 		$total_harga = $this->input->post('total_harga');
 		$total_harga = (int) str_replace('.', '', $total_harga);
 		$data = $this->input->post('data');
 
-		$updatePermohonan = array('kode_registrasi' => $kode_registrasi,
+		$updatePermohonan = array('no_permohonan' => $no_permohonan,
 								  'total_harga'	=> $total_harga,
 								  'status'		=> '1'
 								);

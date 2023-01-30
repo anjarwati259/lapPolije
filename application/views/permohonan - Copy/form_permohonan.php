@@ -8,9 +8,9 @@
 	              	<div class="col-md-6">
 	              		<form>
 			                <div class="row mb-3">
-			                  <label for="kode_registrasi" class="col-sm-4 col-form-label">Kode Registrasi</label>
+			                  <label for="no_permohonan" class="col-sm-4 col-form-label">Kode Registrasi</label>
 			                  <div class="col-sm-8">
-			                    <input type="text" value="<?= $kode_registrasi ?>" class="form-control" id="kode_registrasi" readOnly>
+			                    <input type="text" value="<?= $no_permohonan ?>" class="form-control" id="no_permohonan" readOnly>
 			                  </div>
 			                </div>
 			                <div class="row mb-3">

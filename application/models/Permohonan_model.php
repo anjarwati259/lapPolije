@@ -42,15 +42,15 @@ class Permohonan_model extends CI_Model
 	private function getKodeRegistrasi($kode){
 		$this->db->select('*');
 		$this->db->from('tb_permohonan');
-		$this->db->where('kode_registrasi', $kode);
+		$this->db->where('no_permohonan', $kode);
 		$query = $this->db->get()->row();
-		return $query->kode_registrasi;
+		return $query->no_permohonan;
 	}
 
 	public function insertPermohonan($data){
 		$this->db->insert('tb_permohonan', $data);
-		$kode_registrasi = $this->getKodeRegistrasi($data['kode_registrasi']);
-		return $kode_registrasi;
+		$no_permohonan = $this->getKodeRegistrasi($data['no_permohonan']);
+		return $no_permohonan;
 	}
 
 	public function insertDetailpermohonan($data){
@@ -67,7 +67,7 @@ class Permohonan_model extends CI_Model
        	$this->db->or_where('tb_permohonan.status =','1');  
        	if(!empty($_POST["search"]["value"]))  
        	{  
-            $this->db->like("tb_permohonan.kode_registrasi", $_POST["search"]["value"]);  
+            $this->db->like("tb_permohonan.no_permohonan", $_POST["search"]["value"]);  
             $this->db->like("tb_permohonan.jenis_sample", $_POST["search"]["value"]); 
        	}  
        	if(!empty($_POST["order"]))  
@@ -95,7 +95,7 @@ class Permohonan_model extends CI_Model
        	// $this->db->where('tb_permohonan.status !=','7'); 
        	if(!empty($_POST["search"]["value"]))  
        	{  
-            $this->db->like("tb_permohonan.kode_registrasi", $_POST["search"]["value"]);  
+            $this->db->like("tb_permohonan.no_permohonan", $_POST["search"]["value"]);  
             $this->db->like("tb_permohonan.jenis_sample", $_POST["search"]["value"]); 
        	}  
        	if(!empty($_POST["order"]))  
@@ -118,7 +118,7 @@ class Permohonan_model extends CI_Model
 	public function editpermohonan($data){
 		try {
 	        $this->db->trans_begin();
-	        $this->db->where('kode_registrasi', $data['kode_registrasi']);
+	        $this->db->where('no_permohonan', $data['no_permohonan']);
 			$this->db->update('tb_permohonan',$data);
 
 	        $db_error = $this->db->error();
@@ -138,24 +138,24 @@ class Permohonan_model extends CI_Model
 	    return $result;
 	}
 
-	public function permohonanByID($kode_registrasi){
+	public function permohonanByID($no_permohonan){
 		$this->db->select('tb_permohonan.*, tb_status.keterangan, tb_status.class_color, tb_customer.nama_customer, tb_customer.no_telp, tb_customer.email, tb_customer.alamat');
 		$this->db->from('tb_permohonan');
 		$this->db->join('tb_status','tb_status.status = tb_permohonan.status', 'left');
 		$this->db->join('tb_customer','tb_customer.id = tb_permohonan.id_customer', 'left');
-		$this->db->where('kode_registrasi', $kode_registrasi);
+		$this->db->where('no_permohonan', $no_permohonan);
 		$query = $this->db->get();
 		return $query->row();
 	}
 
-	public function detailPermohonanByID($kode_registrasi){
+	public function detailPermohonanByID($no_permohonan){
 		$this->db->select('tb_detail_permohonan.*, tb_jenis_analisa.jenis_analisa, tb_metode_analisa.metode_analisa, tb_pegawai.nama_pegawai, tb_metode_analisa.harga');
 		$this->db->from('tb_detail_permohonan');
 		$this->db->join('tb_jenis_analisa','tb_jenis_analisa.id = tb_detail_permohonan.id_jenis_analisa', 'left');
 		$this->db->join('tb_metode_analisa','tb_metode_analisa.id = tb_detail_permohonan.id_metode_analisa', 'left');
 		$this->db->join('tb_analist','tb_analist.id = tb_detail_permohonan.id_analist', 'left');
 		$this->db->join('tb_pegawai','tb_pegawai.id = tb_analist.id_pegawai', 'left');
-		$this->db->where('kode_registrasi', $kode_registrasi);
+		$this->db->where('no_permohonan', $no_permohonan);
 		$query = $this->db->get();
 		return $query->result();
 	}
@@ -187,10 +187,10 @@ class Permohonan_model extends CI_Model
 		$this->db->insert('tb_daftar_dokumen', $data);
 	}
 
-	public function getKodeSample($kode_registrasi){
+	public function getKodeSample($no_permohonan){
 		$this->db->select('*');
 		$this->db->from('tb_permohonan');
-		$this->db->where('kode_registrasi', $kode_registrasi);
+		$this->db->where('no_permohonan', $no_permohonan);
 		$query = $this->db->get()->row();
 		return $query->kode_sample;
 	}
@@ -227,7 +227,7 @@ class Permohonan_model extends CI_Model
 	public function getDetail($kode_surat){
 		$this->db->select('a.*,b.jenis_sample, b.jml_sample, c.jenis_analisa, d.metode_analisa');
 		$this->db->from('tb_detail_permohonan a');
-		$this->db->join('tb_permohonan b','b.kode_registrasi = a.kode_registrasi', 'left');
+		$this->db->join('tb_permohonan b','b.no_permohonan = a.no_permohonan', 'left');
 		$this->db->join('tb_jenis_analisa c','c.id = a.id_jenis_analisa', 'left');
 		$this->db->join('tb_metode_analisa d','d.id = a.id_metode_analisa', 'left');
 		$this->db->where('a.surat_tugas', $kode_surat);
@@ -235,11 +235,11 @@ class Permohonan_model extends CI_Model
 		return $query->row();
 	}
 
-	public function getTotal($kode_registrasi){
+	public function getTotal($no_permohonan){
 		$this->db->select('SUM(tb_metode_analisa.harga) as total');
 		$this->db->from('tb_detail_permohonan');
 		$this->db->join('tb_metode_analisa','tb_metode_analisa.id = tb_detail_permohonan.id_metode_analisa', 'left');
-		$this->db->where('tb_detail_permohonan.kode_registrasi', $kode_registrasi);
+		$this->db->where('tb_detail_permohonan.no_permohonan', $no_permohonan);
 		$query = $this->db->get();
 		return $query->row();
 	}
