@@ -31,6 +31,25 @@ class Admin extends CI_Controller {
                       'isi' => 'permohonan/data_permohonan' );
         $this->load->view('layout/wrapper',$data, FALSE);
 	}
+	public function penawaran($kode_registrasi)
+	{
+		$kode_registrasi = base64_decode(urldecode($kode_registrasi));
+		$dataPermohonan = $this->permohonan_model->permohonanByID($kode_registrasi);
+		$detailPermohonan = $this->permohonan_model->detailPermohonanByID($kode_registrasi);
+		$totalHarga = $this->permohonan_model->getTotal($kode_registrasi);
+		$data = array('title' => 'Form Penawaran',
+					  'dataPermohonan' => $dataPermohonan,
+					  'detailPermohonan' => $detailPermohonan,
+					  'totalHarga' => $totalHarga->total,
+                      'isi' => 'penawaran/form_penawaran' );
+        $this->load->view('layout/wrapper',$data, FALSE);
+	}
+
+	public function loaddatapmn(){
+		$data = array('title' => 'Data Permohonan',
+						'dataAnalist' => array());
+        $this->load->view('permohonan/permintaan_permohonan',$data, FALSE);
+	}
 	public function detailPermohonan($kode_registrasi)
 	{
 		$kode_registrasi = base64_decode(urldecode($kode_registrasi));

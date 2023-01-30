@@ -82,3 +82,13 @@ function generateSuratTugas(){
 	$result = array('no_surat' => $no_surat, 'surat_tugas' => $surat_tugas);
 	return $result;
 }
+
+function generateNomorSample($kode_registrasi, $no_sample){
+	$kode = substr($kode_registrasi,0,4);
+	$result = $kode.'-'.$no_sample;
+	return $result;
+}
+
+// function hitungTotalHarga($kode_registrasi){
+// 	$tempNomor = $CI->permohonan_model->getTotal($kode_registrasi);
+// }

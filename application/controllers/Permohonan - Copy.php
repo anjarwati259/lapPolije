@@ -49,8 +49,7 @@ class Permohonan extends CI_Controller {
 			}
 		}else if($type == 'add'){
 			$index	= $this->input->post('index');
-			$idtable = $this->input->post('idtable');
-			$dataHtml = '<select name="jenis_analisa'.$index.'" id="jenis_analisa'.$index.'" class="form-select" onchange="setMetode('.$idtable.','.$index.')">';
+			$dataHtml = '<select name="jenis_analisa'.$index.'" id="jenis_analisa'.$index.'" class="form-select" onchange="setMetode('.$index.')">';
 			foreach ($jenis_analisa as $key => $value) {
 				$dataHtml .= "<option value='$value->id'>$value->jenis_analisa</option>";
 			}
@@ -62,6 +61,7 @@ class Permohonan extends CI_Controller {
 	public function simpanPermohonan(){
 		$action = $this->input->post('action');
 		$status = ($action == 'submit') ? '0' : '5';
+		$totalIndex = $this->input->post('0[totalIndex]');
 		$kode_registrasi = $this->input->post('0[kode_registrasi]');
 		$id_customer = $this->input->post('0[id_customer]');
 		$tgl_kirim = $this->input->post('0[tgl_kirim]');
@@ -83,74 +83,27 @@ class Permohonan extends CI_Controller {
 		$result = $this->permohonan_model->insertPermohonan($data);
 		if(!empty($result)){
 			$dataDetail =[];
-			for ($i=1; $i <= $jml_sample ; $i++) { 
-				$data = $this->input->post($i);
-				foreach ($data as $key => $value) {
-					$dataDetail[] = array('id_jenis_analisa' => $value['jenis_analisa'],
-										'id_metode_analisa' => $value['metode_analisa'],
-										'id_user' => $this->session->userdata('id_user'),
-										'id_sampel' => $i,
-										'kode_registrasi' 	=> $kode_registrasi,
-										'created_at' 		=> date('Y-m-d H:i:sa')
-									);
-				}
+			for ($index=1; $index <= $totalIndex; $index++) { 
+				$jenis_analisa = $index.'[jenis_analisa]';
+				$metode_analisa = $index.'[metode_analisa]';
+				$dataDetail[] = array('kode_registrasi' 	=> $kode_registrasi,
+									'id_user'			=> $this->session->userdata('id_user'),
+									'id_jenis_analisa' 	=> $this->input->post($jenis_analisa),
+									'id_metode_analisa'	=> $this->input->post($metode_analisa),
+									'created_at' 		=> date('Y-m-d H:i:sa')
+								);
+
 			}
 			$this->permohonan_model->insertDetailpermohonan($dataDetail);
 			$return = array('status' => 'success',
 							'message' => 'Data Permohoan Berhasil Disimpan');
+
 		}else{
 			$return = array('status' => 'error',
 							'message' => 'Data Permohoan Tidak Berhasil Disimpan');
 		}
 		echo json_encode($return);
 	}
-
-	// public function simpanPermohonan1(){
-	// 	$action = $this->input->post('action');
-	// 	$status = ($action == 'submit') ? '0' : '5';
-	// 	$totalIndex = $this->input->post('0[totalIndex]');
-	// 	$kode_registrasi = $this->input->post('0[kode_registrasi]');
-	// 	$id_customer = $this->input->post('0[id_customer]');
-	// 	$tgl_kirim = $this->input->post('0[tgl_kirim]');
-	// 	$jenis_sample = $this->input->post('0[jenis_sample]');
-	// 	$jml_sample = $this->input->post('0[jml_sample]');
-	// 	$penyimpanan = $this->input->post('0[penyimpanan]');
-	// 	$keterangan_sample = $this->input->post('0[keterangan_sample]');
-
-	// 	$data = array('kode_registrasi' => $kode_registrasi,
-	// 				  'id_user'			=> $this->session->userdata('id_user'),
-	// 				  'id_customer'		=> $id_customer,
-	// 				  'tgl_kirim'		=> $tgl_kirim,
-	// 				  'jenis_sample'	=> $jenis_sample,
-	// 				  'jml_sample'		=> $jml_sample,
-	// 				  'penyimpanan'		=> $penyimpanan,
-	// 				  'keterangan_sample' => $keterangan_sample,
-	// 				  'status'			=> $status
-	// 				);
-	// 	$result = $this->permohonan_model->insertPermohonan($data);
-	// 	if(!empty($result)){
-	// 		$dataDetail =[];
-	// 		for ($index=1; $index <= $totalIndex; $index++) { 
-	// 			$jenis_analisa = $index.'[jenis_analisa]';
-	// 			$metode_analisa = $index.'[metode_analisa]';
-	// 			$dataDetail[] = array('kode_registrasi' 	=> $kode_registrasi,
-	// 								'id_user'			=> $this->session->userdata('id_user'),
-	// 								'id_jenis_analisa' 	=> $this->input->post($jenis_analisa),
-	// 								'id_metode_analisa'	=> $this->input->post($metode_analisa),
-	// 								'created_at' 		=> date('Y-m-d H:i:sa')
-	// 							);
-
-	// 		}
-	// 		$this->permohonan_model->insertDetailpermohonan($dataDetail);
-	// 		$return = array('status' => 'success',
-	// 						'message' => 'Data Permohoan Berhasil Disimpan');
-
-	// 	}else{
-	// 		$return = array('status' => 'error',
-	// 						'message' => 'Data Permohoan Tidak Berhasil Disimpan');
-	// 	}
-	// 	echo json_encode($return);
-	// }
 
 	public function riwayatPermohonan(){
 		$data = array('title' => 'Riwayat Permohonan',
@@ -160,22 +113,21 @@ class Permohonan extends CI_Controller {
 	}
 
 	public function getDatapermohonan(){
-		$fetch_data = $this->permohonan_model->getRiwayatPermohonan();  
+		$fetch_data = $this->permohonan_model->getDatapermohonan();  
         $data = array(); 
         $no=1; 
         foreach($fetch_data as $row)  
         {  
         	$kode_registrasi = base64_encode($row->kode_registrasi);
         	$urlKode = urlencode($kode_registrasi);
-        	// $disabled = ($row->status =='0') ? '' : 'disabled';
-        	$action = $this->buttonAction($row->status);
+        	$disabled = ($row->status =='0') ? '' : 'disabled';
             $sub_array = array(); 
             $sub_array[] = $no;               
             $sub_array[] = '<a href="'.base_url('permohonan/detailPermohonan/').$urlKode.'">'.$row->kode_registrasi.'</a>';               
             $sub_array[] = $row->tgl_kirim;  
             $sub_array[] = $row->jenis_sample;
             $sub_array[] = '<span class="badge '.$row->class_color.'target="_blank"">'.$row->keterangan.'</span>';
-            $sub_array[] = '<button type="button" class="btn btn-primary btn-sm" '.$action['disabled'].' data-bs-toggle="modal" data-bs-target="#'.$action['modal'].'" onclick="action(\''.$urlKode.'\',\''.$action['action'].'\')">'.$action['label'].'</button>';
+            $sub_array[] = '<button type="button" class="btn btn-primary btn-sm" '.$disabled.' data-bs-toggle="modal" data-bs-target="#largeModal" onclick="kirimSampel(\''.$kode_registrasi.'\')">Kirim Sample</button>';
             $data[] = $sub_array;
             $no++;  
         }  
@@ -186,51 +138,6 @@ class Permohonan extends CI_Controller {
             "data"				=> $data  
         );  
         echo json_encode($output);
-	}
-
-	private function buttonAction($status){
-		// largeModal
-		if($status =='1'){
-			$result = array('action' => 'konfirmApproved',
-							'label' => 'Konfirmasi Penawaran',
-							'disabled' => '',
-							'modal' =>'default',
-							'invoice' =>'0'
-						);
-		}else if($status == '2'){
-			$result = array('action' => 'konfirmBayar',
-							'label' => 'Konfirmasi Bayar',
-							'disabled' => '',
-							'modal' =>'default',
-							'invoice' =>'1'
-						);
-		}else if($status == '21'){
-			$result = array('action' => 'batal',
-							'label' => 'Konfirmasi Bayar',
-							'disabled' => 'disabled',
-							'modal' =>'default',
-							'invoice' =>'0'
-						);
-		}else{
-			$result = array('action' => 'batal',
-							'label' => 'Konfirmasi Bayar',
-							'disabled' => 'disabled',
-							'modal' =>'default',
-							'invoice' =>'0'
-						);
-		}
-		return $result;
-	}
-
-	public function appPenawaran(){
-		$kode_registrasi = $this->input->post('kode_registrasi');
-		$action = $this->input->post('action');
-		$status = ($action == 'approved') ? ('2') : ('20');
-		$data = array('kode_registrasi' => $kode_registrasi,
-					  'status' 	=> $status);
-		$result = $this->permohonan_model->editpermohonan($data);
-		
-		echo json_encode($result);
 	}
 
 	public function kirimResi(){
@@ -263,16 +170,16 @@ class Permohonan extends CI_Controller {
         $data = array(); 
         $no=1; 
         foreach($fetch_data as $row)  
-        {
-        	$disabled = ($row->status == '0') ? ('') :('disabled');  
+        {  
             $sub_array = array();
             $sub_array[] = $no;                
-            $sub_array[] = '<a href="'.base_url('admin/detailPermohonan/').generateUrl($row->kode_registrasi).'">'.$row->kode_registrasi.'</a>'; 
+            $sub_array[] = '<a href="'.base_url('admin/detailPermohonan/').generateUrl($row->kode_registrasi).'">'.$row->kode_registrasi.'</a>';
+            $sub_array[] = '<a href="'.base_url('permohonan/cetakKode/').$row->kode_sample.'">'.$row->kode_sample.'</a>';; 
+            $sub_array[] = dateDefault($row->tgl_kirim); 
             $sub_array[] = $row->jenis_sample;
-            $sub_array[] = $row->jml_sample;
             $sub_array[] = $row->nama_customer;
             $sub_array[] = '<span class="badge '.$row->class_color.'">'.$row->keterangan.'</span>';
-            $sub_array[] = '<a href="'.base_url('admin/penawaran/').generateUrl($row->kode_registrasi).'" class="btn btn-primary btn-sm '.$disabled.'">Penawaran</a>';
+            $sub_array[] = '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#largeModal" onclick="kirimSampel(\''.generateUrl($row->kode_registrasi).'\')">Invoice</button>';
             $data[] = $sub_array;
             $no++;  
         }  
@@ -376,39 +283,5 @@ class Permohonan extends CI_Controller {
 						'isi' => $surat_tugas
 					);
         $this->load->view('permohonan/blanko_permohonan',$data, FALSE);
-	}
-
-	public function tambahFormAnalisa(){
-		$jml_sample = $this->input->post('jml_sample');
-		$jenis_analisa = $this->jenis_analisa_model->listJenisanalisa();
-		$data = array('jenis_analisa' => $jenis_analisa,
-					  'jml_sample' => $jml_sample
-					);
-		$this->load->view('permohonan/form_analisa',$data, FALSE);
-	}
-
-	public function simpanPenawaran(){
-		$kode_registrasi = $this->input->post('kode_registrasi');
-		$total_harga = $this->input->post('total_harga');
-		$total_harga = (int) str_replace('.', '', $total_harga);
-		$data = $this->input->post('data');
-
-		$updatePermohonan = array('kode_registrasi' => $kode_registrasi,
-								  'total_harga'	=> $total_harga,
-								  'status'		=> '1'
-								);
-		$dataUpdate = array();
-		foreach ($data as $key => $value) {
-			$harga = str_replace('.', '', $value['harga']);
-			$dataUpdate[] = array('id' => $value['id'],
-								  'harga_satuan' => (int) $harga
-							);
-		}
-		$result = $this->permohonan_model->updateBatchDetailPermohonan($dataUpdate);
-
-		if($result['status'] == 'success'){
-			$result = $this->permohonan_model->editpermohonan($updatePermohonan);
-		}
-		echo json_encode($result);
 	}
 }

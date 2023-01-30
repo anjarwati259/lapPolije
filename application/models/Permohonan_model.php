@@ -62,7 +62,9 @@ class Permohonan_model extends CI_Model
        	$this->db->from('tb_permohonan');
        	$this->db->join('tb_status','tb_status.status = tb_permohonan.status', 'left');
        	$this->db->join('tb_customer','tb_customer.id = tb_permohonan.id_customer', 'left');
-       	$this->db->where('tb_permohonan.status !=','7');  
+       	// $this->db->where('tb_permohonan.status !=','7');  
+       	$this->db->or_where('tb_permohonan.status =','0');  
+       	$this->db->or_where('tb_permohonan.status =','1');  
        	if(!empty($_POST["search"]["value"]))  
        	{  
             $this->db->like("tb_permohonan.kode_registrasi", $_POST["search"]["value"]);  
@@ -70,7 +72,36 @@ class Permohonan_model extends CI_Model
        	}  
        	if(!empty($_POST["order"]))  
        	{  
-            // $this->db->order_by($this->order_column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);  
+            // $this->db->order_by($this->order_column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']); 
+            $this->db->order_by('tb_permohonan.update_at', 'DESC'); 
+       	}  
+       	else  
+       	{  
+            $this->db->order_by('tb_permohonan.update_at', 'DESC');  
+       	}  
+       	if($_POST["length"] != -1)  
+        {  
+            $this->db->limit($_POST['length'], $_POST['start']);  
+        }  
+        $query = $this->db->get();  
+        return $query->result();
+	}
+
+	public function getRiwayatPermohonan(){
+		$this->db->select('tb_permohonan.*, tb_status.keterangan, tb_status.class_color, tb_customer.nama_customer');  
+       	$this->db->from('tb_permohonan');
+       	$this->db->join('tb_status','tb_status.status = tb_permohonan.status', 'left');
+       	$this->db->join('tb_customer','tb_customer.id = tb_permohonan.id_customer', 'left');
+       	// $this->db->where('tb_permohonan.status !=','7'); 
+       	if(!empty($_POST["search"]["value"]))  
+       	{  
+            $this->db->like("tb_permohonan.kode_registrasi", $_POST["search"]["value"]);  
+            $this->db->like("tb_permohonan.jenis_sample", $_POST["search"]["value"]); 
+       	}  
+       	if(!empty($_POST["order"]))  
+       	{  
+            // $this->db->order_by($this->order_column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']); 
+            $this->db->order_by('tb_permohonan.update_at', 'DESC'); 
        	}  
        	else  
        	{  
@@ -108,7 +139,7 @@ class Permohonan_model extends CI_Model
 	}
 
 	public function permohonanByID($kode_registrasi){
-		$this->db->select('tb_permohonan.*, tb_status.keterangan, tb_status.class_color, tb_customer.nama_customer, tb_customer.no_telp');
+		$this->db->select('tb_permohonan.*, tb_status.keterangan, tb_status.class_color, tb_customer.nama_customer, tb_customer.no_telp, tb_customer.email, tb_customer.alamat');
 		$this->db->from('tb_permohonan');
 		$this->db->join('tb_status','tb_status.status = tb_permohonan.status', 'left');
 		$this->db->join('tb_customer','tb_customer.id = tb_permohonan.id_customer', 'left');
@@ -118,7 +149,7 @@ class Permohonan_model extends CI_Model
 	}
 
 	public function detailPermohonanByID($kode_registrasi){
-		$this->db->select('tb_detail_permohonan.*, tb_jenis_analisa.jenis_analisa, tb_metode_analisa.metode_analisa, tb_pegawai.nama_pegawai');
+		$this->db->select('tb_detail_permohonan.*, tb_jenis_analisa.jenis_analisa, tb_metode_analisa.metode_analisa, tb_pegawai.nama_pegawai, tb_metode_analisa.harga');
 		$this->db->from('tb_detail_permohonan');
 		$this->db->join('tb_jenis_analisa','tb_jenis_analisa.id = tb_detail_permohonan.id_jenis_analisa', 'left');
 		$this->db->join('tb_metode_analisa','tb_metode_analisa.id = tb_detail_permohonan.id_metode_analisa', 'left');
@@ -174,7 +205,7 @@ class Permohonan_model extends CI_Model
 	}
 
 	public function getPermohonanBYorder($kode_order){
-		$this->db->select('tb_permohonan.*, tb_status.keterangan, tb_status.class_color, tb_customer.nama_customer, tb_customer.no_telp, tb_customer.alamat');
+		$this->db->select('tb_permohonan.*, tb_status.keterangan, tb_status.class_color, tb_customer.nama_customer, tb_customer.no_telp, tb_customer.alamat, tb_customer.email, tb_customer.alamat');
 		$this->db->from('tb_permohonan');
 		$this->db->join('tb_status','tb_status.status = tb_permohonan.status', 'left');
 		$this->db->join('tb_customer','tb_customer.id = tb_permohonan.id_customer', 'left');
@@ -202,5 +233,37 @@ class Permohonan_model extends CI_Model
 		$this->db->where('a.surat_tugas', $kode_surat);
 		$query = $this->db->get();
 		return $query->row();
+	}
+
+	public function getTotal($kode_registrasi){
+		$this->db->select('SUM(tb_metode_analisa.harga) as total');
+		$this->db->from('tb_detail_permohonan');
+		$this->db->join('tb_metode_analisa','tb_metode_analisa.id = tb_detail_permohonan.id_metode_analisa', 'left');
+		$this->db->where('tb_detail_permohonan.kode_registrasi', $kode_registrasi);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function updateBatchDetailPermohonan($data){
+		
+		try {
+	        $this->db->trans_begin();
+	        $this->db->update_batch('tb_detail_permohonan',$data, 'id');
+
+	        $db_error = $this->db->error();
+	        if (!empty($db_error['message'])) {
+	            throw new Exception($db_error['message']);
+	        }
+	        $this->db->trans_commit();
+	        $result = array('status' => 'success',
+	    					'message' => 'Data Berhasil Disimpan',
+	    					'atribute' => '');
+	    }catch (Exception $e) {
+	    	$this->db->trans_rollback();
+	    	$result = array('status' => 'error',
+	    					'message' => $e->getMessage(),
+	    					'atribute' => '');
+	    }
+	    return $result; 
 	}
 }

@@ -117,13 +117,6 @@
         });
     }
 
-    function action(kode_registrasi, action){
-        if(action == 'konfirmApproved'){
-            var url = "<?php echo base_url('admin/penawaran/'); ?>"+kode_registrasi;
-            window.location.replace(url);
-        }
-    }
-
     function kirimSampel(kode){
         var kode_registrasi = atob(kode);
         $('#judul-kode').html('Kode #'+kode_registrasi);

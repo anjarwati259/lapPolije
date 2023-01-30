@@ -104,43 +104,33 @@
       
     </div>
 
-<!-- for ($i=1; $i <= $dataPermohonan->jml_sample; $i++) { 
-      echo "baris\n".$i;
-      foreach ($detailPermohonan as $key => $value) {
-        if($value->no_sampel == $i){
-          echo $value->metode_analisa."\n";
-        }
-      }
-    }exit; -->
+
     <div class="col-lg-12">
-      <h5 class="card-title">Informasi Analisa Sample</h5>
-      <?php for ($no_sampel=1; $no_sampel <= $dataPermohonan->jml_sample; $no_sampel++){ ?>
-        <div class="card border-secondary">
-          <h5 class="card-header"><b>Analisa Sample <?= $no_sampel; ?></b></h5>
-          <div class="card-body">
-            <table class="table table-striped" id="tbl-<?= $no_sampel; ?>">
-              <thead>
-                  <tr>
-                      <th scope="col">No</th>
-                      <th scope="col">Jenis Analisa</th>
-                      <th scope="col">Metode Analisa</th>
-                  </tr>
-              </thead>
-              <tbody style="border: none; border-color: #a6a8ab;">
-                <?php $no=1; foreach ($detailPermohonan as $key => $value) {
-                      if($value->id_sampel == $no_sampel){ 
-                  ?>
-                  <tr>
-                    <th><?= $no++; ?></th>
-                      <td><?= ($value->jenis_analisa) ? ($value->jenis_analisa) : '-' ?></td>
-                      <td><?= ($value->metode_analisa) ? ($value->metode_analisa) : '-' ?></td>
-                  </tr>
-                <?php } } ?>
-              </tbody>
-            </table>
-          </div>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Informasi Analisa Sample</h5>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">No</th>
+                <th scope="col">Jenis Analisa</th>
+                <th scope="col">Metode Analisa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php $no = 1; foreach ($detailPermohonan as $key => $value) {?>
+              <tr>
+                <th scope="row"><?= $no++ ?></th>
+                <td><?= ($value->jenis_analisa) ? ($value->jenis_analisa) : '-' ?></td>
+                <td><?= ($value->metode_analisa) ? ($value->metode_analisa) : '-' ?></td>
+              </tr>
+            <?php } ?>
+            </tbody>
+          </table>
+          <!-- End Tables without borders -->
+
         </div>
-      <?php } ?>
+      </div>
     </div>
   </div>
 </section>
