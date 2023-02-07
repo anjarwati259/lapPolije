@@ -71,7 +71,7 @@ class Permohonan extends CI_Controller {
 		$keterangan_sample = $this->input->post('0[keterangan_sample]');
 
 		$data = array('no_permohonan' => $no_permohonan,
-					  'id_user'			=> $this->session->userdata('id_user'),
+					  'created_by'			=> $this->session->userdata('id_user'),
 					  'id_customer'		=> $id_customer,
 					  'tgl_kirim'		=> $tgl_kirim,
 					  'jenis_sample'	=> $jenis_sample,
@@ -84,13 +84,19 @@ class Permohonan extends CI_Controller {
 		if(!empty($result)){
 			$dataDetail =[];
 			for ($i=1; $i <= $jml_sample ; $i++) { 
+				// var_dump($this->input->post('catatan['.$i.']'));
+				$catatan = array('no_sample' => $i,
+								 'catatan' => $this->input->post('catatan['.$i.']'),
+								 'created_at' => date('Y-m-d H:i:sa')
+								);
+				$id = $this->permohonan_model->insertcatatan($catatan);
 				$data = $this->input->post($i);
 				foreach ($data as $key => $value) {
 					$dataDetail[] = array('id_jenis_analisa' => $value['jenis_analisa'],
 										'id_metode_analisa' => $value['metode_analisa'],
 										'id_user' => $this->session->userdata('id_user'),
-										'id_sampel' => $i,
-										'no_permohonan' 	=> $no_permohonan,
+										'id_sampel' => $id,
+										'id_permohonan' 	=> $result,
 										'created_at' 		=> date('Y-m-d H:i:sa')
 									);
 				}
@@ -102,7 +108,7 @@ class Permohonan extends CI_Controller {
 			$return = array('status' => 'error',
 							'message' => 'Data Permohoan Tidak Berhasil Disimpan');
 		}
-		echo json_encode($return);
+		echo json_encode($return);exit;
 	}
 
 	// public function simpanPermohonan1(){
@@ -153,7 +159,9 @@ class Permohonan extends CI_Controller {
 	// }
 
 	public function riwayatPermohonan(){
+		$ekspedisi = $this->permohonan_model->getEkspedisi();
 		$data = array('title' => 'Riwayat Permohonan',
+					  'ekspedisi' => $ekspedisi,
 						'dataAnalist' => array(),
                       'isi' => 'permohonan/riwayat_permohonan');
         $this->load->view('layout/wrapper',$data, FALSE);
@@ -165,14 +173,14 @@ class Permohonan extends CI_Controller {
         $no=1; 
         foreach($fetch_data as $row)  
         {  
-        	$no_permohonan = base64_encode($row->no_permohonan);
-        	$urlKode = urlencode($no_permohonan);
+        	$id = base64_encode($row->id);
+        	$urlKode = urlencode($id);
         	// $disabled = ($row->status =='0') ? '' : 'disabled';
         	$action = $this->buttonAction($row->status);
             $sub_array = array(); 
             $sub_array[] = $no;               
             $sub_array[] = '<a href="'.base_url('permohonan/detailPermohonan/').$urlKode.'">'.$row->no_permohonan.'</a>';               
-            $sub_array[] = $row->tgl_kirim;  
+            $sub_array[] = dateDefault($row->tgl_kirim);  
             $sub_array[] = $row->jenis_sample;
             $sub_array[] = '<span class="badge '.$row->class_color.'target="_blank"">'.$row->keterangan.'</span>';
             $sub_array[] = '<button type="button" class="btn btn-primary btn-sm" '.$action['disabled'].' data-bs-toggle="modal" data-bs-target="#'.$action['modal'].'" onclick="action(\''.$urlKode.'\',\''.$action['action'].'\')">'.$action['label'].'</button>';
@@ -190,7 +198,14 @@ class Permohonan extends CI_Controller {
 
 	private function buttonAction($status){
 		// largeModal
-		if($status =='1'){
+		if($status == '0'){
+			$result = array('action' => 'konfirmApproved',
+							'label' => 'Konfirmasi Penawaran',
+							'disabled' => 'disabled',
+							'modal' =>'default',
+							'invoice' =>'0'
+						);
+		}else if($status =='1'){
 			$result = array('action' => 'konfirmApproved',
 							'label' => 'Konfirmasi Penawaran',
 							'disabled' => '',
@@ -201,7 +216,14 @@ class Permohonan extends CI_Controller {
 			$result = array('action' => 'konfirmBayar',
 							'label' => 'Konfirmasi Bayar',
 							'disabled' => '',
-							'modal' =>'default',
+							'modal' =>'konfirmBayar',
+							'invoice' =>'1'
+						);
+		}else if($status == '4'){
+			$result = array('action' => 'kirimSample',
+							'label' => 'Kirim Sample',
+							'disabled' => '',
+							'modal' =>'largeModal',
 							'invoice' =>'1'
 						);
 		}else if($status == '21'){
@@ -223,10 +245,18 @@ class Permohonan extends CI_Controller {
 	}
 
 	public function appPenawaran(){
-		$no_permohonan = $this->input->post('no_permohonan');
+		$id = $this->input->post('id');
 		$action = $this->input->post('action');
 		$status = ($action == 'approved') ? ('2') : ('20');
-		$data = array('no_permohonan' => $no_permohonan,
+		$invoice = generateKode('invoice',$id);
+		$dokument = array('id_permohonan' => $id,
+						  'type'		=> 'invoice',
+						  'kode_dokumen' => $invoice,
+						  'status'		=> '1',
+						  'created_at'	=> date('Y-m-d H:i:sa')
+						);
+		$this->permohonan_model->saveDokumen($dokument);
+		$data = array('id' => $id,
 					  'status' 	=> $status);
 		$result = $this->permohonan_model->editpermohonan($data);
 		
@@ -237,20 +267,22 @@ class Permohonan extends CI_Controller {
 		$no_permohonan = $this->input->post('no_permohonan');
 		$tgl_kirim = $this->input->post('tgl_kirim');
 		$no_resi = $this->input->post('no_resi');
+		$ekspedisi = $this->input->post('ekspedisi');
 
-		$data = array('no_permohonan' => base64_decode($no_permohonan),
-					  'tgl_kirim' 		=> $tgl_kirim,
-					  'no_resi'			=> $no_resi,
-					  'status'			=> '1'
+		$data = array('id'			=> base64_decode(urldecode($no_permohonan)),
+					  'tgl_kirim' 	=> $tgl_kirim,
+					  'no_resi'		=> $no_resi,
+					  'ekspedisi'	=> $ekspedisi,
+					  'status'		=> '5'
 					);
 		$result = $this->permohonan_model->editpermohonan($data);
 		echo json_encode($result);
 	}
 
-	public function detailPermohonan($no_permohonan){
-		$no_permohonan = base64_decode(urldecode($no_permohonan));
-		$dataPermohonan = $this->permohonan_model->permohonanByID($no_permohonan);
-		$detailPermohonan = $this->permohonan_model->detailPermohonanByID($no_permohonan);
+	public function detailPermohonan($id){
+		$id = base64_decode(urldecode($id));
+		$dataPermohonan = $this->permohonan_model->permohonanByID($id);
+		$detailPermohonan = $this->permohonan_model->detailPermohonanByID($id);
 		$data = array('title' => 'Detail Permohonan',
 					  'dataPermohonan' => $dataPermohonan,
 					  'detailPermohonan' => $detailPermohonan,
@@ -272,7 +304,61 @@ class Permohonan extends CI_Controller {
             $sub_array[] = $row->jml_sample;
             $sub_array[] = $row->nama_customer;
             $sub_array[] = '<span class="badge '.$row->class_color.'">'.$row->keterangan.'</span>';
-            $sub_array[] = '<a href="'.base_url('admin/penawaran/').generateUrl($row->no_permohonan).'" class="btn btn-primary btn-sm '.$disabled.'">Penawaran</a>';
+            $sub_array[] = '<a href="'.base_url('admin/penawaran/').generateUrl($row->id).'" class="btn btn-primary btn-sm '.$disabled.'">Penawaran</a>';
+            $data[] = $sub_array;
+            $no++;  
+        }  
+        $output = array(  
+            "draw"				=> intval($_POST["draw"]),  
+            "recordsTotal"		=> $this->datatables_model->get_all_data('tb_pegawai'),  
+            "recordsFiltered"	=> count($data),
+            "data"				=> $data  
+        );  
+        echo json_encode($output);
+	}
+
+	public function dataPenawaran(){
+		$fetch_data = $this->permohonan_model->getDatapenawaran();  
+        $data = array(); 
+        $no=1; 
+        foreach($fetch_data as $row)  
+        {
+        	$disabled = ($row->status == '3') ? ('') :('disabled');  
+            $sub_array = array();
+            $sub_array[] = $no;                
+            $sub_array[] = '<a href="'.base_url('admin/detailPermohonan/').generateUrl($row->no_penawaran).'">'.$row->no_penawaran.'</a>'; 
+            $sub_array[] = $row->jenis_sample;
+            $sub_array[] = $row->jml_sample;
+            $sub_array[] = $row->nama_customer;
+            $sub_array[] = '<span class="badge '.$row->class_color.'">'.$row->keterangan.'</span>';
+            $sub_array[] = '<a href="'.base_url('admin/konfirmBayar/').generateUrl($row->id).'" class="btn btn-primary btn-sm '.$disabled.'">Konfirmasi Bayar</a>';
+            $data[] = $sub_array;
+            $no++;  
+        }  
+        $output = array(  
+            "draw"				=> intval($_POST["draw"]),  
+            "recordsTotal"		=> $this->datatables_model->get_all_data('tb_pegawai'),  
+            "recordsFiltered"	=> count($data),
+            "data"				=> $data  
+        );  
+        echo json_encode($output);
+	}
+
+	public function dataPesanan(){
+		$fetch_data = $this->permohonan_model->getDatapesanan();  
+        $data = array(); 
+        $no=1; 
+        foreach($fetch_data as $row)  
+        {
+        	$disabled = ($row->status == '3') ? ('') :('disabled');  
+            $sub_array = array();
+            $sub_array[] = $no;                
+            $sub_array[] = '<a href="'.base_url('admin/detailPermohonan/').generateUrl($row->id).'">'.$row->no_pesanan.'</a>'; 
+            $sub_array[] = $row->jenis_sample;
+            $sub_array[] = $row->jml_sample;
+            $sub_array[] = $row->nama_customer;
+            $sub_array[] = '<span class="badge '.$row->class_color.'">'.$row->keterangan.'</span>';
+            $sub_array[] = '<a href="'.base_url('admin/konfirmBayar/').generateUrl($row->id).'" class="btn btn-primary btn-sm '.$disabled.'">Konfirmasi Bayar</a>';
             $data[] = $sub_array;
             $no++;  
         }  
@@ -286,44 +372,24 @@ class Permohonan extends CI_Controller {
 	}
 
 	public function saveAnalist(){
-		$no_permohonan = $this->input->post('0[no_permohonan]');
-		$tgl_terima_sample = $this->input->post('0[tgl_terima_sample]');
-		$tgl_perkiraan_selesai = $this->input->post('0[tgl_perkiraan_selesai]');
-		$kode_sample = $this->input->post('0[kode_sample]');
-		$kode_order = $this->input->post('0[kode_order]');
-
-		$detailPermohonan = $this->permohonan_model->detailPermohonanByID($no_permohonan);
-
-		$data = array('no_permohonan' 	=> $no_permohonan,
-					  'tgl_terima_sample'	=> $tgl_terima_sample,
-					  'tgl_perkiraan_selesai' => $tgl_perkiraan_selesai,
-					  'kode_sample'			=> $kode_sample,
-					  'kode_order'			=> $kode_order,
-					  'status'				=> '2'
-					);
-		$result = $this->permohonan_model->editpermohonan($data);
-		if($result['status'] == 'success'){
-			foreach ($detailPermohonan as $key => $value) {
-				$index = $key+1;
-				$id_detail = $index.'[id]';
-				$id_analist = $index.'[id_analist]';
-				$surat_tugas = generateSuratTugas();
-				$dataDetail = array('id' => $this->input->post($id_detail),
-									'id_analist' => $this->input->post($id_analist),
-									'no_surat'	=> $surat_tugas['no_surat'],
-									'surat_tugas' => $surat_tugas['surat_tugas']
-									);
-				$this->permohonan_model->addJmlAnalist($this->input->post($id_analist));
-				$this->permohonan_model->editDetailpermohonan($dataDetail);
-			}
-			$return = array('status' => 'success',
-							'message' => 'Data Permohoan Berhasil Disimpan');
-
-		}else{
-			$return = array('status' => 'error',
-							'message' => 'Data Permohoan Tidak Berhasil Disimpan');
+		$dataAnalist = $this->input->post('data');
+		$dataPermohonan = $this->input->post('dataPermohonan');
+		$sample = $this->input->post('sample');
+		$dataPermohonan['status'] = '6';
+		foreach ($sample as $key => $value) {
+			$no_blanko = generateKode('no_blanko',$value['id']);
+			$sample[$key]['no_blanko'] = $no_blanko;
 		}
-		echo json_encode($return);
+
+		$data = array('dataAnalist' => $dataAnalist,
+					  'dataSample' => $sample
+					);
+		$result = $this->permohonan_model->saveBatchPermohonan($data);
+		if($result['status'] == 'success'){
+			$result = $this->permohonan_model->editpermohonan($dataPermohonan);
+		}
+		echo json_encode($result);
+		// var_dump($result);
 	}
 
 	public function blankoPermohonan($kode_order){
@@ -388,12 +454,14 @@ class Permohonan extends CI_Controller {
 	}
 
 	public function simpanPenawaran(){
-		$no_permohonan = $this->input->post('no_permohonan');
+		$id_permohonan = $this->input->post('id');
+		$noPenawaran = generateKode('penawaran', $id_permohonan);
 		$total_harga = $this->input->post('total_harga');
 		$total_harga = (int) str_replace('.', '', $total_harga);
 		$data = $this->input->post('data');
 
-		$updatePermohonan = array('no_permohonan' => $no_permohonan,
+		$updatePermohonan = array('id' => $id_permohonan,
+								  'no_penawaran' => $noPenawaran,
 								  'total_harga'	=> $total_harga,
 								  'status'		=> '1'
 								);
@@ -409,6 +477,87 @@ class Permohonan extends CI_Controller {
 		if($result['status'] == 'success'){
 			$result = $this->permohonan_model->editpermohonan($updatePermohonan);
 		}
+		echo json_encode($result);
+	}
+
+	public function getDataBayar(){
+		$id_permohonan = $this->input->post('id');
+		$id = base64_decode(urldecode($id_permohonan));
+		$dataPermohonan = $this->permohonan_model->permohonanByID($id);
+		echo json_encode($dataPermohonan);
+	}
+
+	public function kirimBuktiBayar(){
+		$jml_bayar = $this->input->post('jml_bayar');
+		$tgl_bayar = $this->input->post('tgl_bayar');
+		$rekening = $this->input->post('rekening');
+		$id = $this->input->post('id');
+		$atas_nama = $this->input->post('atas_nama');
+		// upload gambar
+		$config['upload_path']="./upload"; //path folder file upload
+        $config['allowed_types']= 'gif|jpg|png|jpeg'; //type file yang boleh di upload
+        $config['encrypt_name'] = FALSE; //enkripsi file name upload
+        $config['max_size']			= '1000';//dalam kb
+		$config['max_width']		= '2024';
+		$config['max_height']		= '2024';
+        // var_dump($config);exit;
+         
+        $this->load->library('upload',$config); //call library upload 
+        if($this->upload->do_upload("bukti_bayar")){ //upload file
+            $data = array('upload_data' => $this->upload->data()); //ambil file name yang diupload
+ 
+            $judul= $this->input->post('judul'); //get judul image
+            $image= $data['upload_data']['file_name']; //set file name ke variable image
+            // $result= $this->m_upload->simpan_upload($judul,$image); //kirim value ke model m_upload
+            $data = array('id_permohonan' => $id,
+        				  'tgl_bayar' => $tgl_bayar,
+        				  'atas_nama' => $atas_nama,
+        				  'jml_bayar' => $jml_bayar,
+        				  'rekening' => $rekening,
+        				  'bukti_bayar' => $image,
+        				  'created_by'	=> $this->session->userdata('id_user'),
+        				  'created_at' => date('Y-m-d H:i:sa')
+
+        				);
+            $hasil = $this->permohonan_model->simpanBayar($data);
+            if($hasil['status'] == 'success'){
+            	$result = $this->permohonan_model->editpermohonan(array('id' =>$id, 'status' => '3'));
+            }else{
+            	$result = $hasil;
+            }
+        }else{
+        	$error = $this->upload->display_errors();
+        	$result = array('status' => 'error',
+        					'message' => $error);
+        }
+        echo json_encode($result);
+	}
+
+	public function bukti_bayar($bukti){
+		$bukti_bayar = base64_decode(urldecode($bukti));
+		$html = '<img style="display: block; margin-left: auto; margin-right: auto; max-height: 700px; max-width: 500px;" src="'.base_url().'upload/'.$bukti_bayar.'">';
+		echo $html;
+	}
+
+	public function appBayar(){
+		$id = $this->input->post('id');
+		$action = $this->input->post('action');
+
+		$no_pesanan = generateKode('pesanan', $id);
+		$status = ($action == 'approved') ? ('4') : ('22');
+		$data = array('id' => $id,
+					  'no_pesanan' => $no_pesanan,
+					  'status' => $status);
+
+		$kwitansi = generateKode('kwitansi', $id);
+		$dokument = array('id_permohonan' => $id,
+						  'type'	=> 'kwitansi',
+						  'kode_dokumen' => $kwitansi,
+						  'status'	=> '1',
+						  'created_at' => date('Y-m-d H:i:sa')
+						);
+		$this->permohonan_model->saveDokumen($dokument);
+		$result = $this->permohonan_model->editpermohonan($data);
 		echo json_encode($result);
 	}
 }

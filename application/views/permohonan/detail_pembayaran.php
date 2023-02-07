@@ -7,7 +7,11 @@
           <table class="table table-borderless">
             <tbody>
               <tr>
-                <input type="hidden" id="no_permohonan" value="<?= $dataPermohonan->no_permohonan ?>">
+                <th style="width: 250px;">Kode Permohonan</th>
+                <td>: <?= ($dataPermohonan->no_penawaran) ? ($dataPermohonan->no_permohonan) : ('-'); ?></td>
+              </tr>
+              <tr>
+                <input type="hidden" id="id_permohonan" value="<?= $dataPermohonan->id ?>">
                 <th style="width: 250px;">Kode Penawaran</th>
                 <td>: <?= ($dataPermohonan->no_penawaran) ? ($dataPermohonan->no_penawaran) : ($noPenawaran); ?></td>
               </tr>
@@ -80,7 +84,7 @@
       
     </div>
 
-    <div class="col-lg-12">
+    <!-- <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Informasi Analisa Sample</h5>
@@ -100,7 +104,7 @@
                 <th scope="row"><?= $no ?></th>
                 <td><?= ($value->jenis_analisa) ? ($value->jenis_analisa) : '-' ?></td>
                 <td><?= ($value->metode_analisa) ? ($value->metode_analisa) : '-' ?></td>
-                <td><?= generateNomorSample($dataPermohonan->no_permohonan, $value->no_sample) ?></td>
+                <td><?= generateNomorSample($dataPermohonan->no_permohonan, $value->id_sampel) ?></td>
                 <td id="harga" data-id ="<?= $value->id; ?>"><?= number_format($value->harga,0,',','.'); ?></td>
               </tr>
               <?php $no++;} ?>
@@ -108,104 +112,71 @@
             <tfoot>
             	<tr>
             		<th colspan="4" class="text-end">Total</th>
-            		<th id="total"><?= number_format($totalHarga,0,',','.'); ?></th>
+            		<th id="total"><?= number_format($dataPermohonan->total_harga,0,',','.'); ?></th>
             	</tr>
             </tfoot>
           </table>
+        </div>
+      </div>
+    </div> -->
 
-          <?php if($this->session->userdata('hak_akses')=="1"){ ?>
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Detail Pembayaran</h5>
+          <table class="table table-striped" id="tbl-penawaran">
+            <thead>
+              <tr>
+                <th scope="col">Tanggal Bayar</th>
+                <th scope="col">Rekening</th>
+                <th scope="col">Atas Nama</th>
+                <th scope="col">Jumlah Bayar (Rp.)</th>
+                <th scope="col">Dokumen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><?= dateDefault($dataBayar->tgl_bayar); ?></td>
+                <td><?= $dataBayar->rekening; ?></td>
+                <td><?= $dataBayar->atas_nama; ?></td>
+                <td><?= number_format($dataBayar->jml_bayar,0,',','.'); ?></td>
+                <td>
+                  1. <a href="<?= base_url('permohonan/bukti_bayar/').urlencode(base64_encode($dataBayar->bukti_bayar)) ?>" target="_blank">Bukti Bayar</a><br>
+                  2. <a href="#">Invoive</a><br>
+                  2. <a href="#">Kwitansi</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <div class="text-center group-button">
-            <button type="submit" class="btn btn-primary" onclick="simpan('submit')">Submit</button>
-            <button type="reset" class="btn btn-secondary" onclick="">Cancel</button>
+            <button type="button" class="btn btn-primary" onclick="AppBayar('approved')">Approved</button>
+            <button type="button" class="btn btn-danger" onclick="AppBayar('reject')">Reject</button>
           </div>
-      	  <?php }else{ ?>
-      	  	<div class="text-center group-button">
-	            <button type="button" class="btn btn-primary" onclick="konfirm('approved')">Approved</button>
-	            <button type="button" class="btn btn-danger" onclick="konfirm('reject')">Reject</button>
-	        </div>
-      	  <?php } ?>
         </div>
       </div>
     </div>
   </div>
 </section>
-<button type="button" class="btn btn-primary btn-approved" data-bs-toggle="modal" data-bs-target="#modal_approved">Approved</button>
-<div class="modal fade" id="modal_approved" tabindex="-1">
-	<div class="modal-dialog">
-	  <div class="modal-content">
-	    <div class="modal-header">
-	      <h5 class="modal-title">Basic Modal</h5>
-	      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	    </div>
-	    <div class="modal-body">
-	      Non omnis incidunt qui sed occaecati magni asperiores est mollitia. Soluta at et reprehenderit. Placeat autem numquam et fuga numquam. Tempora in facere consequatur sit dolor ipsum. Consequatur nemo amet incidunt est facilis. Dolorem neque recusandae quo sit molestias sint dignissimos.
-	    </div>
-	    <div class="modal-footer">
-	      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-	      <button type="button" class="btn btn-primary">Save changes</button>
-	    </div>
-	  </div>
-	</div>
-</div>
+
 <script type="text/javascript">
-	$('.btn-approved').click();
-	function simpan(action){
-		var data = {};
-		var id = '<?= $dataPermohonan->id ?>';id
-		var total_harga = $('#total').text();
-
-		data.id = id;
-		data.total_harga = total_harga;
-		dataharga = {}
-		$("#tbl-penawaran>tbody>tr").each(function(index, val){
-			var harga = $(this).find('#harga').text();
-			var id = $(this).find('#harga').attr("data-id");
-	        dataharga[index] = {['id']:id,
-	        					['harga']:harga}
-	    });
-	    data.data = dataharga;
-	    $.ajax({
-            type: 'POST',
-            url: "<?php echo base_url('permohonan/simpanPenawaran'); ?>",
-            data:data,
-            dataType : 'json',
-            success: function(hasil) {
-                console.log(hasil)
-                var url = "<?php echo base_url('admin/permohonan'); ?>";
-                if(hasil.status == 'success'){
-                    localStorage.setItem("success", JSON.stringify({['message']:hasil.message, ['tapid']:'pmn'}));
-                    window.location.replace(url);
-                }else{
-                    // localStorage.setItem("error",data.message)
-                    Swal.fire('Oppss...',hasil.message,'error')
-                } 
+  function AppBayar(action){
+    var id = $('#id_permohonan').val();
+    $.ajax({
+        type: 'POST',
+        url: "<?php echo base_url('permohonan/AppBayar'); ?>",
+        data:{id:id, action:action},
+        dataType : 'json',
+        success: function(hasil) {
+            // console.log(hasil);
+            var url = "<?php echo base_url('permohonan/kwitansi'); ?>";
+            if(hasil.status == 'success'){
+                localStorage.setItem("sukses",hasil.message)
+                window.location.replace(url);
+            }else{
+                // localStorage.setItem("error",data.message)
+                Swal.fire('Oppss...',hasil.message,'error')
             }
-        });
-	}
-
-	function konfirm(action){
-		var id = '<?= $dataPermohonan->id; ?>';
-		$.ajax({
-            type: 'POST',
-            url: "<?php echo base_url('permohonan/appPenawaran'); ?>",
-            data:{id:id, action:action},
-            dataType : 'json',
-            success: function(hasil) {
-                console.log(hasil)
-                if(hasil.status == 'success' && action == 'approved'){
-                	console.log('app')
-	                $('#modal-approved').show();
-	                $('#modal-reject').hide();
-	            }else if(hasil.status == 'success' && action == 'reject'){
-	            	console.log('re')
-	            	$('#modal-reject').show();
-	                $('#modal-approved').hide();
-	            }else{
-	            	Swal.fire('Oppss...',hasil.message,'error')
-	            	console.log('error')
-	            }
-            }
-        });
-	}
+        }
+    });
+  }
 </script>
-<?php include('penawaran_ajax.php'); ?>

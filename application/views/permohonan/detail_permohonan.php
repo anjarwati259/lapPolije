@@ -128,7 +128,7 @@
               </thead>
               <tbody style="border: none; border-color: #a6a8ab;">
                 <?php $no=1; foreach ($detailPermohonan as $key => $value) {
-                      if($value->id_sampel == $no_sampel){ 
+                      if($value->no_sample == $no_sampel){ 
                   ?>
                   <tr>
                     <th><?= $no++; ?></th>
@@ -138,6 +138,10 @@
                 <?php } } ?>
               </tbody>
             </table>
+            <div class="row">
+              <label for="inputEmail3" class="col-sm-4 col-form-label"><b>Catatan:</b></label>
+              <label><?= $detailPermohonan[0]->catatan; ?></label>
+            </div>
           </div>
         </div>
       <?php } ?>

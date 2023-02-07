@@ -27,37 +27,17 @@
             <?php }else{ ?>
               <tr>
                 <th style="width: 250px;">Tanggal Terima Sampel</th>
-                <td>: <?= dateDefault($dataPermohonan->tgl_terima_sample) ?></td>
+                <td>: <?= ($dataPermohonan->tgl_terima_sample) ? (dateDefault($dataPermohonan->tgl_terima_sample)) : '-' ?></td>
               </tr>
               <tr>
                 <th style="width: 250px;">Tanggal Perkiraan Selesai</th>
-                <td>: <?= dateDefault($dataPermohonan->tgl_terima_sample) ?></td>
+                <td>: <?= ($dataPermohonan->tgl_perkiraan_selesai) ? (dateDefault($dataPermohonan->tgl_perkiraan_selesai)) : '-' ?></td>
               </tr>
             <?php } ?>
               <tr>
                 <th style="width: 250px;">Tanggal Selesai</th>
                 <td>: <?= ($dataPermohonan->tgl_selesai) ? ($dataPermohonan->tgl_selesai) : '-' ?></td>
               </tr>
-              <?php if($dataPermohonan->status == '1' || $dataPermohonan->status == '0'){ ?>
-              <tr>
-                <th style="width: 250px;">Kode Sampel</th>
-                <td style="display: flex;">:&nbsp;<input type="number" name="kode_sample" id="kode_sample" value="<?= $kode_sample ?>" class="form-control"></td>
-              </tr>
-              <tr>
-                <th style="width: 250px;">Kode Order</th>
-                <td style="display: flex;">:&nbsp;<input type="text" name="kode_order" id="kode_order" value="<?= $kode_order ?>" class="form-control"></td>
-              </tr>
-            <?php }else{ ?>
-              <tr>
-                <th style="width: 250px;">Kode Sampel</th>
-                <td>: <?= ($dataPermohonan->kode_sample) ? ($dataPermohonan->kode_sample) : '-' ?></td>
-              </tr>
-              <tr>
-                <a href=""></a>
-                <th style="width: 250px;">Kode Order</th>
-                <td>: <a href="<?= base_url('permohonan/blankoPermohonan/').generateUrl($dataPermohonan->kode_order) ?>"><?= ($dataPermohonan->kode_order) ? ($dataPermohonan->kode_order) : '-' ?></a></td>
-              </tr>
-            <?php } ?>
               <tr>
                 <th style="width: 250px;">Jenis Sampel</th>
                 <td>: <?= ($dataPermohonan->jenis_sample) ? ($dataPermohonan->jenis_sample) : '-' ?></td>

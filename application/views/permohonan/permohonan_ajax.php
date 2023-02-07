@@ -121,24 +121,85 @@
         if(action == 'konfirmApproved'){
             var url = "<?php echo base_url('admin/penawaran/'); ?>"+no_permohonan;
             window.location.replace(url);
+        }else if(action == 'konfirmBayar'){
+            konfirmasiBayar(no_permohonan);
+        }else if(action == 'kirimSample'){
+            kirimSampel(no_permohonan);
         }
     }
 
+    function konfirmasiBayar(id){
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url('permohonan/getDataBayar'); ?>",
+            data:{id:id},
+            dataType : 'json',
+            success: function(hasil) {
+                console.log(hasil)
+                $('#id').val(hasil.id);
+                $('#no_penawaran').val(hasil.no_penawaran);
+                $('#jml_bayar').val(hasil.total_harga);
+            }
+        });
+    }
+
+    function kirimBayar(){
+        var data = new FormData(document.getElementById("form-konfirmBayar"));
+        // formObj = {};
+        // for (var pair of data.entries()) {
+        //   formObj[pair[0]] = pair[1]
+        // }
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url('permohonan/kirimBuktiBayar'); ?>",
+            data:data,
+            dataType : 'json',
+            processData: false,
+            contentType: false,
+            success: function(hasil) {
+                // console.log(hasil);
+                var url = "<?php echo base_url('permohonan/riwayatPermohonan'); ?>";
+                if(hasil.status == 'success'){
+                    localStorage.setItem("sukses",hasil.message)
+                    window.location.replace(url);
+                }else{
+                    // localStorage.setItem("error",data.message)
+                    Swal.fire('Oppss...',hasil.message,'error')
+                }
+            }
+        });
+        // console.log(data);
+    }
+
     function kirimSampel(kode){
-        var no_permohonan = atob(kode);
-        $('#judul-kode').html('Kode #'+no_permohonan);
-        $('#no_permohonan').val(kode);
+        // var no_permohonan = atob(kode);
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url('permohonan/getDataBayar'); ?>",
+            data:{id:kode},
+            dataType : 'json',
+            success: function(hasil) {
+                console.log(hasil) 
+                $('#judul-kode').html('Kode #'+hasil.no_pesanan);
+                $('#no_permohonan').val(kode);
+            }
+        });
+        
     }
 
     function kirimResi(){
-        var no_permohonan = $('#no_permohonan').val();
-        var tgl_kirim = $('#tgl_kirim').val();
-        var no_resi = $('#no_resi').val();
+        // var no_permohonan = $('#no_permohonan').val();
+        // var tgl_kirim = $('#tgl_kirim').val();
+        // var no_resi = $('#no_resi').val();
+        // var ekspedisi = $('#ekspedisi').val();
+        var data = new FormData(document.getElementById("form-kirim-resi"));
         $.ajax({
             type: 'POST',
             url: "<?php echo base_url('permohonan/kirimResi'); ?>",
-            data:{no_permohonan:no_permohonan, tgl_kirim:tgl_kirim, no_resi:no_resi},
+            data:data,
             dataType : 'json',
+            processData: false,
+            contentType: false,
             success: function(hasil) {
                 console.log(hasil) 
                 if(hasil.status == 'success'){

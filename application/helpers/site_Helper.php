@@ -30,8 +30,10 @@ function getMenu($role){
 function getKodeRegistrasi(){
 	$CI = get_instance();
 	$CI->load->model('user_model');
-	$tempNomor = $CI->permohonan_model->getTempNomor('Registrasi');
-	$randID = substr(str_shuffle('123456789'),1,4);
+	$tempNomor = $CI->permohonan_model->getTempNomor('permohonan');
+	$id = (int) $CI->permohonan_model->getIdPermohonan();
+	$suffle = (strlen($id) >= 4) ? (0) : (4-$id);
+	$randID = $id.substr(str_shuffle('123456789'),1,$suffle);
 	$findWord = ['{nomor}', '{tahun}'];
 	$replace = [$randID, date('Y')];
 	$no_permohonan = str_replace($findWord, $replace, $tempNomor->temp_nomor);
@@ -88,6 +90,19 @@ function generateNomorSample($no_permohonan, $no_sample){
 	$result = $kode.'-'.$no_sample;
 	return $result;
 }
+
+function generateKodeSample($jenis, $id, $no_permohonan=null){
+	$CI = get_instance();
+	// $CI->load->model('user_model');
+	$tempNomor = $CI->permohonan_model->getTempNomor($jenis);
+	$kode = substr($no_permohonan,0,4);
+	$findWord = ['{kode_registrasi}', '{nomor}'];
+	$replace = [$kode, $id];
+	$kode = str_replace($findWord, $replace, $tempNomor->temp_nomor);
+	
+	return $kode;
+}
+
 
 // function hitungTotalHarga($no_permohonan){
 // 	$tempNomor = $CI->permohonan_model->getTotal($no_permohonan);

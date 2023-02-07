@@ -229,9 +229,12 @@
                  }
 
     	data.action = action;
+    	var listcatatan = {}
     	for (var i = 1; i <= jml_sample; i++) {
     		var dataAnalisa = {}
     		var row = 0;
+    		var catatan  = $('#catatan'+i).val();
+    		listcatatan[i] = catatan;
     		$("#tbl-"+i+">tbody>tr").each(function(index, val){
 	        	index+=1;
 	        	let jenis_analisa = $('#jenis_analisa'+index).val();
@@ -245,24 +248,25 @@
 		    });
 		    data[i] = dataAnalisa;
     	}
+    	data.catatan = listcatatan;
     	console.log(data);
-    	// $.ajax({
-     //        type: 'POST',
-     //        url: "<?php echo base_url('permohonan/simpanPermohonan'); ?>",
-     //        data:data,
-     //        dataType : 'json',
-     //        success: function(hasil) {
-     //            // console.log(hasil)
-     //            var url = "<?php echo base_url('permohonan/riwayatPermohonan'); ?>";
-     //            if(hasil.status == 'success'){
-     //                localStorage.setItem("sukses",hasil.message)
-     //                window.location.replace(url);
-     //            }else{
-     //                // localStorage.setItem("error",data.message)
-     //                Swal.fire('Oppss...',hasil.message,'error')
-     //            } 
-     //        }
-     //    });
+    	$.ajax({
+            type: 'POST',
+            url: "<?php echo base_url('permohonan/simpanPermohonan'); ?>",
+            data:data,
+            dataType : 'json',
+            success: function(hasil) {
+                console.log(hasil)
+                var url = "<?php echo base_url('permohonan/riwayatPermohonan'); ?>";
+                if(hasil.status == 'success'){
+                    localStorage.setItem("sukses",hasil.message)
+                    window.location.replace(url);
+                }else{
+                    // localStorage.setItem("error",data.message)
+                    Swal.fire('Oppss...',hasil.message,'error')
+                } 
+            }
+        });
     }
 </script>
 <?php //include('permohonan_ajax.php'); ?>

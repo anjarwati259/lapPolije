@@ -49,7 +49,7 @@
             $('#pmn-tab').removeClass('active');
         },
         success: function(data){
-          console.log(data);
+          // console.log(data);
             $('#'+id+'-tab').addClass('active');
             // $("#loadloader").attr('style', 'display: none;');
             $("#loadcontent").html(data);
