@@ -73,6 +73,8 @@ class Admin extends CI_Controller {
 
 		if($dataPermohonan->status == '5'){
 			$isi = 'permohonan/viewAction/detail_terima_sample';
+		}else if($dataPermohonan->status == '7'){
+			$isi = 'permohonan/viewAction/detail_selesai_analisa';
 		}else{
 			$isi = 'permohonan/detail_permohonan_admin';
 		}

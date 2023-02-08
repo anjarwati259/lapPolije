@@ -8,35 +8,28 @@
             <tbody>
               <tr>
                 <input type="hidden" id="no_permohonan" value="<?= $dataPermohonan->no_permohonan ?>">
-                <th style="width: 250px;">Kode Registrasi</th>
-                <td>: <?= $dataPermohonan->no_permohonan ?></td>
+                <th style="width: 250px;">Kode Pesanan</th>
+                <td>: <?= $dataPermohonan->no_pesanan ?></td>
               </tr>
               <tr>
                 <th style="width: 250px;">Tanggal Kirim</th>
                 <td>: <?= dateDefault($dataPermohonan->tgl_kirim) ?></td>
               </tr>
-              <?php if($dataPermohonan->status == '1' || $dataPermohonan->status == '0'){ ?>
-              <tr>
-                <th style="width: 250px;">Tanggal Terima Sampel</th>
-                <td style="display: flex;">:&nbsp;<input type="date" name="tgl_terima_sample" id="tgl_terima_sample" value="" class="form-control"></td>
-              </tr>
-              <tr>
-                <th style="width: 250px;">Tanggal Perkiraan Selesai</th>
-                <td style="display: flex;">:&nbsp;<input type="date" name="tgl_perkiraan_selesai" id="tgl_perkiraan_selesai" value="" class="form-control"></td>
-              </tr>
-            <?php }else{ ?>
               <tr>
                 <th style="width: 250px;">Tanggal Terima Sampel</th>
                 <td>: <?= ($dataPermohonan->tgl_terima_sample) ? (dateDefault($dataPermohonan->tgl_terima_sample)) : '-' ?></td>
               </tr>
               <tr>
+                <th style="width: 250px;">Perkiraan Selesai (Hari)</th>
+                <td>: <?= ($dataPermohonan->perkiraan_selesai) ? ($dataPermohonan->perkiraan_selesai) : '-' ?></td>
+              </tr>
+              <tr>
                 <th style="width: 250px;">Tanggal Perkiraan Selesai</th>
                 <td>: <?= ($dataPermohonan->tgl_perkiraan_selesai) ? (dateDefault($dataPermohonan->tgl_perkiraan_selesai)) : '-' ?></td>
               </tr>
-            <?php } ?>
               <tr>
                 <th style="width: 250px;">Tanggal Selesai</th>
-                <td>: <?= ($dataPermohonan->tgl_selesai) ? ($dataPermohonan->tgl_selesai) : '-' ?></td>
+                <td>: <?= ($dataPermohonan->tgl_selesai) ? (dateDefault($dataPermohonan->tgl_selesai)) : '-' ?></td>
               </tr>
               <tr>
                 <th style="width: 250px;">Jenis Sampel</th>
@@ -115,71 +108,73 @@
       </div>
       
     </div>
-
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Informasi Analisa Sample</h5>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th scope="col">No</th>
-                <th scope="col">Jenis Analisa</th>
-                <th scope="col">Metode Analisa</th>
-                <th scope="col">Nama Analist</th>
-                <?php if($dataPermohonan->status != '1' or $dataPermohonan->status != '0'){ ?>
-                  <th scope="col">Surat Tugas</th>
-                  <th scope="col">Ulangan 1</th>
-                  <th scope="col">Ulangan 2</th>
-                  <th scope="col">Rata - Rata</th>
-                  <th scope="col">Action</th>
-                <?php } ?>
-              </tr>
-            </thead>
-            <tbody>
-              <?php $no = 1; foreach ($detailPermohonan as $key => $value) {?>
-              <tr>
-                <th scope="row"><?= $no ?></th>
-                <td><?= ($value->jenis_analisa) ? ($value->jenis_analisa) : '-' ?></td>
-                <td><?= ($value->metode_analisa) ? ($value->metode_analisa) : '-' ?></td>
-                <?php if($dataPermohonan->status == '1' || $dataPermohonan->status == '0'){ ?>
-                <td>
-                  <select name="id_analist<?= $no ?>" id="id_analist<?= $no ?>" class="form-select" aria-label="Default select example">
-                    <option selected disabled>Open this select menu</option>
-                    <?php foreach ($dataAnalist as $kAnalist => $vAnalist) { 
-                      if($vAnalist->jml_analist < $batas_analist){ ?>
-                      <option value="<?= $vAnalist->id ?>"><?= $vAnalist->nama_pegawai ?></option>
-                    <?php }} ?>
-                  </select>
-                </td>
-                <input type="hidden" id="id<?= $no; ?>" value="<?= $value->id ?>">
-              <?php }else{ ?>
-                <td><?= ($value->nama_pegawai) ? ($value->nama_pegawai) : '-' ?></td>
-                <td><a href="<?= base_url('permohonan/suratTugas/').generateUrl($value->surat_tugas) ?>"><?= ($value->surat_tugas) ? ($value->surat_tugas) : '-' ?></a></td>
-                <td><?= ($value->pengulangan_1) ? ($value->pengulangan_1) : '-' ?></td>
-                <td><?= ($value->pengulangan_2) ? ($value->pengulangan_2) : '-' ?></td>
-                <td><?= ($value->rata_rata) ? ($value->rata_rata) : '-' ?></td>
-                <td>
-                  <?php $disabled = ($value->status == 1) ? '':('disabled'); ?>
-                  <button type="submit" class="btn btn-primary btn-sm" onclick="appAnalist('<?= $value->id ?>', '<?= $value->no_permohonan ?>');" <?= $disabled; ?>>Approved</button>
-                </td>
-              <?php } ?>
-              </tr>
-            <?php $no++;} ?>
-            </tbody>
-          </table>
-          <!-- End Tables without borders -->
+          <?php for ($no_sampel=1; $no_sampel <= $dataPermohonan->jml_sample; $no_sampel++){ 
+            $no_blanko = getNoBlanko($dataPermohonan->id, $no_sampel);
+            ?>
+          <div class="card border-secondary">
+            <h5 class="card-header"><b>No. Blanko: <a href="<?= base_url('permohonan/blankoPermohonan/').urlencode(base64_encode($no_blanko)) ?>" target="_blank"><?= $no_blanko ?></a></b></h5>
+            <div class="card-body">
+              <table class="table table-striped" id="tbl">
+                <thead>
+                    <tr>
+                      <th scope="col">Kode Sampel</th>
+                      <th scope="col">Jenis Analisa</th>
+                      <th scope="col">Metode Analisa</th>
+                      <th scope="col">Nama Analist</th>
+                      <th scope="col">Ulangan 1</th>
+                      <th scope="col">Ulangan 2</th>
+                      <th scope="col">Rata - Rata</th>
+                      <th scope="col">Standart Deviasi</th>
+                      <th scope="col">Action</th>
 
-        </div>
-        <?php if($dataPermohonan->status == '1' or $dataPermohonan->status == '0'){ ?>
-        <div class="text-center">
-          <button type="submit" class="btn btn-primary" onclick="simpanAdmin();">Submit</button>
-          <a href="<?php echo base_url('admin/permohonan'); ?>" class="btn btn-danger">Cancel</a>
-        </div>
-      <?php } ?>
+                    </tr>
+                </thead>
+                <tbody style="border: none; border-color: #a6a8ab;">
+                  <?php $no=1; foreach ($detailPermohonan as $key => $value) {
+                        if($value->no_sample == $no_sampel){ 
+                    ?>
+                    <tr>
+                      <td><?= ($value->kode_sample) ? ($value->kode_sample) : '-' ?></td>
+                      <td><?= ($value->jenis_analisa) ? ($value->jenis_analisa) : '-' ?></td>
+                      <td><?= ($value->metode_analisa) ? ($value->metode_analisa) : '-' ?></td>
+                      <td><?= ($value->nama_pegawai) ? ($value->nama_pegawai) : '-' ?></td>
+                      <td><?= ($value->pengulangan_1) ? ($value->pengulangan_1) : '-' ?></td>
+                      <td><?= ($value->pengulangan_2) ? ($value->pengulangan_2) : '-' ?></td>
+                      <td><?= ($value->rata_rata) ? ($value->rata_rata) : '-' ?></td>
+                      <td><?= ($value->standart_deviasi) ? ($value->standart_deviasi) : '-' ?></td>
+                      <td>
+                        <div class="btn-sm btn-group" role="group" aria-label="Button group with nested dropdown">
+                          <div class="btn-group" role="group">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                              Document
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                              <li><a class="dropdown-item" href="<?= base_url('permohonan/suratTugas/').urlencode(base64_encode($value->surat_tugas)) ?>">Surat Tugas</a></li>
+                              <li><a class="dropdown-item" href="#">Selesai Tugas</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  <?php } } ?>
+                </tbody>
+              </table>
+              <div class="row">
+                <label for="inputEmail3" class="col-sm-4 col-form-label"><b>Catatan:</b></label>
+                <label><?= $detailPermohonan[0]->catatan; ?></label>
+              </div>
+            </div>
+          </div>
+        <?php } ?>
       </div>
     </div>
   </div>
 </section>
 
-<?php include('permohonan_ajax.php'); ?>
+<script type="text/javascript">
+  
+</script>

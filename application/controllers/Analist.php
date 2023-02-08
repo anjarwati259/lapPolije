@@ -62,14 +62,14 @@ class Analist extends CI_Controller {
         $no=1; 
         foreach($fetch_data as $row)  
         {  
-            $no_permohonan = base64_encode($row->no_permohonan);
-            $urlKode = urlencode($no_permohonan);
+            $id = base64_encode($row->id);
+            $urlKode = urlencode($id);
             $class_color = ($row->status_analist == 0) ? ('bg-warning text-dark') : ('bg-success text-dark');
             $status_analist = ($row->status_analist == 0) ? ('Belum Selesai') : ('Selesai');
             // $disabled = ($row->status =='0') ? '' : 'disabled';
             $sub_array = array(); 
             $sub_array[] = $no;               
-            $sub_array[] = '<a href="'.base_url('analist/detailPermohonan/').$urlKode.'/'.$row->id_jenis_analisa.'/'.$row->id_metode_analisa.'">'.$row->no_permohonan.'</a>';               
+            $sub_array[] = '<a href="'.base_url('analist/detailPermohonan/').$urlKode.'/'.$row->id_detail.'">'.$row->no_pesanan.'</a>';               
             $sub_array[] = $row->kode_sample;  
             $sub_array[] = $row->jenis_sample;
             $sub_array[] = $row->jenis_analisa;
@@ -89,10 +89,13 @@ class Analist extends CI_Controller {
         echo json_encode($output);
     }
 
-    public function detailPermohonan($no_permohonan, $jenis_analisa, $metode_analisa){
+    public function detailPermohonan($no_permohonan, $id_detail){
+        $id_user = $this->session->userdata('id_user');
+        $id_analist = $this->analis_model->getIdAnalist($id_user);
         $no_permohonan = base64_decode(urldecode($no_permohonan));
         $dataPermohonan = $this->permohonan_model->permohonanByID($no_permohonan);
-        $detailPermohonan = $this->analis_model->detailPermohonan($no_permohonan, $metode_analisa, $jenis_analisa);
+        $detailPermohonan = $this->analis_model->detailPermohonan($id_detail);
+        var_dump($detailPermohonan);exit;
         $data = array('title' => 'Detail Permohonan',
                       'dataPermohonan' => $dataPermohonan,
                       'detailPermohonan' => $detailPermohonan,
@@ -102,33 +105,69 @@ class Analist extends CI_Controller {
     }
 
     public function submitAnalisa(){
-        $id = $this->input->post('id');
-        $ulangan1 = $this->input->post('ulangan1');
-        $ulangan2 = $this->input->post('ulangan2');
-        $rata_rata = $this->input->post('rata_rata');
-        $id_analist = $this->input->post('id_analist');
-        $no_permohonan = $this->input->post('no_permohonan');
-        $data = array('id' => $id,
-                      'pengulangan_1' => (float)$ulangan1,
-                      'pengulangan_2' => (float)$ulangan2,
-                      'rata_rata' => (float)$rata_rata,
-                      'status'  => '1'
-                    );
+        $data = $this->input->post('data');
+        $data['status'] = 1;
+        // $id = $this->input->post('id');
+        // $ulangan1 = $this->input->post('ulangan1');
+        // $ulangan2 = $this->input->post('ulangan2');
+        // $rata_rata = $this->input->post('rata_rata');
+        // $id_analist = $this->input->post('id_analist');
+        // $no_permohonan = $this->input->post('no_permohonan');
+        // $data = array('id' => $id,
+        //               'pengulangan_1' => (float)$ulangan1,
+        //               'pengulangan_2' => (float)$ulangan2,
+        //               'rata_rata' => (float)$rata_rata,
+        //               'status'  => '1'
+        //             );
         $result = $this->analis_model->upDetailPermohonan($data);
 
         if($result['status'] == 'success'){
-            $dataUp = array('id' => $id,
-                            'no_permohonan' => $no_permohonan,
+            $dataUp = array('id' => $data['id'],
+                            'id_permohonan' => $data['id_permohonan'],
                             'status_detail' => '0',
-                            'status_up'     => '3'
+                            'status_up'     => '7'
                             );
             $this->analis_model->updateStatus($dataUp);
-            $this->analis_model->updateMinAnalist($id_analist);
+            $this->analis_model->updateMinAnalist($data['id_analist']);
         }
         echo json_encode($result);
     }
 
     public function ApprovedAnalisa(){
+        $id = $this->input->post('id');
+        $no_permohonan = $this->input->post('no_permohonan');
+        $dataDetail = $this->analis_model->dataDetailByID($id);
+        $kode_doc = generateKode('selesai_tugas', $dataDetail->no_surat);
+        
+        $data = array('id' => $id,
+                      'selesai_tugas' => $kode_doc,
+                      'status' => '3',
+                    );
+        $result = $this->analis_model->upDetailPermohonan($data);
+        if($result['status'] == 'success'){
+            $dataUp = array('id' => $id,
+                            'id_permohonan' => $no_permohonan,
+                            'tgl_selesai'   => date('Y-m-d'),
+                            'status_detail' => '1',
+                            'status_up'     => '8'
+                            );
+            // var_dump($dataUp);exit;
+            $hasil = $this->analis_model->updateStatus($dataUp);
+            if($hasil == true){
+                $sertifikat = generateKode('sertifikat', $dataDetail->id_sampel);
+                $dataDoc = array('id' => $dataDetail->id_sampel,
+                                 'no_sertifikat' => $sertifikat,
+                            );
+                $this->permohonan_model->updateDetailSample($dataDoc);
+            }
+        }
+
+        // echo json_encode($result);
+        // $result = $this->analis_model->upDetailPermohonan($data);
+
+    }
+
+    public function ApprovedAnalisa1(){
         $id = $this->input->post('id');
         $no_permohonan = $this->input->post('no_permohonan');
         $data = array('id' => $id,
@@ -141,8 +180,10 @@ class Analist extends CI_Controller {
                             'status_detail' => '1',
                             'status_up'     => '4'
                             );
+            var_dump($dataUp);exit;
             $hasil = $this->analis_model->updateStatus($dataUp);
             $kode_sample = $this->permohonan_model->getKodeSample($no_permohonan);
+            var_dump($kode_sample);exit;
             $kode_doc = generateKode('selesai_tugas', $id);
             $dataDoc = array('id_detail_permohonan' => $id,
                              'no_permohonan' => $no_permohonan,

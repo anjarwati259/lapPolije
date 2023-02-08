@@ -103,6 +103,12 @@ function generateKodeSample($jenis, $id, $no_permohonan=null){
 	return $kode;
 }
 
+function getNoBlanko($id_permohonan, $no_sample){
+	$CI = get_instance();
+	$detailSample = $CI->permohonan_model->detailSample($id_permohonan, $no_sample);
+	return $detailSample->no_blanko;
+}
+
 
 // function hitungTotalHarga($no_permohonan){
 // 	$tempNomor = $CI->permohonan_model->getTotal($no_permohonan);

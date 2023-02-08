@@ -272,20 +272,40 @@
             }
         });
     }
+
+    function countResult(){
+        var ul1 = parseFloat($("#ulangan1").val());
+        var ul2 = parseFloat($("#ulangan2").val());
+
+        var arr = [{key:"ul1", value:ul1}, {key:"ul2", value:ul2}]
+        const mean = arr.reduce((s, n) => s + (n.value || 0), 0) / arr.length;
+        const variance = arr.reduce((s, n) => s + ((n.value || 0) - mean) ** 2, 0) / (arr.length - 1);
+        var std = Math.sqrt(variance);
+
+        $("#rata_rata").val(mean);
+        $('#standart_deviasi').val(std.toFixed(4));
+    }
+
     function submitAnalist(){
         var id_detail = $('#id_detail').val();
         var ulangan1 = $('#ulangan1').val();
         var ulangan2 = $('#ulangan2').val();
         var rata_rata = $('#rata_rata').val();
         var id_analist = $('#id_analist').val();
-        var no_permohonan = $('#no_permohonan').val();
+        var id_permohonan = $('#id_permohonan').val();
+        var standart_deviasi = $('#standart_deviasi').val();
+        var rata_rata = $('#rata_rata').val();
+        var data = {}
 
-        var data = {id:id_detail,
-                    no_permohonan:no_permohonan,
-                    ulangan1:ulangan1,
-                    ulangan2:ulangan2,
+        data.data = {id:id_detail,
+                    id_permohonan:id_permohonan,
+                    pengulangan_1:ulangan1,
+                    pengulangan_2:ulangan2,
+                    standart_deviasi:standart_deviasi,
+                    rata_rata:rata_rata,
                     id_analist:id_analist,
                     rata_rata: rata_rata };
+        console.log(data)
         $.ajax({
             type: 'POST',
             url: "<?php echo base_url('analist/submitAnalisa'); ?>",

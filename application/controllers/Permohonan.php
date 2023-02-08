@@ -392,17 +392,17 @@ class Permohonan extends CI_Controller {
 		// var_dump($result);
 	}
 
-	public function blankoPermohonan($kode_order){
-		$kode_order = base64_decode(urldecode($kode_order));
+	public function blankoPermohonan($no_blanko){
+		$no_blanko = base64_decode(urldecode($no_blanko));
 		$tempSurat = $this->permohonan_model->getTemplateSurat('surat_permohonan');
 		$suratPermohonan = str_replace(['{base_url}', '{title}','{date}'],[base_url(),'Blanko Permohonan', dateDefault(date('Y-m-d'))],$tempSurat->template_surat);
-
-		$data = $this->permohonan_model->getPermohonanBYorder($kode_order);
-		$detail = $this->permohonan_model->detailPermohonanByID($data->no_permohonan);
+		$detailSample = $this->permohonan_model->getPermohonanID($no_blanko);
+		$data = $this->permohonan_model->permohonanByID($detailSample->id_permohonan);
+		$detail = $this->permohonan_model->detailPermohonanByID($detailSample->id_permohonan, $detailSample->id_sampel);
 		$dataKalab = $this->permohonan_model->getKalab();
 
 		$find = ['{kode_order}','{tgl_terima_sample}','{tgl_perkiraan_selesai}','{nama_pemohon}','{alamat}','{no_telp}','{jenis_sample}','{kode_sample}','{jml_sample}','{penyimpanan}','{keterangan_sample}','{nip}', '{kalab}'];
-		$replace = [$kode_order, dateDefault($data->tgl_terima_sample), dateDefault($data->tgl_perkiraan_selesai), $data->nama_customer, $data->alamat, $data->no_telp, $data->jenis_sample, $data->kode_sample, $data->jml_sample, $data->penyimpanan, $data->keterangan_sample,$dataKalab->nip, $dataKalab->nama_pegawai];
+		$replace = [$no_blanko, dateDefault($data->tgl_terima_sample), dateDefault($data->tgl_perkiraan_selesai), $data->nama_customer, $data->alamat, $data->no_telp, $data->jenis_sample, $detail[0]->kode_sample, $data->jml_sample, $data->penyimpanan, $data->keterangan_sample,$dataKalab->nip, $dataKalab->nama_pegawai];
 		$suratPermohonan = str_replace($find,$replace,$suratPermohonan);
 
 		// $total = count($detail);

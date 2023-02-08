@@ -67,6 +67,11 @@ class Permohonan_model extends CI_Model
 		return $this->db->insert_id();
 	}
 
+	public function updateDetailSample($data){
+		$this->db->where('id', $data['id']);
+		$this->db->update('tb_detail_sample',$data);
+	}
+
 	public function insertDetailpermohonan($data){
 		$this->db->insert_batch('tb_detail_permohonan', $data);
 	}
@@ -185,8 +190,8 @@ class Permohonan_model extends CI_Model
 		return $query->row();
 	}
 
-	public function detailPermohonanByID($id){
-		$this->db->select('tb_detail_permohonan.*, tb_jenis_analisa.jenis_analisa, tb_metode_analisa.metode_analisa, tb_pegawai.nama_pegawai, tb_metode_analisa.harga, tb_detail_sample.no_sample, tb_detail_sample.catatan');
+	public function detailPermohonanByID($id, $id_sampel=null){
+		$this->db->select('tb_detail_permohonan.*,tb_detail_sample.kode_sample, tb_jenis_analisa.jenis_analisa, tb_metode_analisa.metode_analisa, tb_pegawai.nama_pegawai, tb_metode_analisa.harga, tb_detail_sample.no_sample, tb_detail_sample.catatan');
 		$this->db->from('tb_detail_permohonan');
 		$this->db->join('tb_jenis_analisa','tb_jenis_analisa.id = tb_detail_permohonan.id_jenis_analisa', 'left');
 		$this->db->join('tb_metode_analisa','tb_metode_analisa.id = tb_detail_permohonan.id_metode_analisa', 'left');
@@ -194,6 +199,7 @@ class Permohonan_model extends CI_Model
 		$this->db->join('tb_pegawai','tb_pegawai.id = tb_analist.id_pegawai', 'left');
 		$this->db->join('tb_detail_sample','tb_detail_sample.id = tb_detail_permohonan.id_sampel', 'left');
 		$this->db->where('tb_detail_permohonan.id_permohonan', $id);
+		$this->db->like('tb_detail_permohonan.id_sampel',$id_sampel);
 		$query = $this->db->get();
 		return $query->result();
 	}
@@ -398,6 +404,27 @@ class Permohonan_model extends CI_Model
 		$this->db->select('*');
 		$this->db->from('tb_ekspedisi');
 		$query = $this->db->get()->result();
+		return $query;
+	}
+
+	public function detailSample($id_permohonan, $no_sample){
+		$this->db->select('tb_detail_sample.*');  
+       	$this->db->from('tb_detail_sample');
+       	$this->db->join('tb_detail_permohonan','tb_detail_permohonan.id_sampel = tb_detail_sample.id', 'left');
+       	$this->db->where('tb_detail_permohonan.id_permohonan',$id_permohonan); 
+       	$this->db->where('tb_detail_sample.no_sample',$no_sample); 
+       	$this->db->group_by('tb_detail_permohonan.id_sampel');
+       	$query = $this->db->get()->row();
+		return $query;
+	}
+
+	public function getPermohonanID($no_blanko){
+		$this->db->select('tb_detail_permohonan.*');  
+       	$this->db->from('tb_detail_permohonan');
+       	$this->db->join('tb_detail_sample','tb_detail_sample.id = tb_detail_permohonan.id_sampel', 'left');
+       	$this->db->where('tb_detail_sample.no_blanko',$no_blanko); 
+       	$this->db->group_by('tb_detail_sample.no_blanko');
+       	$query = $this->db->get()->row();
 		return $query;
 	}
 }

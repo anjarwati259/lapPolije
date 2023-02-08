@@ -8,7 +8,7 @@
                   <thead>
                     <tr>
                       <th scope="col">No</th>
-                      <th scope="col">Kode Registrasi</th>
+                      <th scope="col">Kode Pesanan</th>
                       <th scope="col">Kode Sampel</th>
                       <th scope="col">Jenis Sample</th>
                       <th scope="col">Jenis Analisa</th>
