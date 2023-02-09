@@ -96,10 +96,12 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Brandon Jacob</td>
-                    <td>Designer</td>
-                  </tr>
+                  <?php $no=1; foreach ($daftarDocument as $key => $value) { ?>
+                    <tr>
+                      <td><a href="<?= base_url('permohonan/cetakDoc/').urlencode(base64_encode($value->kode_dokumen)); ?>"><?= $value->kode_dokumen; ?></a></td>
+                      <td><?= $value->type; ?></td>
+                    </tr>
+                  <?php } ?>
                 </tbody>
               </table>
             </div>
@@ -130,7 +132,6 @@
                       <th scope="col">Rata - Rata</th>
                       <th scope="col">Standart Deviasi</th>
                       <th scope="col">Action</th>
-
                     </tr>
                 </thead>
                 <tbody style="border: none; border-color: #a6a8ab;">
@@ -153,8 +154,8 @@
                               Document
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                              <li><a class="dropdown-item" href="<?= base_url('permohonan/suratTugas/').urlencode(base64_encode($value->surat_tugas)) ?>">Surat Tugas</a></li>
-                              <li><a class="dropdown-item" href="#">Selesai Tugas</a></li>
+                              <li><a class="dropdown-item" href="<?= base_url('permohonan/suratTugas/').urlencode(base64_encode($value->surat_tugas)) ?>" target="_blank">Surat Tugas</a></li>
+                              <li><a class="dropdown-item" href="<?= base_url('permohonan/selesaiTugas/').urlencode(base64_encode($value->selesai_tugas)) ?>" target="_blank">Selesai Tugas</a></li>
                             </ul>
                           </div>
                         </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Surat Tugas</title>
+	<title>Kwitansi</title>
 	<style type="text/css">
 		.img-logo{
 			height: 100px; 
@@ -10,9 +10,21 @@
 		}
 		.title-surat{
 			text-align: center;
-			font-size: 20px;
-			font-weight: 600;
-			margin-bottom: 30px;
+			font-size: 25px;
+			font-weight: 500;
+		}
+		.nomor-surat{
+			text-align: center; 
+			margin-top: 5px;
+			margin-bottom: 20px;
+			font-size: 18px;
+		}
+		#customers {
+		  border-collapse: collapse;
+		}
+
+		#customers td, #customers th {
+		  border: 2px solid #504e4e;
 		}
 	</style>
 </head>
@@ -35,74 +47,56 @@
 				<td colspan="2"><hr size="3%" color="black"></td>
 			</tr>
 		</table> <br><br>
-		<div class="title-surat">Surat Keterangan Telah Selesai Melaksanakan Tugas</div>
-	</div>
-	<table align="center">
+		<div class="title-surat">Kwitansi</div>
+		<div class="nomor-surat" style="">(No. {nomor_kwitansi})</div>
+	</div><br>
+
+	<table align="center" style="border-spacing: 15px;">
 		<tr>
-			<td colspan="3">Yang bertanda Tangan dibawah Ini :<br><br></td>
+			<td width="200">Telah diterima dari</td>
+			<td>:</td>
+			<td width="470">{nama_customer}</td>
 		</tr>
 		<tr>
-			<td width="200">Nama</td>
-			<td>:</td>
-			<td width="500">{nama_kalab}</td>
+			<td>Uang sejumlah</td>
+			<td></td>
+			<td height="50" style="border: solid 3px; text-align: center; font-size: 25px; font-weight: 700;">{terbilang}</td>
 		</tr>
 		<tr>
-			<td>NIP</td>
+			<td>Untuk pembayaran</td>
 			<td>:</td>
-			<td>{nip_analis}</td>
+			<td> Analisa {jenis_analisa} sebanyak {jml_sample} sampel (No. {kode_sample})</td>
 		</tr>
 		<tr>
-			<td>Jabatan</td>
+			<td>Terbilang</td>
 			<td>:</td>
-			<td>{jabatan_analis}</td>
-		</tr>
-		<tr>
-			<td>Unit Kerja</td>
-			<td>:</td>
-			<td>{unit_analis}</td>
+			<td> <u>Rp. {total}</u></td>
 		</tr>
 	</table><br>
 
 	<table align="center">
 		<tr>
-			<td width="720">Telah  melaksanakan pengujian {analisa} dengan butir kegiatan PLP  dibawah  satu jenjang yaitu melakukan pengujian sampel  dengan menggunakan peralatan katagori 2 dan bahan khusus pada kegiatan pengabdian kepada masyarakat ( II.B.39d ).</td>
-		</tr>
-	</table><br><br>
-	<table align="center">
-		<tr>
-			<td width="300"></td>
-			<td width="140"></td>
-			<td width="260">Jember, {date}</td>
-		</tr>
-		<tr>
-			<td>Disahkan oleh,</td>
-			<td></td>
-			<td>Diajukan oleh,</td>
-		</tr>
-		<tr>
-			<td>Kepala</td>
-			<td></td>
-			<td>PLP. Ahli Muda</td>
-		</tr>
-		<tr>
-			<td>Laboratorium Analisis Pangan</td>
-			<td></td>
-			<td>Lab.Analisis Pangan</td>
+			<td width="420"></td>
+			<td width="300">Jember, {date}</td>
 		</tr>
 		<tr>
 			<td></td>
+			<td>Kepala Laboratorium Analisis Pangan</td>
+		</tr>
+		<tr>
 			<td></td>
 			<td><br><br><br></td>
 		</tr>
 		<tr>
-			<td>{nama_kalab}</td>
 			<td></td>
-			<td>{nama_analis}</td>
+			<td>{nama_kalab}</td>
 		</tr>
 		<tr>
-			<td>NIP. {nip_analis}</td>
 			<td></td>
 			<td>NIP. {nip_kalab}</td>
+		</tr>
+		<tr>
+			<td colspan="3"><br><br><i>Catatan:<br>*Total biaya tidak termasuk PPN dan PPh</i></td>
 		</tr>
 	</table>
 </body>

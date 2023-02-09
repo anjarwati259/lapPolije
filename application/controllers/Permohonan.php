@@ -444,6 +444,62 @@ class Permohonan extends CI_Controller {
         $this->load->view('permohonan/blanko_permohonan',$data, FALSE);
 	}
 
+	public function cetakDoc($kode_dokumen){
+		$kode_dokumen = base64_decode(urldecode($kode_dokumen));
+		$daftarDocument = $this->permohonan_model->getDaftarDocByID($kode_dokumen);
+		$data = $this->permohonan_model->permohonanByID($daftarDocument->id_permohonan);
+		$detail = $this->permohonan_model->detailPermohonanByID($daftarDocument->id_permohonan);
+		$dataKalab = $this->permohonan_model->getKalab();
+
+		$tempSurat = $this->permohonan_model->getTemplateSurat($daftarDocument->type);
+		$template_surat = str_replace(['{base_url}', '{title}','{date}'],[base_url(),'Invoice', dateDefault(date('Y-m-d'))],$tempSurat->template_surat);
+
+		if($daftarDocument->type=='invoice'){
+			$html = '';
+			foreach ($detail as $key => $value) {
+				$key+=1;
+				$html .= '<tr>';
+				$html .= '<td>'.$key.'</td>';
+				$html .= '<td>'.$value->jenis_analisa.'</td>';
+				$html .= '<td>'.$value->metode_analisa.'</td>';
+				$html .= '<td>'.generateNomorSample($data->no_permohonan, $value->no_sample).'</td>';
+				$html .= '<td>'.number_format($value->harga,0,',','.').'</td>';
+				$html .= '</tr>';
+			}
+			$find = ['{kode_dokumen}','{nama_customer}','{nama_instansi}','{alamat_customer}','{nip_kalab}', '{nama_kalab}','{table_invoice}','{total_harga}'];
+
+			$replace = [$kode_dokumen, $data->nama_customer, '', $data->alamat,$dataKalab->nip, $dataKalab->nama_pegawai, $html, number_format($data->total_harga,0,',','.')];
+		}else{
+			$terbilang = ucwords(terbilang($data->total_harga));
+			$find = ['{kode_dokumen}','{nama_customer}','{terbilang}','{total}','{nip_kalab}', '{nama_kalab}', '{jml_sample}','{jenis_analisa}'];
+			$replace = [$kode_dokumen, $data->nama_customer, $terbilang, number_format($data->total_harga,0,',','.'),$dataKalab->nip, $dataKalab->nama_pegawai, $data->jml_sample, $jenis_analisa];
+		}
+		$template_surat = str_replace($find,$replace,$template_surat);
+
+		$data = array('title' => 'Invoive',
+						'isi' => $template_surat
+					);
+        $this->load->view('permohonan/blanko_permohonan',$data, FALSE);
+	}
+
+	public function selesaiTugas($nomor){
+		$nomor = base64_decode(urldecode($nomor));
+		$tempSurat = $this->permohonan_model->getTemplateSurat('selesai_tugas');
+		$selesai_tugas = str_replace(['{base_url}', '{title}','{date}'],[base_url(),'Surat Tugas', dateDefault(date('Y-m-d'))],$tempSurat->template_surat);
+		$data = $this->permohonan_model->getDetailByNomor($nomor);
+		$analist = $this->analis_model->getAnalistByID($data->id_analist);
+		$dataKalab = $this->permohonan_model->getKalab();
+
+		$find = ['{nomor}','{nama_analist}','{nip_analist}','{jabatan_analist}','{unit_analist}','{nama_kalab}','{nip_kalab}','{jabatan_kalab}','{unit_kalab}','{analisa}','{sample}','{jml_sample}'];
+		$replace = [$nomor, $analist->nama_pegawai, $analist->nip, $analist->nama_jabatan, $analist->nama_unit, $dataKalab->nama_pegawai, $dataKalab->nip, $dataKalab->nama_jabatan, $dataKalab->nama_unit, $data->jenis_analisa, $data->jenis_sample, $data->jml_sample, ];
+		$selesai_tugas = str_replace($find,$replace,$selesai_tugas);
+
+		$data = array('title' => 'Selesai Tugas',
+						'isi' => $selesai_tugas
+					);
+        $this->load->view('permohonan/blanko_permohonan',$data, FALSE);
+	}
+
 	public function tambahFormAnalisa(){
 		$jml_sample = $this->input->post('jml_sample');
 		$jenis_analisa = $this->jenis_analisa_model->listJenisanalisa();

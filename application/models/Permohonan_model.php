@@ -271,10 +271,21 @@ class Permohonan_model extends CI_Model
 	public function getDetail($kode_surat){
 		$this->db->select('a.*,b.jenis_sample, b.jml_sample, c.jenis_analisa, d.metode_analisa');
 		$this->db->from('tb_detail_permohonan a');
-		$this->db->join('tb_permohonan b','b.no_permohonan = a.no_permohonan', 'left');
+		$this->db->join('tb_permohonan b','b.id = a.id_permohonan', 'left');
 		$this->db->join('tb_jenis_analisa c','c.id = a.id_jenis_analisa', 'left');
 		$this->db->join('tb_metode_analisa d','d.id = a.id_metode_analisa', 'left');
 		$this->db->where('a.surat_tugas', $kode_surat);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function getDetailByNomor($nomor){
+		$this->db->select('a.*,b.jenis_sample, b.jml_sample, c.jenis_analisa, d.metode_analisa');
+		$this->db->from('tb_detail_permohonan a');
+		$this->db->join('tb_permohonan b','b.id = a.id_permohonan', 'left');
+		$this->db->join('tb_jenis_analisa c','c.id = a.id_jenis_analisa', 'left');
+		$this->db->join('tb_metode_analisa d','d.id = a.id_metode_analisa', 'left');
+		$this->db->where('a.selesai_tugas', $nomor);
 		$query = $this->db->get();
 		return $query->row();
 	}
@@ -426,5 +437,21 @@ class Permohonan_model extends CI_Model
        	$this->db->group_by('tb_detail_sample.no_blanko');
        	$query = $this->db->get()->row();
 		return $query;
+	}
+
+	public function getDaftarDocument($id){
+		$this->db->select('*');
+		$this->db->from('tb_daftar_dokumen');
+		$this->db->where('id_permohonan', $id);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function getDaftarDocByID($kode_document){
+		$this->db->select('*');
+		$this->db->from('tb_daftar_dokumen');
+		$this->db->where('kode_dokumen', $kode_document);
+		$query = $this->db->get();
+		return $query->row();
 	}
 }

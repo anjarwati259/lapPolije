@@ -70,6 +70,7 @@ class Admin extends CI_Controller {
 		$detailPermohonan = $this->permohonan_model->detailPermohonanByID($no_permohonan);
 		$dataAnalist = $this->analis_model->listAnalist();
 		$batasAnalist = $this->analis_model->getBatasAnalist();
+		$daftarDocument = $this->permohonan_model->getDaftarDocument($no_permohonan);
 
 		if($dataPermohonan->status == '5'){
 			$isi = 'permohonan/viewAction/detail_terima_sample';
@@ -92,6 +93,7 @@ class Admin extends CI_Controller {
 		$data = array('title' => 'Data Permohonan',
 					  'dataPermohonan' => $dataPermohonan,
 					  'detailPermohonan' => $detailPermohonan,
+					  'daftarDocument'	=> $daftarDocument,
 					  // 'kode_sample'		=> $kode_sample,
 					  // 'kode_order'		=> $kode_order,
 					  'dataAnalist'		=> $dataAnalist,
