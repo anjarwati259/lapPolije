@@ -95,7 +95,6 @@ class Analist extends CI_Controller {
         $no_permohonan = base64_decode(urldecode($no_permohonan));
         $dataPermohonan = $this->permohonan_model->permohonanByID($no_permohonan);
         $detailPermohonan = $this->analis_model->detailPermohonan($id_detail);
-        var_dump($detailPermohonan);exit;
         $data = array('title' => 'Detail Permohonan',
                       'dataPermohonan' => $dataPermohonan,
                       'detailPermohonan' => $detailPermohonan,
@@ -162,7 +161,7 @@ class Analist extends CI_Controller {
             }
         }
 
-        // echo json_encode($result);
+        echo json_encode($result);
         // $result = $this->analis_model->upDetailPermohonan($data);
 
     }

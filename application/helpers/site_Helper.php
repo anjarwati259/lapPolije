@@ -32,7 +32,7 @@ function getKodeRegistrasi(){
 	$CI->load->model('user_model');
 	$tempNomor = $CI->permohonan_model->getTempNomor('permohonan');
 	$id = (int) $CI->permohonan_model->getIdPermohonan();
-	$suffle = (strlen($id) >= 4) ? (0) : (4-$id);
+	$suffle = (strlen($id) >= 4) ? (0) : (4-strlen($id));
 	$randID = $id.substr(str_shuffle('123456789'),1,$suffle);
 	$findWord = ['{nomor}', '{tahun}'];
 	$replace = [$randID, date('Y')];

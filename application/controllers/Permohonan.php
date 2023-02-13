@@ -21,7 +21,7 @@ class Permohonan extends CI_Controller {
 		$id_user = $this->session->userdata('id_user');
 		$ket_sample = $this->permohonan_model->keterangan_sample();
 		$penyimpanan_sample = $this->permohonan_model->penyimpanan_sample();
-		$customer = $this->customer_model->getCustomerByUser($id_user);
+		$customer = $this->customer_model->getCustomer($id_user);
 		$no_permohonan = getKodeRegistrasi();
 		$jenis_analisa = $this->jenis_analisa_model->listJenisanalisa();
 
@@ -299,7 +299,7 @@ class Permohonan extends CI_Controller {
         	$disabled = ($row->status == '0') ? ('') :('disabled');  
             $sub_array = array();
             $sub_array[] = $no;                
-            $sub_array[] = '<a href="'.base_url('admin/detailPermohonan/').generateUrl($row->no_permohonan).'">'.$row->no_permohonan.'</a>'; 
+            $sub_array[] = '<a href="'.base_url('admin/detailPermohonan/').generateUrl($row->id).'">'.$row->no_permohonan.'</a>'; 
             $sub_array[] = $row->jenis_sample;
             $sub_array[] = $row->jml_sample;
             $sub_array[] = $row->nama_customer;
@@ -531,7 +531,10 @@ class Permohonan extends CI_Controller {
 		$result = $this->permohonan_model->updateBatchDetailPermohonan($dataUpdate);
 
 		if($result['status'] == 'success'){
-			$result = $this->permohonan_model->editpermohonan($updatePermohonan);
+			$this->permohonan_model->editpermohonan($updatePermohonan);
+			$result = array('status' => 'success',
+	    					'message' => 'Data Berhasil Disimpan',
+	    					'atribute' => '');
 		}
 		echo json_encode($result);
 	}

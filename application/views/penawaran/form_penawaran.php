@@ -192,10 +192,12 @@
             dataType : 'json',
             success: function(hasil) {
                 console.log(hasil)
+                var url = "<?php echo base_url('permohonan/riwayatPermohonan'); ?>"
                 if(hasil.status == 'success' && action == 'approved'){
-                	console.log('app')
-	                $('#modal-approved').show();
-	                $('#modal-reject').hide();
+                  localStorage.setItem("success", JSON.stringify({['message']:hasil.message, ['tapid']:'pmn'}));
+                    window.location.replace(url);
+	                // $('#modal-approved').show();
+	                // $('#modal-reject').hide();
 	            }else if(hasil.status == 'success' && action == 'reject'){
 	            	console.log('re')
 	            	$('#modal-reject').show();

@@ -45,6 +45,7 @@ class Permohonan_model extends CI_Model
 		$this->db->order_by('id', 'DESC'); 
 		$query = $this->db->get()->row();
 		$idPermohonan = (empty($query->id)) ? (1) : ($query->id);
+		$idPermohonan +=1;
 		return $idPermohonan;
 	}
 
