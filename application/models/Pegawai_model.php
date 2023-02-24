@@ -37,6 +37,7 @@ class Pegawai_model extends CI_Model
 	public function listPegawai(){
 		$this->db->select('*');
 		$this->db->from('tb_pegawai');
+		$this->db->where('status','1');
 		$this->db->order_by('id','asc');
 		$query = $this->db->get();
 		return $query->result();

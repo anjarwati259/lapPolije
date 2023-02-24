@@ -10,6 +10,7 @@ class Analist extends CI_Controller {
 		$this->simple_login->cek_login();
 		$this->load->model('analis_model');
         $this->load->model('permohonan_model');
+        $this->load->model('pegawai_model');
 		$this->load->model('datatables_model');
 		$this->load->library('form_validation');
 	}
@@ -166,8 +167,95 @@ class Analist extends CI_Controller {
 
     }
 
-    public function batasAnalist(){
-        $id = $this->input->post('id_analist');
-        
+    public function dataAnalist(){
+        $pegawai = $this->pegawai_model->listPegawai(); 
+        $data = array('title' => 'Dashboard Analist',
+                        'pegawai' => $pegawai,
+                      'isi' => 'analist/data_analisis');
+        $this->load->view('layout/wrapper',$data, FALSE);
+    }
+
+    public function getDataAnalist(){
+        $fetch_data = $this->analis_model->getDataAnalist();  
+        $data = array();  
+        $no = 1;
+        foreach($fetch_data as $row)  
+        {  
+            $sub_array = array();     
+            $sub_array[] = $no;             
+            $sub_array[] = $row->nip; 
+            $sub_array[] = $row->nama_pegawai; 
+            $sub_array[] = $row->jml_analist; 
+            $sub_array[] = '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#largeModal" onclick="editanalist('.$row->id.')">Edit</button> <button type="button" class="btn btn-danger btn-sm" onclick="hapusanalist('.$row->id.')">Hapus</button>';
+            $data[] = $sub_array;  
+            $no++;
+        }  
+        $output = array(  
+            "draw"              => intval($_POST["draw"]),  
+            "recordsTotal"      => $this->datatables_model->get_all_data('tb_jenis_analisa'),  
+            "recordsFiltered"   => count($data),
+            "data"              => $data  
+        );  
+        echo json_encode($output);
+    }
+
+    public function addanalist(){
+        $id = $this->input->post('id');
+        $id_pegawai = $this->input->post('id_pegawai');
+        $jml_analist = $this->input->post('jml_analist');
+
+        $this->form_validation->set_rules('id_pegawai', 'Silahkan Pilih Nama Pegawai', 'required');
+        $this->form_validation->set_rules('jml_analist', 'Silahkan Pilih Nama Pegawai', 'required');
+
+        $cekAnalist = $this->analis_model->cekAnalist($id_pegawai);
+
+        if(empty($id)){
+            if($this->form_validation->run()){
+                if($cekAnalist == false){
+                    $data = array('id_pegawai' => $id_pegawai,
+                              'jml_analist' => $jml_analist,
+                              'status' => '1',
+                              'created_at'  => date('Y-m-d H:i:sa'),
+                              'updated_at'  => date('Y-m-d H:i:sa')
+                            );
+                    $result = $this->analis_model->insertAnalist($data);
+                    echo json_encode($result);
+                }else{
+                    $result = array('status' => 'error',
+                                    'message' => 'Data Pegawai Telah Terdaftar Sebagai Analist',
+                                    'atribute' => '');
+                    echo json_encode($result);
+                }
+            }else{
+                $atribute = array(
+                    'id_pegawai' => form_error('id_pegawai'),
+                    'jml_analist' => form_error('jml_analist'),
+                );
+
+                $result = array('status' => 'error',
+                                'message' => 'Data Ada yang Belum Terisi, Silahkan Lengkapi Terlebih Dahulu !',
+                                'atribute' => $atribute
+                );
+                echo json_encode($result);
+            }
+        }else{
+           $data = array('id' => $id,
+                          'jml_analist' => $jml_analist,
+                        );
+           $result = $this->analis_model->editAnalist($data);
+           echo json_encode($result);
+        }
+    }
+
+    public function getAnalistById(){
+        $id = $this->input->post('id');
+        $result = $this->analis_model->getAnalistId($id);
+        echo json_encode($result);
+    }
+
+    public function delAnalist(){
+        $id = $this->input->post('id');
+        $result = $this->analis_model->delAnalist($id);
+        echo json_encode($result);
     }
 }

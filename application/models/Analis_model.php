@@ -129,4 +129,107 @@ class analis_model extends CI_Model
 		$query = $this->db->get();
 		return $query->row();
 	}
+
+	// area data analist
+
+	public function getDataAnalist(){
+		$this->db->select('tb_analist.*, tb_pegawai.nip, tb_pegawai.nama_pegawai');
+		$this->db->from('tb_analist');
+		$this->db->join('tb_pegawai','tb_pegawai.id = tb_analist.id_pegawai', 'left');
+		$this->db->where('tb_analist.status', '1');
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function cekAnalist($id){
+		$this->db->select('count(*) as total');
+		$this->db->from('tb_analist');
+		$this->db->where('id_pegawai', $id);
+		$this->db->where('status', '1');
+		$query = $this->db->get()->row();
+
+		if($query->total > 0){
+			return true;
+		}else{
+			return false;
+		}
+		// return $query->result();
+	}
+
+	public function insertAnalist($data){
+		try {
+	        $this->db->trans_begin();
+	        $this->db->insert('tb_analist', $data);
+
+	        $db_error = $this->db->error();
+	        if (!empty($db_error['message'])) {
+	            throw new Exception($db_error['message']);
+	        }
+	        $this->db->trans_commit();
+	        $result = array('status' => 'success',
+	    					'message' => 'Data Berhasil Disimpan',
+	    					'atribute' => '');
+	    }catch (Exception $e) {
+	    	$this->db->trans_rollback();
+	    	$result = array('status' => 'error',
+	    					'message' => $e->getMessage(),
+	    					'atribute' => '');
+	    }
+	    return $result;
+	}
+
+	public function getAnalistId($id){
+		$this->db->select('tb_analist.*, tb_pegawai.nip, tb_pegawai.nama_pegawai');
+		$this->db->from('tb_analist');
+		$this->db->join('tb_pegawai','tb_pegawai.id = tb_analist.id_pegawai', 'left');
+		$this->db->where('tb_analist.id', $id);
+		$query = $this->db->get()->row();
+		return $query;
+	}
+
+	public function editAnalist($data){
+		try {
+	        $this->db->trans_begin();
+	        $this->db->where('id', $data['id']);
+			$this->db->update('tb_analist',$data);
+
+	        $db_error = $this->db->error();
+	        if (!empty($db_error['message'])) {
+	            throw new Exception($db_error['message']);
+	        }
+	        $this->db->trans_commit();
+	        $result = array('status' => 'success',
+	    					'message' => 'Data Berhasil Disimpan',
+	    					'atribute' => '');
+	    }catch (Exception $e) {
+	    	$this->db->trans_rollback();
+	    	$result = array('status' => 'error',
+	    					'message' => $e->getMessage(),
+	    					'atribute' => '');
+	    }
+	    return $result;
+	}
+
+	public function delAnalist($id){
+		try {
+	        $this->db->trans_begin();
+	        $this->db->where('id', $id);
+			$this->db->update('tb_analist', array('status' => '0'));;
+
+	        $db_error = $this->db->error();
+	        if (!empty($db_error['message'])) {
+	            throw new Exception($db_error['message']);
+	        }
+	        $this->db->trans_commit();
+	        $result = array('status' => 'success',
+	    					'message' => 'Data Berhasil Dihapus',
+	    					'atribute' => '');
+	    }catch (Exception $e) {
+	    	$this->db->trans_rollback();
+	    	$result = array('status' => 'error',
+	    					'message' => $e->getMessage(),
+	    					'atribute' => '');
+	    }
+	    return $result;
+	}
 }
