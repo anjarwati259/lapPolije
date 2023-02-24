@@ -185,10 +185,10 @@
           </li>
         <?php }else{ ?>
           <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+            <a class="nav-link collapsed" data-bs-target="#forms-nav<?= $vMenu['id'] ?>" data-bs-toggle="collapse" href="#">
               <?= $vMenu['icon']; ?><span><?= $vMenu['menu']; ?></span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
-            <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <ul id="forms-nav<?= $vMenu['id'] ?>" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <?php
          foreach ($subMenu as $key => $value) {
            if($vMenu['idParent'] == $value['parent']){ ?>

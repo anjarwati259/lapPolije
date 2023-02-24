@@ -442,6 +442,43 @@ class Permohonan extends CI_Controller {
         $this->load->view('permohonan/blanko_permohonan',$data, FALSE);
 	}
 
+	public function sertifikat($kode,$no_sertifikat){
+		$no_sertifikat = urldecode(base64_decode($no_sertifikat));
+		$tempSurat = $this->permohonan_model->getTemplateSurat('sertifikat');
+		$template_surat = ($kode == 'in') ? ($tempSurat->template_surat) : ($tempSurat->template_eng);
+		$sertifikat = str_replace(['{base_url}', '{title}','{date}'],[base_url(),'Blanko Permohonan', dateDefault(date('Y-m-d'))],$template_surat);
+
+		$detailSample = $this->permohonan_model->getSertifikat($no_sertifikat);
+		$data = $this->permohonan_model->permohonanByID($detailSample->id_permohonan);
+		$detail = $this->permohonan_model->detailPermohonanByID($detailSample->id_permohonan, $detailSample->id_sampel);
+		$dataKalab = $this->permohonan_model->getKalab();
+
+		$html = '';
+		$jenis_analisa = '';
+		$analist = '';
+		foreach ($detail as $key => $value) {
+			$key+=1;
+			$html .= '<tr align="center">';
+			$html .= '<td>'.$value->jenis_analisa.'</td>';
+			$html .= '<td>'.$value->rata_rata.'&plusmn;'.$value->standart_deviasi.'</td>';
+			$html .= '<td>%</td>';
+			$html .= '<td>'.$value->metode_analisa.'</td>';
+			$html .= '</tr>';
+
+			$jenis_analisa .=$value->jenis_analisa.', ';
+			$analist .= $value->nama_pegawai.', ';
+		}
+
+		$find = ['{no_sertifikat}','{no_po}','{tgl_terima}','{tgl_selesai}','{nama_customer}','{alamat_customer}','{no_telp}','{jenis_sample}','{kode_sample}','{jenis_analisa}','{nama_analist}','{table_sertifikat}','{nip_kalab}', '{nama_kalab}', '{keterangan}', '{instansi}'];
+		$replace = [$no_sertifikat,$detailSample->no_blanko, dateDefault($data->tgl_terima_sample), dateDefault($data->tgl_selesai), $data->nama_customer, $data->alamat, $data->no_telp, $data->jenis_sample, $detail[0]->kode_sample, $jenis_analisa, $analist,$html,$dataKalab->nip, $dataKalab->nama_pegawai, $detail[0]->catatan, ''];
+		$sertifikat = str_replace($find,$replace,$sertifikat);
+
+		$data = array('title' => 'Blanko Permohonan',
+						'isi' => $sertifikat
+					);
+        $this->load->view('permohonan/blanko_permohonan',$data, FALSE);
+	}
+
 	public function suratTugas($surat_tugas){
 		$kode_surat = base64_decode(urldecode($surat_tugas));
 		$tempSurat = $this->permohonan_model->getTemplateSurat('surat_tugas');
@@ -475,7 +512,7 @@ class Permohonan extends CI_Controller {
 			$html = '';
 			foreach ($detail as $key => $value) {
 				$key+=1;
-				$html .= '<tr>';
+				$html .= '<tr align="center">';
 				$html .= '<td>'.$key.'</td>';
 				$html .= '<td>'.$value->jenis_analisa.'</td>';
 				$html .= '<td>'.$value->metode_analisa.'</td>';
@@ -647,5 +684,11 @@ class Permohonan extends CI_Controller {
 		// $this->permohonan_model->saveDokumen($dokument);
 		$result = $this->permohonan_model->appPenawaran($data, $dokument);
 		echo json_encode($result);
+	}
+
+	public function lapPermohonan(){
+		$data = array('title' => 'Laporan Permohonan',
+                      'isi' => 'permohonan/laporan_permohonan' );
+        $this->load->view('layout/wrapper',$data, FALSE);
 	}
 }

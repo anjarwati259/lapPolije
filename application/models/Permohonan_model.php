@@ -192,7 +192,7 @@ class Permohonan_model extends CI_Model
 	}
 
 	public function detailPermohonanByID($id, $id_sampel=null){
-		$this->db->select('tb_detail_permohonan.*,tb_detail_sample.kode_sample, tb_jenis_analisa.jenis_analisa, tb_metode_analisa.metode_analisa, tb_pegawai.nama_pegawai, tb_metode_analisa.harga, tb_detail_sample.no_sample, tb_detail_sample.catatan');
+		$this->db->select('tb_detail_permohonan.*,tb_detail_sample.kode_sample, tb_jenis_analisa.jenis_analisa, tb_metode_analisa.metode_analisa, tb_pegawai.nama_pegawai, tb_metode_analisa.harga, tb_detail_sample.no_sample, tb_detail_sample.catatan, tb_detail_sample.no_sertifikat');
 		$this->db->from('tb_detail_permohonan');
 		$this->db->join('tb_jenis_analisa','tb_jenis_analisa.id = tb_detail_permohonan.id_jenis_analisa', 'left');
 		$this->db->join('tb_metode_analisa','tb_metode_analisa.id = tb_detail_permohonan.id_metode_analisa', 'left');
@@ -486,5 +486,14 @@ class Permohonan_model extends CI_Model
 	    					'atribute' => '');
 	    }
 	    return $result;
+	}
+
+	public function getSertifikat($no_sertifikat){
+		$this->db->select('tb_detail_permohonan.*, tb_detail_sample.no_blanko');  
+       	$this->db->from('tb_detail_permohonan');
+       	$this->db->join('tb_detail_sample','tb_detail_sample.id = tb_detail_permohonan.id_sampel', 'left');
+       	$this->db->where('tb_detail_sample.no_sertifikat',$no_sertifikat);
+       	$query = $this->db->get()->row();
+		return $query;
 	}
 }

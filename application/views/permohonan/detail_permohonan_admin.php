@@ -165,8 +165,23 @@
                 </tbody>
               </table>
               <div class="row">
-                <label for="inputEmail3" class="col-sm-4 col-form-label"><b>Catatan:</b></label>
-                <label><?= $detailPermohonan[$no_sampel]->catatan; ?></label>
+                <div class="col-md-6">
+                  <label for="inputEmail3" class="col-form-label"><b>Catatan:</b></label><br>
+                  <label><?= $detailPermohonan[$no_sampel]->catatan; ?></label>
+                </div>
+                <div class="col-md-6">
+                  <label for="inputEmail3" class="col-form-label"><b>Sertifikat:</b></label>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <td><a href="<?= base_url('permohonan/sertifikat/en/').base64_encode(urlencode($detailPermohonan[$no_sampel]->no_sertifikat)); ?>" target="_blank">Bahasa Inggris</a></td>
+                        <td><a href="<?= base_url('permohonan/sertifikat/in/').base64_encode(urlencode($detailPermohonan[$no_sampel]->no_sertifikat)); ?>" target="_blank">Bahasa Indonesia</a></td>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+                <!-- <label for="inputEmail3" class="col-sm-4 col-form-label"><b>Catatan:</b></label>
+                <label><?= $detailPermohonan[$no_sampel]->catatan; ?></label> -->
               </div>
             </div>
           </div>
