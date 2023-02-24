@@ -73,11 +73,11 @@ class Admin extends CI_Controller {
 		$daftarDocument = $this->permohonan_model->getDaftarDocument($no_permohonan);
 		$status = (int) $dataPermohonan->status;
 
-		if($status == 5){
+		if($status == 4){
 			$isi = 'permohonan/viewAction/detail_terima_sample';
 		}else if($status == 7){
 			$isi = 'permohonan/viewAction/detail_selesai_analisa';
-		}else if($dataPermohonan->status <= 5){
+		}else if($dataPermohonan->status <= 4){
 			$isi = 'permohonan/detail_permohonan';
 		}else{
 			$isi = 'permohonan/detail_permohonan_admin';

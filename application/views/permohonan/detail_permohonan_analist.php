@@ -172,5 +172,7 @@
     </div>
   </div>
 </section>
-
+<script type="text/javascript">
+  
+</script>
 <?php include('permohonan_ajax.php'); ?>

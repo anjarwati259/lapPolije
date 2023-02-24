@@ -448,11 +448,43 @@ class Permohonan_model extends CI_Model
 		return $query->result();
 	}
 
+	public function listDaftarDocument($id,$type){
+		$this->db->select('*');
+		$this->db->from('tb_daftar_dokumen');
+		$this->db->where('id_permohonan', $id);
+		$this->db->where('type', $type);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
 	public function getDaftarDocByID($kode_document){
 		$this->db->select('*');
 		$this->db->from('tb_daftar_dokumen');
 		$this->db->where('kode_dokumen', $kode_document);
 		$query = $this->db->get();
 		return $query->row();
+	}
+
+	public function appPenawaran($data, $document){
+		try {
+	        $this->db->trans_begin();
+			$this->db->insert('tb_daftar_dokumen',$document);
+			$this->db->where('id', $data['id']);
+			$this->db->update('tb_permohonan', $data);
+	        $db_error = $this->db->error();
+	        if (!empty($db_error['message'])) {
+	            throw new Exception($db_error['message']);
+	        }
+	        $this->db->trans_commit();
+	        $result = array('status' => 'success',
+	    					'message' => 'Data Berhasil Disimpan',
+	    					'atribute' => '');
+	    }catch (Exception $e) {
+	    	$this->db->trans_rollback();
+	    	$result = array('status' => 'error',
+	    					'message' => $e->getMessage(),
+	    					'atribute' => '');
+	    }
+	    return $result;
 	}
 }

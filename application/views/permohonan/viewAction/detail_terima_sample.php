@@ -140,7 +140,7 @@
                         <td>
                           <input class="form-control" type="text" name="kode_sample" id="kode_sample<?= $no_sampel; ?>" value="<?= generateKodeSample('kode_sample', $value->id_sampel) ?>" data-idsample="<?= $value->id_sampel ?>" readonly></td>
                         <td>
-                          <select name="id_analist" id="id_analist" class="form-select" aria-label="Default select example">
+                          <select name="id_analist" id="id_analist" class="form-select" aria-label="Default select example" onchange="batasAnalist(this)">
                             <option selected disabled>Open this select menu</option>
                             <?php foreach ($dataAnalist as $kAnalist => $vAnalist) { 
                               if($vAnalist->jml_analist < $batas_analist){ ?>
@@ -155,7 +155,7 @@
               </table>
               <div class="row">
                 <label for="inputEmail3" class="col-sm-4 col-form-label"><b>Catatan:</b></label>
-                <label><?= $detailPermohonan[0]->catatan; ?></label>
+                <label><?= $detailPermohonan[$no_sampel]->catatan; ?></label>
               </div>
             </div>
           </div>
@@ -201,7 +201,7 @@
     // console.log(data)
     data.sample = dataSample;
     data.dataPermohonan = dataPermohonan;
-    console.log(data)
+    // console.log(data)
     $.ajax({
       type: 'POST',
       url: "<?php echo base_url('permohonan/saveAnalist'); ?>",
@@ -219,5 +219,39 @@
           } 
       }
     });
+  }
+
+  function batasAnalist(sel){
+    var id = sel.value;
+    var data = {}
+    var jmlAnalist = JSON.parse(localStorage.getItem("jmlAnalisa"));
+    var batasAnalisa = '<?php echo $batas_analist; ?>'
+
+    for(var key in jmlAnalist){
+      var jml_analisa = parseInt(jmlAnalist[key].jml_analisa);
+      if(jmlAnalist[key].id_analist == id && jml_analisa < batasAnalisa){
+        jml_analisa+=1;
+        jmlAnalist[key]['jml_analisa'] = jml_analisa;
+      }
+      if(jml_analisa >= batasAnalisa){
+        var pesan = 'Analist dengan nama '+jmlAnalist[key].nama+' Telah Melebihi Batas';
+        Swal.fire('Warning!',pesan,'warning');
+      }
+    }
+    Object.assign(data,jmlAnalist);
+    localStorage.setItem("jmlAnalisa",JSON.stringify(data));
+    // var html = '<option>Coba</option>';
+    // $("#tbl>tbody>tr").find('#id_analist').html(html);
+  }
+
+  setjmlAnalist()
+  function setjmlAnalist(){
+    let dataanalist = <?php echo json_encode($dataAnalist); ?>;
+    // console.log(dataanalist)
+    var jmlAnalist = {};
+    for ( var key in dataanalist ) {
+      jmlAnalist[key] = {['id_analist']:dataanalist[key].id, ['jml_analisa']:dataanalist[key].jml_analist, ['nama']:dataanalist[key].nama_pegawai}
+    }
+    localStorage.setItem("jmlAnalisa",JSON.stringify(jmlAnalist));
   }
 </script>

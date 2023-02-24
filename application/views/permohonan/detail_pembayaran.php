@@ -142,15 +142,14 @@
                 <td><?= number_format($dataBayar->jml_bayar,0,',','.'); ?></td>
                 <td>
                   1. <a href="<?= base_url('permohonan/bukti_bayar/').urlencode(base64_encode($dataBayar->bukti_bayar)) ?>" target="_blank">Bukti Bayar</a><br>
-                  2. <a href="#">Invoive</a><br>
-                  2. <a href="#">Kwitansi</a>
+                  2. <a href="<?= base_url('permohonan/invoice/').$dataPermohonan->id ?>">Invoive</a><br>
+                  3. <a href="#">Kwitansi</a>
                 </td>
               </tr>
             </tbody>
           </table>
           <div class="text-center group-button">
             <button type="button" class="btn btn-primary" onclick="AppBayar('approved')">Approved</button>
-            <button type="button" class="btn btn-danger" onclick="AppBayar('reject')">Reject</button>
           </div>
         </div>
       </div>
@@ -168,7 +167,7 @@
         dataType : 'json',
         success: function(hasil) {
             // console.log(hasil);
-            var url = "<?php echo base_url('permohonan/kwitansi'); ?>";
+            var url = "<?php echo base_url('permohonan/kwitansi/'); ?>"+id;
             if(hasil.status == 'success'){
                 localStorage.setItem("sukses",hasil.message)
                 window.location.replace(url);

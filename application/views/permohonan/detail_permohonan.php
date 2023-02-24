@@ -140,7 +140,7 @@
             </table>
             <div class="row">
               <label for="inputEmail3" class="col-sm-4 col-form-label"><b>Catatan:</b></label>
-              <label><?= $detailPermohonan[0]->catatan; ?></label>
+              <label><?= $detailPermohonan[$no_sampel]->catatan; ?></label>
             </div>
           </div>
         </div>

@@ -120,8 +120,8 @@
           </div>
       	  <?php }else{ ?>
       	  	<div class="text-center group-button">
-	            <button type="button" class="btn btn-primary" onclick="konfirm('approved')">Approved</button>
-	            <button type="button" class="btn btn-danger" onclick="konfirm('reject')">Reject</button>
+	            <button type="button" class="btn btn-primary" onclick="konfirm('approved')" <?= ($dataPermohonan->status == '2') ? ('disabled') : (''); ?>>Setuju</button>
+	            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal_reject" <?= ($dataPermohonan->status == '2') ? ('disabled') : (''); ?>>Tidak Setuju</button>
 	        </div>
       	  <?php } ?>
         </div>
@@ -129,20 +129,21 @@
     </div>
   </div>
 </section>
-<button type="button" class="btn btn-primary btn-approved" data-bs-toggle="modal" data-bs-target="#modal_approved">Approved</button>
-<div class="modal fade" id="modal_approved" tabindex="-1">
+
+<div class="modal fade" id="modal_reject" tabindex="-1">
 	<div class="modal-dialog">
 	  <div class="modal-content">
-	    <div class="modal-header">
-	      <h5 class="modal-title">Basic Modal</h5>
-	      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	    </div>
 	    <div class="modal-body">
-	      Non omnis incidunt qui sed occaecati magni asperiores est mollitia. Soluta at et reprehenderit. Placeat autem numquam et fuga numquam. Tempora in facere consequatur sit dolor ipsum. Consequatur nemo amet incidunt est facilis. Dolorem neque recusandae quo sit molestias sint dignissimos.
-	    </div>
-	    <div class="modal-footer">
-	      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-	      <button type="button" class="btn btn-primary">Save changes</button>
+        <form class="row g-3">
+          <div class="col-12">
+            <label for="alasan" class="form-label"><b>Alasan Tidak Setuju</b></label>
+            <textarea id="alasan" class="form-control" style="height: 200px;"></textarea>
+          </div>
+        </form>
+        <div class="mt-3 text-center">
+          <button type="button" class="btn btn-primary" onclick="konfirm('reject')">Submit</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
 	    </div>
 	  </div>
 	</div>
@@ -151,7 +152,7 @@
 	$('.btn-approved').click();
 	function simpan(action){
 		var data = {};
-		var id = '<?= $dataPermohonan->id ?>';id
+		var id = '<?= $dataPermohonan->id ?>';
 		var total_harga = $('#total').text();
 
 		data.id = id;
@@ -163,51 +164,51 @@
 	        dataharga[index] = {['id']:id,
 	        					['harga']:harga}
 	    });
-	    data.data = dataharga;
-	    $.ajax({
-            type: 'POST',
-            url: "<?php echo base_url('permohonan/simpanPenawaran'); ?>",
-            data:data,
-            dataType : 'json',
-            success: function(hasil) {
-                console.log(hasil)
-                var url = "<?php echo base_url('admin/permohonan'); ?>";
-                if(hasil.status == 'success'){
-                    localStorage.setItem("success", JSON.stringify({['message']:hasil.message, ['tapid']:'pmn'}));
-                    window.location.replace(url);
-                }else{
-                    // localStorage.setItem("error",data.message)
-                    Swal.fire('Oppss...',hasil.message,'error')
-                } 
-            }
-        });
+	 data.data = dataharga;
+    $.ajax({
+          type: 'POST',
+          url: "<?php echo base_url('permohonan/simpanPenawaran'); ?>",
+          data:data,
+          dataType : 'json',
+          success: function(hasil) {
+              console.log(hasil)
+              var url = "<?php echo base_url('admin/permohonan'); ?>";
+              if(hasil.status == 'success'){
+                  localStorage.setItem("success", JSON.stringify({['message']:hasil.message, ['tapid']:'pmn'}));
+                  window.location.replace(url);
+              }else{
+                  // localStorage.setItem("error",data.message)
+                  Swal.fire('Oppss...',hasil.message,'error')
+              } 
+          }
+      });
 	}
 
 	function konfirm(action){
 		var id = '<?= $dataPermohonan->id; ?>';
+    var alasan = $('#alasan').val();
 		$.ajax({
-            type: 'POST',
-            url: "<?php echo base_url('permohonan/appPenawaran'); ?>",
-            data:{id:id, action:action},
-            dataType : 'json',
-            success: function(hasil) {
-                console.log(hasil)
-                var url = "<?php echo base_url('permohonan/riwayatPermohonan'); ?>"
-                if(hasil.status == 'success' && action == 'approved'){
-                  localStorage.setItem("success", JSON.stringify({['message']:hasil.message, ['tapid']:'pmn'}));
-                    window.location.replace(url);
-	                // $('#modal-approved').show();
-	                // $('#modal-reject').hide();
-	            }else if(hasil.status == 'success' && action == 'reject'){
-	            	console.log('re')
-	            	$('#modal-reject').show();
-	                $('#modal-approved').hide();
-	            }else{
-	            	Swal.fire('Oppss...',hasil.message,'error')
-	            	console.log('error')
-	            }
-            }
-        });
+        type: 'POST',
+        url: "<?php echo base_url('permohonan/appPenawaran'); ?>",
+        data:{id:id, action:action, alasan:alasan},
+        dataType : 'json',
+        success: function(hasil) {
+          // console.log(hasil)
+          var url = "<?php echo base_url('permohonan/invoice/'); ?>"+id;
+          if(hasil.status == 'success' && action == 'approved'){
+            // localStorage.setItem("success", JSON.stringify({['message']:hasil.message}));
+            // window.open(url, '_blank')
+            window.location.replace(url);
+          }else if(hasil.status == 'success' && action == 'reject'){
+          	console.log('re')
+          	$('#modal-reject').show();
+              $('#modal-approved').hide();
+          }else{
+          	Swal.fire('Oppss...',hasil.message,'error')
+          	console.log('error')
+          }
+        }
+    });
 	}
 </script>
 <?php include('penawaran_ajax.php'); ?>

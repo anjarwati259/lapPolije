@@ -166,44 +166,8 @@ class Analist extends CI_Controller {
 
     }
 
-    public function ApprovedAnalisa1(){
-        $id = $this->input->post('id');
-        $no_permohonan = $this->input->post('no_permohonan');
-        $data = array('id' => $id,
-                      'status' => '3',
-                    );
-        $result = $this->analis_model->upDetailPermohonan($data);
-        if($result['status'] == 'success'){
-            $dataUp = array('id' => $id,
-                            'no_permohonan' => $no_permohonan,
-                            'status_detail' => '1',
-                            'status_up'     => '4'
-                            );
-            var_dump($dataUp);exit;
-            $hasil = $this->analis_model->updateStatus($dataUp);
-            $kode_sample = $this->permohonan_model->getKodeSample($no_permohonan);
-            var_dump($kode_sample);exit;
-            $kode_doc = generateKode('selesai_tugas', $id);
-            $dataDoc = array('id_detail_permohonan' => $id,
-                             'no_permohonan' => $no_permohonan,
-                             'type' => 'selesai_tugas',
-                             'kode_dokumen' => $kode_doc,
-                             'status'   => '1',
-                             'created_at' => date('Y-m-d H:i:sa')
-                            );
-            $this->permohonan_model->saveDokumen($dataDoc);
-
-            if($hasil == true){
-                $kode_doc = generateKode('sertifikat', $kode_sample);
-                $dataDoc = array('no_permohonan' => $no_permohonan,
-                                'type' => 'sertifikat',
-                                'kode_dokumen' => $kode_doc,
-                                'status' => '1',
-                                'created_at' => date('Y-m-d H:i:sa')
-                            );
-                $this->permohonan_model->saveDokumen($dataDoc);
-            }
-        }
-        echo json_encode($result);
+    public function batasAnalist(){
+        $id = $this->input->post('id_analist');
+        
     }
 }

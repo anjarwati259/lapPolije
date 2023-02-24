@@ -219,13 +219,6 @@ class Permohonan extends CI_Controller {
 							'modal' =>'konfirmBayar',
 							'invoice' =>'1'
 						);
-		}else if($status == '4'){
-			$result = array('action' => 'kirimSample',
-							'label' => 'Kirim Sample',
-							'disabled' => '',
-							'modal' =>'largeModal',
-							'invoice' =>'1'
-						);
 		}else if($status == '21'){
 			$result = array('action' => 'batal',
 							'label' => 'Konfirmasi Bayar',
@@ -246,19 +239,33 @@ class Permohonan extends CI_Controller {
 
 	public function appPenawaran(){
 		$id = $this->input->post('id');
+		$alasan = $this->input->post('alasan');
 		$action = $this->input->post('action');
 		$status = ($action == 'approved') ? ('2') : ('20');
-		$invoice = generateKode('invoice',$id);
-		$dokument = array('id_permohonan' => $id,
+		
+		if($action == 'approved'){
+			$invoice = generateKode('invoice',$id);
+			$dokument = array('id_permohonan' => $id,
 						  'type'		=> 'invoice',
 						  'kode_dokumen' => $invoice,
 						  'status'		=> '1',
 						  'created_at'	=> date('Y-m-d H:i:sa')
 						);
-		$this->permohonan_model->saveDokumen($dokument);
-		$data = array('id' => $id,
-					  'status' 	=> $status);
-		$result = $this->permohonan_model->editpermohonan($data);
+			$data = array('id' => $id,
+					  	  'status' 	=> $status);
+			$result = $this->permohonan_model->appPenawaran($data, $dokument);
+			// echo json_encode($data);
+		}else{
+			$data = array('id' => $id,
+						  'alasan' => $alasan,
+					  	  'status' 	=> $status);
+			$result = $this->permohonan_model->editpermohonan($data);
+			// echo json_encode($data);
+		}
+		
+		// $this->permohonan_model->saveDokumen($dokument);
+		
+		// $result = $this->permohonan_model->editpermohonan($data);
 		
 		echo json_encode($result);
 	}
@@ -374,8 +381,10 @@ class Permohonan extends CI_Controller {
 	public function saveAnalist(){
 		$dataAnalist = $this->input->post('data');
 		$dataPermohonan = $this->input->post('dataPermohonan');
+		// $jmlAnalisa = $this->input->post('jmlAnalisa');
 		$sample = $this->input->post('sample');
 		$dataPermohonan['status'] = '6';
+
 		foreach ($sample as $key => $value) {
 			$no_blanko = generateKode('no_blanko',$value['id']);
 			$sample[$key]['no_blanko'] = $no_blanko;
@@ -387,6 +396,14 @@ class Permohonan extends CI_Controller {
 		$result = $this->permohonan_model->saveBatchPermohonan($data);
 		if($result['status'] == 'success'){
 			$result = $this->permohonan_model->editpermohonan($dataPermohonan);
+			foreach ($dataAnalist as $key => $value) {
+				$this->permohonan_model->addJmlAnalist($value['id_analist']);
+				$surat_tugas = generateKode('surat_tugas',$value['id']);
+				$data = array('id' => $value['id'],
+                      			'surat_tugas' => $surat_tugas,
+                    );
+				$this->analis_model->upDetailPermohonan($data);
+			}
 		}
 		echo json_encode($result);
 		// var_dump($result);
@@ -480,6 +497,18 @@ class Permohonan extends CI_Controller {
 						'isi' => $template_surat
 					);
         $this->load->view('permohonan/blanko_permohonan',$data, FALSE);
+	}
+
+	public function invoice($id){
+		$daftarDocument = $this->permohonan_model->listDaftarDocument($id, 'invoice');
+		$kode_dokumen = urlencode(base64_encode($daftarDocument->kode_dokumen));
+		$this->cetakDoc($kode_dokumen);
+	}
+
+	public function kwitansi($id){
+		$daftarDocument = $this->permohonan_model->listDaftarDocument($id, 'kwitansi');
+		$kode_dokumen = urlencode(base64_encode($daftarDocument->kode_dokumen));
+		$this->cetakDoc($kode_dokumen);
 	}
 
 	public function selesaiTugas($nomor){
@@ -615,8 +644,8 @@ class Permohonan extends CI_Controller {
 						  'status'	=> '1',
 						  'created_at' => date('Y-m-d H:i:sa')
 						);
-		$this->permohonan_model->saveDokumen($dokument);
-		$result = $this->permohonan_model->editpermohonan($data);
+		// $this->permohonan_model->saveDokumen($dokument);
+		$result = $this->permohonan_model->appPenawaran($data, $dokument);
 		echo json_encode($result);
 	}
 }
