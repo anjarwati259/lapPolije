@@ -12,10 +12,34 @@ class Metode_analisa_model extends CI_Model
 		$this->load->database();
 	}
 
-	public function insertmetode_analisa($data){
+	public function insertmetode_analisa1($data){
 		try {
 	        $this->db->trans_begin();
 	        $this->db->insert('tb_metode_analisa', $data);
+
+	        $db_error = $this->db->error();
+	        if (!empty($db_error['message'])) {
+	            throw new Exception($db_error['message']);
+	        }
+	        $this->db->trans_commit();
+	        $result = array('status' => 'success',
+	    					'message' => 'Data Berhasil Disimpan',
+	    					'atribute' => '');
+	    }catch (Exception $e) {
+	    	$this->db->trans_rollback();
+	    	$result = array('status' => 'error',
+	    					'message' => $e->getMessage(),
+	    					'atribute' => '');
+	    }
+	    return $result;
+	}
+
+	public function insertmetode_analisa($data, $datafile){
+		try {
+	        $this->db->trans_begin();
+	        $this->db->insert('tb_metode_analisa', $data);
+	        $datafile['id_metode_analisa'] = $this->db->insert_id();
+	        $this->db->insert('tb_file', $datafile);
 
 	        $db_error = $this->db->error();
 	        if (!empty($db_error['message'])) {
@@ -44,9 +68,10 @@ class Metode_analisa_model extends CI_Model
 
 	// untuk datatable
 	public function getDatametode_analisa(){
-		$this->db->select('tb_metode_analisa.*, tb_jenis_analisa.jenis_analisa');  
+		$this->db->select('tb_metode_analisa.*, tb_jenis_analisa.jenis_analisa, tb_file.nama_file');  
        	$this->db->from('tb_metode_analisa');
        	$this->db->join('tb_jenis_analisa','tb_jenis_analisa.id = tb_metode_analisa.id_jenis_analisa', 'left');
+       	$this->db->join('tb_file','tb_file.id_metode_analisa = tb_metode_analisa.id', 'left');
        	$this->db->where('tb_metode_analisa.status','1');  
        	if(!empty($_POST["search"]["value"]))  
        	{  

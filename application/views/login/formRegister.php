@@ -23,56 +23,65 @@
               </div>
 
               <form action="<?php echo base_url('login/Addregister') ?>" method="POST" class="row g-3 needs-validation" novalidate>
-                <div class="col-6">
-                  <label for="nama_customer" class="form-label">Nama Lengkap</label>
-                  <input type="text" name="nama_customer" class="form-control" id="nama_customer" required>
-                  <div class="invalid-feedback">Please, enter your name!</div>
-                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <label for="nama_customer" class="form-label">Nama Lengkap</label>
+                    <input type="text" name="nama_customer" class="form-control" id="nama_customer" required>
+                    <div class="invalid-feedback">Please, enter your name!</div>
+                  </div>
 
-                <div class="col-6">
-                  <label for="username" class="form-label">Username</label>
-                  <input type="text" name="username" class="form-control" id="username" required>
-                  <div class="invalid-feedback">Please, enter your Username!</div>
-                </div>
+                  <div class="col-6">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control" id="username" required>
+                    <div class="invalid-feedback">Please, enter your Username!</div>
+                  </div>
 
-                <div class="col-6">
-                  <label for="yourEmail" class="form-label">Your Email</label>
-                  <input type="email" name="email" class="form-control" id="yourEmail" required>
-                  <div class="invalid-feedback">Please enter a valid Email adddress!</div>
-                </div>
+                  <div class="col-6">
+                    <label for="yourEmail" class="form-label">Your Email</label>
+                    <input type="email" name="email" class="form-control" id="yourEmail" required>
+                    <div class="invalid-feedback">Please enter a valid Email adddress!</div>
+                  </div>
 
-                <div class="col-6">
-                  <label for="password" class="form-label">Password</label>
-                  <input type="password" name="password" class="form-control" id="password" required>
-                  <div class="invalid-feedback">Please enter your password!</div>
-                  <div id="msgPass"></div>
-                </div>
+                  <div class="col-6">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" id="password" required>
+                    <div class="invalid-feedback">Please enter your password!</div>
+                    <div id="msgPass"></div>
+                  </div>
 
-                <div class="col-6">
-                  <label for="yourName" class="form-label">Nomor Telephon (WA)</label>
-                  <input type="number" name="no_telp" class="form-control" id="no_telp" required>
-                  <div class="invalid-feedback">Please, enter your phone!</div>
-                </div>
+                  <div class="col-6">
+                    <label for="yourName" class="form-label">Nomor Telephon (WA)</label>
+                    <input type="number" name="no_telp" class="form-control" id="no_telp" required>
+                    <div class="invalid-feedback">Please, enter your phone!</div>
+                  </div>
 
-                <div class="col-6">
-                  <label for="rep_pass" class="form-label">Ulangi Password</label>
-                  <input type="password" name="rep_pass" class="form-control" id="rep_pass" required>
-                  <div class="invalid-feedback">Please, enter your password!</div>
-                  <div id="msgRep"></div>
-                </div>
+                  <div class="col-6">
+                    <label for="rep_pass" class="form-label">Ulangi Password</label>
+                    <input type="password" name="rep_pass" class="form-control" id="rep_pass" required>
+                    <div class="invalid-feedback">Please, enter your password!</div>
+                    <div id="msgRep"></div>
+                  </div>
 
-                <div class="col-12">
-                  <label for="yourName" class="form-label">Alamat</label>
-                  <textarea class="form-control" name="alamat" id="alamat" style="height: 100px;" required></textarea>
-                  <div class="invalid-feedback">Please, enter your Address!</div>
-                </div>
+                  <div class="col-6">
+                    <label for="yourEmail" class="form-label">Nama Instansi</label>
+                    <input type="text" name="instansi" class="form-control" id="instansi" required>
+                    <div class="invalid-feedback">Please, enter your instansi!</div>
+                  </div>
 
-                <div class="col-12 text-end">
-                  <button class="btn btn-primary w-30" type="submit">Create Account</button>
+                  <div class="col-6">
+                    <label for="yourName" class="form-label">Alamat</label>
+                    <textarea class="form-control" name="alamat" id="alamat" style="height: 100px;" required></textarea>
+                    <div class="invalid-feedback">Please, enter your Address!</div>
+                  </div>
+
+                  <div class="col-12 text-end mt-3">
+                    <button class="btn btn-primary w-30" type="submit">Create Account</button>
+                  </div>
+                  <div class="col-12 text-end">
+                    <p class="small mb-0">Already have an account? <a href="<?php echo base_url('login') ?>">Log in</a></p>
+                  </div>
                 </div>
-                <div class="col-12 text-end">
-                  <p class="small mb-0">Already have an account? <a href="<?php echo base_url('login') ?>">Log in</a></p>
-                </div>
+                
               </form>
 
             </div>

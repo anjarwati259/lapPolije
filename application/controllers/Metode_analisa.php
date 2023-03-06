@@ -35,13 +35,34 @@ class Metode_analisa extends CI_Controller {
 
 		if($this->form_validation->run()){
 			if(empty($id)){
-				$data = array(	'metode_analisa' => $metode_analisa,
+				// upload gambar
+				$config['upload_path']="./upload"; //path folder file upload
+		        $config['allowed_types']= 'gif|jpg|png|jpeg|pdf'; //type file yang boleh di upload
+		        $config['encrypt_name'] = FALSE; //enkripsi file name upload
+		        $config['max_size']			= '2024';//dalam kb
+				$config['max_width']		= '2024';
+				$config['max_height']		= '2024';
+
+				$this->load->library('upload',$config);
+				if($this->upload->do_upload("upload_file")){
+					$file = array('upload_data' => $this->upload->data());
+
+					$datafile = array('nama_file' => $file['upload_data']['file_name'],
+									'created_at' => date('Y-m-d H:i:sa'),
+									'status' => '1');
+
+					$data = array(	'metode_analisa' => $metode_analisa,
 								'id_jenis_analisa' => $id_jenis_analisa,
 								'harga'			=> $harga,
 								'status'		=> '1',
 								'created_at'	=> date('Y-m-d H:i:sa')
 						);
-				$result = $this->metode_analisa_model->insertmetode_analisa($data);
+					$result = $this->metode_analisa_model->insertmetode_analisa($data, $datafile);
+				}else{
+					$result = array('status' => 'error',
+		    					'message' => $this->upload->display_errors(),
+		    					'atribute' => '');
+				}
 			}else{
 				$data = array(	'metode_analisa' => $metode_analisa,
 								'id_jenis_analisa' => $id_jenis_analisa,

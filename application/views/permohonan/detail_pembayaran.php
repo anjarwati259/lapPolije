@@ -61,7 +61,7 @@
                   </tr>
                   <tr>
                     <th scope="row">Nama Instansi</th>
-                    <td>: -</td>
+                    <td>: <?= ($dataPermohonan->instansi) ? ($dataPermohonan->instansi) : '-' ?></td>
                   </tr>
                   <tr>
                     <th scope="row">Nomor Telephon</th>

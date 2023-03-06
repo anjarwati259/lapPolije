@@ -297,7 +297,7 @@
         var rata_rata = $('#rata_rata').val();
         var data = {}
 
-        data.data = {id:id_detail,
+        data = {id:id_detail,
                     id_permohonan:id_permohonan,
                     pengulangan_1:ulangan1,
                     pengulangan_2:ulangan2,

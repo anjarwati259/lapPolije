@@ -21,7 +21,7 @@
               </tr>
               <tr>
                 <th style="width: 250px;">Perkiraan Selesai (Hari)</th>
-                <td>: <?= ($dataPermohonan->perkiraan_selesai) ? ($dataPermohonan->perkiraan_selesai) : '-' ?></td>
+                <td>: <?= ($dataPermohonan->perkiraan_selesai) ? (dateDefault($dataPermohonan->perkiraan_selesai)) : '-' ?></td>
               </tr>
               <tr>
                 <th style="width: 250px;">Tanggal Perkiraan Selesai</th>
@@ -73,7 +73,7 @@
                   </tr>
                   <tr>
                     <th scope="row">Nama Instansi</th>
-                    <td>: -</td>
+                    <td>: <?= ($dataPermohonan->instansi) ? ($dataPermohonan->instansi) : '-' ?></td>
                   </tr>
                   <tr>
                     <th scope="row">Nomor Telephon</th>
@@ -96,12 +96,16 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <?php if($daftarDocument){ ?>
                   <?php $no=1; foreach ($daftarDocument as $key => $value) { ?>
                     <tr>
                       <td><a href="<?= base_url('permohonan/cetakDoc/').urlencode(base64_encode($value->kode_dokumen)); ?>"><?= $value->kode_dokumen; ?></a></td>
                       <td><?= $value->type; ?></td>
                     </tr>
                   <?php } ?>
+                <?php }else{ ?>
+                  <p>Dokument Belum Tersedia</p>
+                <?php } ?>
                 </tbody>
               </table>
             </div>

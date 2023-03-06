@@ -20,12 +20,20 @@
                 <td>: <?= dateDefault($dataPermohonan->tgl_terima_sample) ?></td>
               </tr>
               <tr>
+                <th style="width: 250px;">Perkiraan Selesai</th>
+                <td>: <?= ($dataPermohonan->perkiraan_selesai) ? ($dataPermohonan->perkiraan_selesai) : '0' ?> Hari</td>
+              </tr>
+              <tr>
+                <th style="width: 250px;">Perkiraan Selesai</th>
+                <td>: <?= ($dataPermohonan->perkiraan_selesai) ? ($dataPermohonan->perkiraan_selesai) : '0' ?> Hari</td>
+              </tr>
+              <tr>
                 <th style="width: 250px;">Tanggal Perkiraan Selesai</th>
                 <td>: <?= dateDefault($dataPermohonan->tgl_terima_sample) ?></td>
               </tr>
               <tr>
                 <th style="width: 250px;">Tanggal Selesai</th>
-                <td>: <?= ($dataPermohonan->tgl_selesai) ? ($dataPermohonan->tgl_selesai) : '-' ?></td>
+                <td>: <?= ($dataPermohonan->tgl_selesai) ? (dateDefault($dataPermohonan->tgl_selesai)) : '-' ?></td>
               </tr>
               <tr>
                 <th style="width: 250px;">Jenis Sampel</th>
@@ -69,7 +77,7 @@
                   </tr>
                   <tr>
                     <th scope="row">Nama Instansi</th>
-                    <td>: -</td>
+                    <td>: <?= ($dataPermohonan->instansi) ? ($dataPermohonan->instansi) : '-' ?></td>
                   </tr>
                   <tr>
                     <th scope="row">Nomor Telephon</th>
@@ -92,10 +100,18 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Brandon Jacob</td>
-                    <td>Designer</td>
-                  </tr>
+                  <?php if($daftarDocument){ ?>
+                  <?php $no=1; foreach ($daftarDocument as $key => $value) { ?>
+                    <?php if($value['kode_dokumen']){ ?>
+                    <tr>
+                      <td><a href="<?= base_url('permohonan/'.$value['url'].'/').urlencode(base64_encode($value['kode_dokumen'])); ?>" target="_blank"><?= $value['kode_dokumen']; ?></a></td>
+                      <td><?= $value['type']; ?></td>
+                    </tr>
+                  <?php } ?>
+                  <?php } ?>
+                <?php }else{ ?>
+                  <p>Dokument Belum Tersedia</p>
+                <?php } ?>
                 </tbody>
               </table>
             </div>

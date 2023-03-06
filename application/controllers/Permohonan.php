@@ -168,7 +168,8 @@ class Permohonan extends CI_Controller {
 	}
 
 	public function getDatapermohonan(){
-		$fetch_data = $this->permohonan_model->getRiwayatPermohonan();  
+		$id_customer = $this->session->userdata('id');
+		$fetch_data = $this->permohonan_model->getRiwayatPermohonan($id_customer);  
         $data = array(); 
         $no=1; 
         foreach($fetch_data as $row)  
@@ -290,9 +291,11 @@ class Permohonan extends CI_Controller {
 		$id = base64_decode(urldecode($id));
 		$dataPermohonan = $this->permohonan_model->permohonanByID($id);
 		$detailPermohonan = $this->permohonan_model->detailPermohonanByID($id);
+		$daftarDocument = $this->permohonan_model->getDaftarDocument($id);
 		$data = array('title' => 'Detail Permohonan',
 					  'dataPermohonan' => $dataPermohonan,
 					  'detailPermohonan' => $detailPermohonan,
+					  'daftarDocument' => $daftarDocument,
                       'isi' => 'permohonan/detail_permohonan');
         $this->load->view('layout/wrapper',$data, FALSE);
 	}
@@ -522,7 +525,7 @@ class Permohonan extends CI_Controller {
 			}
 			$find = ['{kode_dokumen}','{nama_customer}','{nama_instansi}','{alamat_customer}','{nip_kalab}', '{nama_kalab}','{table_invoice}','{total_harga}'];
 
-			$replace = [$kode_dokumen, $data->nama_customer, '', $data->alamat,$dataKalab->nip, $dataKalab->nama_pegawai, $html, number_format($data->total_harga,0,',','.')];
+			$replace = [$kode_dokumen, $data->nama_customer, $data->instansi, $data->alamat,$dataKalab->nip, $dataKalab->nama_pegawai, $html, number_format($data->total_harga,0,',','.')];
 		}else{
 			$terbilang = ucwords(terbilang($data->total_harga));
 			$find = ['{kode_dokumen}','{nama_customer}','{terbilang}','{total}','{nip_kalab}', '{nama_kalab}', '{jml_sample}','{jenis_analisa}'];
@@ -690,5 +693,33 @@ class Permohonan extends CI_Controller {
 		$data = array('title' => 'Laporan Permohonan',
                       'isi' => 'permohonan/laporan_permohonan' );
         $this->load->view('layout/wrapper',$data, FALSE);
+	}
+
+	public function getLapPermohonan(){
+		$fetch_data = $this->permohonan_model->getLapPermohonan();  
+        $data = array(); 
+        $no=1; 
+        foreach($fetch_data as $row)  
+        { 
+            $sub_array = array();
+            $sub_array[] = $no;                
+            $sub_array[] = $row->no_pesanan; 
+            $sub_array[] = dateDefault(date('Y-m-d',strtotime($row->created_at)));
+            $sub_array[] = $row->nama_customer;
+            $sub_array[] = $row->jenis_sample;
+            $sub_array[] = $row->kode_sample;
+            $sub_array[] = $row->jenis_analisa;
+            $sub_array[] = $row->metode_analisa;
+            $sub_array[] = number_format($row->harga_satuan,0,',','.');
+            $data[] = $sub_array;
+            $no++;  
+        }  
+        $output = array(  
+            "draw"				=> intval($_POST["draw"]),  
+            "recordsTotal"		=> $this->datatables_model->get_all_data('tb_detail_permohonan'),  
+            "recordsFiltered"	=> $this->datatables_model->get_all_data('tb_detail_permohonan'),
+            "data"				=> $data  
+        );  
+        echo json_encode($output);
 	}
 }

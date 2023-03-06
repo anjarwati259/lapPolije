@@ -96,9 +96,20 @@ class Analist extends CI_Controller {
         $no_permohonan = base64_decode(urldecode($no_permohonan));
         $dataPermohonan = $this->permohonan_model->permohonanByID($no_permohonan);
         $detailPermohonan = $this->analis_model->detailPermohonan($id_detail);
+        $Document = $this->permohonan_model->getDocument($id_detail);
+        // $daftarDocument = $this->permohonan_model->getDaftarDocument($no_permohonan);
+
+        $dataDoc[] = ['kode_dokumen' => $Document->surat_tugas,
+                    'type' => 'Surat Tugas',
+                    'url' =>'suratTugas'];
+        $dataDoc[] = ['kode_dokumen' => $Document->selesai_tugas,
+                    'type' => 'Selesai Tugas',
+                    'url' =>'selesaiTugas'];
+
         $data = array('title' => 'Detail Permohonan',
                       'dataPermohonan' => $dataPermohonan,
                       'detailPermohonan' => $detailPermohonan,
+                      'daftarDocument' => $dataDoc,
                       'dataAnalist'     =>array(),
                       'isi' => 'permohonan/detail_permohonan_analist');
         $this->load->view('layout/wrapper',$data, FALSE);
@@ -106,29 +117,34 @@ class Analist extends CI_Controller {
 
     public function submitAnalisa(){
         $data = $this->input->post('data');
-        $data['status'] = 1;
-        // $id = $this->input->post('id');
-        // $ulangan1 = $this->input->post('ulangan1');
-        // $ulangan2 = $this->input->post('ulangan2');
-        // $rata_rata = $this->input->post('rata_rata');
-        // $id_analist = $this->input->post('id_analist');
-        // $no_permohonan = $this->input->post('no_permohonan');
-        // $data = array('id' => $id,
-        //               'pengulangan_1' => (float)$ulangan1,
-        //               'pengulangan_2' => (float)$ulangan2,
-        //               'rata_rata' => (float)$rata_rata,
-        //               'status'  => '1'
-        //             );
+        // $data['status'] = 1;
+        $id = $this->input->post('id');
+        $id_permohonan = $this->input->post('id_permohonan');
+        $ulangan1 = $this->input->post('pengulangan_1');
+        $ulangan2 = $this->input->post('pengulangan_2');
+        $rata_rata = $this->input->post('rata_rata');
+        $standart_deviasi = $this->input->post('standart_deviasi');
+        $id_analist = $this->input->post('id_analist');
+        $no_permohonan = $this->input->post('no_permohonan');
+        $data = array('id' => $id,
+                      'pengulangan_1' => (float)$ulangan1,
+                      'pengulangan_2' => (float)$ulangan2,
+                      'rata_rata' => (float)$rata_rata,
+                      'standart_deviasi' => (float) $standart_deviasi,
+                      'status'  => '1'
+                    );
+
         $result = $this->analis_model->upDetailPermohonan($data);
 
         if($result['status'] == 'success'){
-            $dataUp = array('id' => $data['id'],
-                            'id_permohonan' => $data['id_permohonan'],
+            $dataUp = array('id' => $id,
+                            'id_permohonan' => $id_permohonan,
                             'status_detail' => '0',
-                            'status_up'     => '7'
+                            'status_up'     => '7',
+                            'tgl_selesai' => date('Y-m-d')
                             );
             $this->analis_model->updateStatus($dataUp);
-            $this->analis_model->updateMinAnalist($data['id_analist']);
+            $this->analis_model->updateMinAnalist($id_analist);
         }
         echo json_encode($result);
     }

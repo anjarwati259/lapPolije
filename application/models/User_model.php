@@ -42,6 +42,7 @@ class User_model extends CI_Model
 						  'id_user' => $query->id_pegawai, 
 						  'nama' => $query->nama_pegawai,
 						  'username' => $query->username,
+						  'id' => $query->id_pegawai,
 						  'hak_akses' => $query->hak_akses
 						);
 		}else if($query->hak_akses == '3'){
@@ -49,6 +50,7 @@ class User_model extends CI_Model
 						  'id_user' => $query->id_customer, 
 						  'nama' => $query->nama_customer,
 						  'username' => $query->username,
+						  'id' => $query->id_customer,
 						  'hak_akses' => $query->hak_akses
 						);
 		}else{

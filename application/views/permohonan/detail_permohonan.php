@@ -19,6 +19,10 @@
                 <td>: <?= ($dataPermohonan->tgl_terima_sample) ? (dateDefault($dataPermohonan->tgl_terima_sample)) : '-' ?></td>
               </tr>
               <tr>
+                <th style="width: 250px;">Perkiraan Selesai</th>
+                <td>: <?= ($dataPermohonan->perkiraan_selesai) ? ($dataPermohonan->perkiraan_selesai) : '0' ?> Hari</td>
+              </tr>
+              <tr>
                 <th style="width: 250px;">Tanggal Perkiraan Selesai</th>
                 <td>: <?= ($dataPermohonan->tgl_perkiraan_selesai) ? (dateDefault($dataPermohonan->tgl_perkiraan_selesai)) : '-' ?></td>
               </tr>
@@ -68,7 +72,7 @@
                   </tr>
                   <tr>
                     <th scope="row">Nama Instansi</th>
-                    <td>: -</td>
+                    <td>: <?= ($dataPermohonan->instansi) ? ($dataPermohonan->instansi) : '-' ?></td>
                   </tr>
                   <tr>
                     <th scope="row">Nomor Telephon</th>
@@ -91,10 +95,16 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Brandon Jacob</td>
-                    <td>Designer</td>
-                  </tr>
+                  <?php if($daftarDocument){ ?>
+                  <?php $no=1; foreach ($daftarDocument as $key => $value) { ?>
+                    <tr>
+                      <td><a href="<?= base_url('permohonan/cetakDoc/').urlencode(base64_encode($value->kode_dokumen)); ?>"><?= $value->kode_dokumen; ?></a></td>
+                      <td><?= $value->type; ?></td>
+                    </tr>
+                  <?php } ?>
+                <?php }else{ ?>
+                  <p>Dokument Belum Tersedia</p>
+                <?php } ?>
                 </tbody>
               </table>
             </div>
@@ -139,8 +149,23 @@
               </tbody>
             </table>
             <div class="row">
-              <label for="inputEmail3" class="col-sm-4 col-form-label"><b>Catatan:</b></label>
-              <label><?= $detailPermohonan[$no_sampel]->catatan; ?></label>
+              <div class="col-md-6">
+                <label for="inputEmail3" class="col-form-label"><b>Catatan:</b></label><br>
+                <label><?= $detailPermohonan[$no_sampel]->catatan; ?></label>
+              </div>
+              <?php if($dataPermohonan->status == '8'){ ?>
+              <div class="col-md-6">
+                <label for="inputEmail3" class="col-form-label"><b>Sertifikat:</b></label>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <td><a href="<?= base_url('permohonan/sertifikat/en/').base64_encode(urlencode($detailPermohonan[$no_sampel]->no_sertifikat)); ?>" target="_blank">Bahasa Inggris</a></td>
+                      <td><a href="<?= base_url('permohonan/sertifikat/in/').base64_encode(urlencode($detailPermohonan[$no_sampel]->no_sertifikat)); ?>" target="_blank">Bahasa Indonesia</a></td>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+            <?php } ?>
             </div>
           </div>
         </div>

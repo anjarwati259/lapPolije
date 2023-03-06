@@ -44,6 +44,11 @@
                 <label for="harga" class="form-label">Harga Analisa</label>
                 <input type="number" class="form-control" name="harga" id="harga" required>
               </div>
+
+              <div class="col-md-12">
+                <label for="formFile" class="form-label">Upload File</label>
+                <input class="form-control" type="file" id="upload_file" name="upload_file">
+              </div>
 	        </form>
         </div>
         <div class="modal-footer">

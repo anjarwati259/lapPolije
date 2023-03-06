@@ -39,6 +39,7 @@ class Login extends CI_Controller {
 		$email = $this->input->post('email');
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
+		$instansi = $this->input->post('instansi');
 
 		$dataUser = array('username' => $username,
 						  'password' => sha1($password),
@@ -52,6 +53,7 @@ class Login extends CI_Controller {
 								'alamat'		=> $alamat,
 								'no_telp'		=> $no_telp,
 								'email'			=> $email,
+								'instansi'		=> $instansi,
 								'status'		=> '1',
 								'created_at'	=> date('Y-m-d H:i:sa')
 							);

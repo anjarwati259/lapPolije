@@ -107,12 +107,12 @@ class Permohonan_model extends CI_Model
         return $query->result();
 	}
 
-	public function getRiwayatPermohonan(){
+	public function getRiwayatPermohonan($id_customer){
 		$this->db->select('tb_permohonan.*, tb_status.keterangan, tb_status.class_color, tb_customer.nama_customer');  
        	$this->db->from('tb_permohonan');
        	$this->db->join('tb_status','tb_status.status = tb_permohonan.status', 'left');
        	$this->db->join('tb_customer','tb_customer.id = tb_permohonan.id_customer', 'left');
-       	// $this->db->where('tb_permohonan.status !=','7'); 
+       	$this->db->where('tb_permohonan.id_customer',$id_customer); 
        	if(!empty($_POST["search"]["value"]))  
        	{  
             $this->db->like("tb_permohonan.no_permohonan", $_POST["search"]["value"]);  
@@ -182,7 +182,7 @@ class Permohonan_model extends CI_Model
 	}
 
 	public function permohonanByID($id){
-		$this->db->select('tb_permohonan.*, tb_status.keterangan, tb_status.class_color, tb_customer.nama_customer, tb_customer.no_telp, tb_customer.email, tb_customer.alamat');
+		$this->db->select('tb_permohonan.*, tb_status.keterangan, tb_status.class_color, tb_customer.nama_customer, tb_customer.no_telp, tb_customer.email, tb_customer.alamat, tb_customer.instansi');
 		$this->db->from('tb_permohonan');
 		$this->db->join('tb_status','tb_status.status = tb_permohonan.status', 'left');
 		$this->db->join('tb_customer','tb_customer.id = tb_permohonan.id_customer', 'left');
@@ -448,6 +448,14 @@ class Permohonan_model extends CI_Model
 		return $query->result();
 	}
 
+	public function getDocument($id){
+		$this->db->select('surat_tugas, selesai_tugas');
+		$this->db->from('tb_detail_permohonan');
+		$this->db->where('id', $id);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
 	public function listDaftarDocument($id,$type){
 		$this->db->select('*');
 		$this->db->from('tb_daftar_dokumen');
@@ -494,6 +502,22 @@ class Permohonan_model extends CI_Model
        	$this->db->join('tb_detail_sample','tb_detail_sample.id = tb_detail_permohonan.id_sampel', 'left');
        	$this->db->where('tb_detail_sample.no_sertifikat',$no_sertifikat);
        	$query = $this->db->get()->row();
+		return $query;
+	}
+
+	public function getLapPermohonan(){
+		$this->db->select('a.created_at,a.harga_satuan,b.jenis_sample,b.no_pesanan,c.nama_customer,d.jenis_analisa,e.metode_analisa,f.kode_sample');  
+       	$this->db->from('tb_detail_permohonan a');
+       	$this->db->join('tb_permohonan b','b.id = a.id_permohonan', 'left');
+       	$this->db->join('tb_customer c','c.id = b.id_customer', 'left');
+       	$this->db->join('tb_jenis_analisa d','d.id = a.id_jenis_analisa', 'left');
+       	$this->db->join('tb_metode_analisa e','e.id = a.id_metode_analisa', 'left');
+       	$this->db->join('tb_detail_sample f','f.id = a.id_sampel', 'left');
+       	if($_POST["length"] != -1)  
+        {  
+            $this->db->limit($_POST['length'], $_POST['start']);  
+        }  
+       	$query = $this->db->get()->result();
 		return $query;
 	}
 }

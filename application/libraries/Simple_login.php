@@ -23,6 +23,7 @@ class Simple_login
         if($user['status'] == 'success'){
           $this->CI->session->set_userdata('id_user',$user['id_user']);
           $this->CI->session->set_userdata('nama_user',$user['nama']);
+          $this->CI->session->set_userdata('id',$user['id']);
           $this->CI->session->set_userdata('username',$user['username']);
           $this->CI->session->set_userdata('hak_akses',$user['hak_akses']);
         }else{
