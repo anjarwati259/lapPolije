@@ -74,4 +74,16 @@ class User_model extends CI_Model
 		$query = $this->db->get();
 		return $query->result();
 	}
+
+	public function getProfileAdmin($id){
+		$this->db->select('tb_pegawai.*, user.username, tb_jabatan.nama_jabatan, tb_unit.nama_unit');
+		$this->db->from('tb_pegawai');
+		$this->db->join('user','user.id = tb_pegawai.id_user', 'left');
+		$this->db->join('tb_jabatan','tb_jabatan.id = tb_pegawai.id_jabatan', 'left');
+		$this->db->join('tb_unit','tb_unit.id = tb_pegawai.id_unit', 'left');
+		$this->db->where('tb_pegawai.id',$id);
+		$this->db->order_by('id','desc');
+		$query = $this->db->get()->row();
+		return $query;
+	}
 }

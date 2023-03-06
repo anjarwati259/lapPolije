@@ -421,8 +421,10 @@ class Permohonan extends CI_Controller {
 		$detail = $this->permohonan_model->detailPermohonanByID($detailSample->id_permohonan, $detailSample->id_sampel);
 		$dataKalab = $this->permohonan_model->getKalab();
 
-		$find = ['{kode_order}','{tgl_terima_sample}','{tgl_perkiraan_selesai}','{nama_pemohon}','{alamat}','{no_telp}','{jenis_sample}','{kode_sample}','{jml_sample}','{penyimpanan}','{keterangan_sample}','{nip}', '{kalab}'];
-		$replace = [$no_blanko, dateDefault($data->tgl_terima_sample), dateDefault($data->tgl_perkiraan_selesai), $data->nama_customer, $data->alamat, $data->no_telp, $data->jenis_sample, $detail[0]->kode_sample, $data->jml_sample, $data->penyimpanan, $data->keterangan_sample,$dataKalab->nip, $dataKalab->nama_pegawai];
+		$ttd = '<img src="'.base_url().'qrcode/'.$dataKalab->qrcode.'">';
+
+		$find = ['{kode_order}','{tgl_terima_sample}','{tgl_perkiraan_selesai}','{nama_pemohon}','{alamat}','{no_telp}','{jenis_sample}','{kode_sample}','{jml_sample}','{penyimpanan}','{keterangan_sample}','{nip}', '{kalab}','{ttd}'];
+		$replace = [$no_blanko, dateDefault($data->tgl_terima_sample), dateDefault($data->tgl_perkiraan_selesai), $data->nama_customer, $data->alamat, $data->no_telp, $data->jenis_sample, $detail[0]->kode_sample, $data->jml_sample, $data->penyimpanan, $data->keterangan_sample,$dataKalab->nip, $dataKalab->nama_pegawai, $ttd];
 		$suratPermohonan = str_replace($find,$replace,$suratPermohonan);
 
 		// $total = count($detail);
@@ -471,9 +473,10 @@ class Permohonan extends CI_Controller {
 			$jenis_analisa .=$value->jenis_analisa.', ';
 			$analist .= $value->nama_pegawai.', ';
 		}
+		$ttd = '<img src="'.base_url().'qrcode/'.$dataKalab->qrcode.'">';
 
-		$find = ['{no_sertifikat}','{no_po}','{tgl_terima}','{tgl_selesai}','{nama_customer}','{alamat_customer}','{no_telp}','{jenis_sample}','{kode_sample}','{jenis_analisa}','{nama_analist}','{table_sertifikat}','{nip_kalab}', '{nama_kalab}', '{keterangan}', '{instansi}'];
-		$replace = [$no_sertifikat,$detailSample->no_blanko, dateDefault($data->tgl_terima_sample), dateDefault($data->tgl_selesai), $data->nama_customer, $data->alamat, $data->no_telp, $data->jenis_sample, $detail[0]->kode_sample, $jenis_analisa, $analist,$html,$dataKalab->nip, $dataKalab->nama_pegawai, $detail[0]->catatan, ''];
+		$find = ['{no_sertifikat}','{no_po}','{tgl_terima}','{tgl_selesai}','{nama_customer}','{alamat_customer}','{no_telp}','{jenis_sample}','{kode_sample}','{jenis_analisa}','{nama_analist}','{table_sertifikat}','{nip_kalab}', '{nama_kalab}', '{keterangan}', '{instansi}','{ttd}'];
+		$replace = [$no_sertifikat,$detailSample->no_blanko, dateDefault($data->tgl_terima_sample), dateDefault($data->tgl_selesai), $data->nama_customer, $data->alamat, $data->no_telp, $data->jenis_sample, $detail[0]->kode_sample, $jenis_analisa, $analist,$html,$dataKalab->nip, $dataKalab->nama_pegawai, $detail[0]->catatan, '', $ttd];
 		$sertifikat = str_replace($find,$replace,$sertifikat);
 
 		$data = array('title' => 'Blanko Permohonan',
@@ -491,8 +494,10 @@ class Permohonan extends CI_Controller {
 		$analist = $this->analis_model->getAnalistByID($data->id_analist);
 		$dataKalab = $this->permohonan_model->getKalab();
 
-		$find = ['{nomor_tugas}','{nama_analist}','{nip_analist}','{jabatan_analist}','{unit_analist}','{nama_kalab}','{nip_kalab}','{jabatan_kalab}','{unit_kalab}','{analisa}','{sample}','{jml_sample}'];
-		$replace = [$kode_surat, $analist->nama_pegawai, $analist->nip, $analist->nama_jabatan, $analist->nama_unit, $dataKalab->nama_pegawai, $dataKalab->nip, $dataKalab->nama_jabatan, $dataKalab->nama_unit, $data->jenis_analisa, $data->jenis_sample, $data->jml_sample];
+		$ttd = '<img src="'.base_url().'qrcode/'.$dataKalab->qrcode.'">';
+
+		$find = ['{nomor_tugas}','{nama_analist}','{nip_analist}','{jabatan_analist}','{unit_analist}','{nama_kalab}','{nip_kalab}','{jabatan_kalab}','{unit_kalab}','{analisa}','{sample}','{jml_sample}','{ttd}'];
+		$replace = [$kode_surat, $analist->nama_pegawai, $analist->nip, $analist->nama_jabatan, $analist->nama_unit, $dataKalab->nama_pegawai, $dataKalab->nip, $dataKalab->nama_jabatan, $dataKalab->nama_unit, $data->jenis_analisa, $data->jenis_sample, $data->jml_sample, $ttd];
 		$surat_tugas = str_replace($find,$replace,$surat_tugas);
 
 		$data = array('title' => 'Surat Tugas',
@@ -511,6 +516,8 @@ class Permohonan extends CI_Controller {
 		$tempSurat = $this->permohonan_model->getTemplateSurat($daftarDocument->type);
 		$template_surat = str_replace(['{base_url}', '{title}','{date}'],[base_url(),'Invoice', dateDefault(date('Y-m-d'))],$tempSurat->template_surat);
 
+		$ttd = '<img src="'.base_url().'qrcode/'.$dataKalab->qrcode.'">';
+
 		if($daftarDocument->type=='invoice'){
 			$html = '';
 			foreach ($detail as $key => $value) {
@@ -523,13 +530,13 @@ class Permohonan extends CI_Controller {
 				$html .= '<td>'.number_format($value->harga,0,',','.').'</td>';
 				$html .= '</tr>';
 			}
-			$find = ['{kode_dokumen}','{nama_customer}','{nama_instansi}','{alamat_customer}','{nip_kalab}', '{nama_kalab}','{table_invoice}','{total_harga}'];
+			$find = ['{kode_dokumen}','{nama_customer}','{nama_instansi}','{alamat_customer}','{nip_kalab}', '{nama_kalab}','{table_invoice}','{total_harga}','{ttd}'];
 
-			$replace = [$kode_dokumen, $data->nama_customer, $data->instansi, $data->alamat,$dataKalab->nip, $dataKalab->nama_pegawai, $html, number_format($data->total_harga,0,',','.')];
+			$replace = [$kode_dokumen, $data->nama_customer, $data->instansi, $data->alamat,$dataKalab->nip, $dataKalab->nama_pegawai, $html, number_format($data->total_harga,0,',','.'), $ttd];
 		}else{
 			$terbilang = ucwords(terbilang($data->total_harga));
-			$find = ['{kode_dokumen}','{nama_customer}','{terbilang}','{total}','{nip_kalab}', '{nama_kalab}', '{jml_sample}','{jenis_analisa}'];
-			$replace = [$kode_dokumen, $data->nama_customer, $terbilang, number_format($data->total_harga,0,',','.'),$dataKalab->nip, $dataKalab->nama_pegawai, $data->jml_sample, $jenis_analisa];
+			$find = ['{kode_dokumen}','{nama_customer}','{terbilang}','{total}','{nip_kalab}', '{nama_kalab}', '{jml_sample}','{jenis_analisa}', '{ttd}'];
+			$replace = [$kode_dokumen, $data->nama_customer, $terbilang, number_format($data->total_harga,0,',','.'),$dataKalab->nip, $dataKalab->nama_pegawai, $data->jml_sample, $jenis_analisa, $ttd];
 		}
 		$template_surat = str_replace($find,$replace,$template_surat);
 
@@ -559,8 +566,10 @@ class Permohonan extends CI_Controller {
 		$analist = $this->analis_model->getAnalistByID($data->id_analist);
 		$dataKalab = $this->permohonan_model->getKalab();
 
-		$find = ['{nomor}','{nama_analist}','{nip_analist}','{jabatan_analist}','{unit_analist}','{nama_kalab}','{nip_kalab}','{jabatan_kalab}','{unit_kalab}','{analisa}','{sample}','{jml_sample}'];
-		$replace = [$nomor, $analist->nama_pegawai, $analist->nip, $analist->nama_jabatan, $analist->nama_unit, $dataKalab->nama_pegawai, $dataKalab->nip, $dataKalab->nama_jabatan, $dataKalab->nama_unit, $data->jenis_analisa, $data->jenis_sample, $data->jml_sample, ];
+		$ttd = '<img src="'.base_url().'qrcode/'.$dataKalab->qrcode.'">';
+
+		$find = ['{nomor}','{nama_analist}','{nip_analist}','{jabatan_analist}','{unit_analist}','{nama_kalab}','{nip_kalab}','{jabatan_kalab}','{unit_kalab}','{analisa}','{sample}','{jml_sample}', '{ttd}'];
+		$replace = [$nomor, $analist->nama_pegawai, $analist->nip, $analist->nama_jabatan, $analist->nama_unit, $dataKalab->nama_pegawai, $dataKalab->nip, $dataKalab->nama_jabatan, $dataKalab->nama_unit, $data->jenis_analisa, $data->jenis_sample, $data->jml_sample, $ttd];
 		$selesai_tugas = str_replace($find,$replace,$selesai_tugas);
 
 		$data = array('title' => 'Selesai Tugas',

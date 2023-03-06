@@ -7,6 +7,8 @@ class Login extends CI_Controller {
 	    parent::__construct();
 	    $this->load->model('user_model');
 	    $this->load->model('customer_model');
+	    $this->load->model('pegawai_model');
+	    $this->load->library('Ciqrcode');
   	}
 
 	public function index()
@@ -77,5 +79,31 @@ class Login extends CI_Controller {
 	{
 		//ambil fungsi logout dari simple_login
 	    $this->simple_login->logout();
+	}
+
+	public function profile(){
+		$id = $this->session->userdata('id');
+		$dataProfile = $this->user_model->getProfileAdmin($id);
+
+		if(empty($dataProfile->qrcode)){
+			
+			$filename = 'qr_'.$id.'.png';
+			$params['data'] = $dataProfile->nama_pegawai;
+			$params['level'] = 'H';
+			$params['size'] = 2;
+			$params['savename'] = FCPATH.'qrcode/qr_'.$id.'.png';
+			$this->ciqrcode->generate($params);
+
+			$data = array('id' => $id,
+							'qrcode' => $filename);
+
+			$result = $this->pegawai_model->editpegawai($data);
+			$dataProfile = $this->user_model->getProfileAdmin($id);
+		}
+
+		$data = array('title' => 'Profile',
+					  'dataProfile' => $dataProfile,
+                      'isi' => 'login/profile' );
+        $this->load->view('layout/wrapper',$data, FALSE);
 	}
 }
