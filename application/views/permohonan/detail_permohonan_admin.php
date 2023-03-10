@@ -21,7 +21,7 @@
               </tr>
               <tr>
                 <th style="width: 250px;">Perkiraan Selesai (Hari)</th>
-                <td>: <?= ($dataPermohonan->perkiraan_selesai) ? (dateDefault($dataPermohonan->perkiraan_selesai)) : '-' ?></td>
+                <td>: <?= ($dataPermohonan->perkiraan_selesai) ? ($dataPermohonan->perkiraan_selesai) : '-' ?></td>
               </tr>
               <tr>
                 <th style="width: 250px;">Tanggal Perkiraan Selesai</th>

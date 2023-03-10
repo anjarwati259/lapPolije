@@ -4,9 +4,9 @@
 
 	"default": {
 
-		//"host": "files.000webhost.com",
-		"username": "devsoftwarelap",  // or null for anonymous login
-		"password": "PcdKBX#quDY%MzHnSjCo",
+		"host": "files.000webhost.com",
+		"username": "devlappengujian",  // or null for anonymous login
+		"password": "aA)gU$8JZhh6E(r)pXXr",
 		"path": "/public_html",
 
 		"upload_on_save": true, // set *false* if you do not want to upload on save!

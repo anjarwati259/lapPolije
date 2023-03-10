@@ -75,10 +75,17 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
+	// local
 	'hostname' => 'localhost',
 	'username' => 'root',
 	'password' => '',
 	'database' => 'db_polijev2',
+	// dev
+	// 'hostname' => 'localhost',
+	// 'username' => 'id20010682_dbdevlap01',
+	// 'password' => 'g&wz4[QF?^buCRYd',
+	// 'database' => 'id20010682_dbdevlap',
+	//production
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

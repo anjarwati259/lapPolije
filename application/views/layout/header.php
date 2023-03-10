@@ -24,6 +24,7 @@
   <link href="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/quill/quill.snow.css" rel="stylesheet">
   <link href="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
   <link href="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="<?php echo base_url() ?>assets/css/select2.min.css" rel="stylesheet">
   <!-- <link href="<?php echo base_url() ?>template/NiceAdmin/assets/vendor/simple-datatables/style.css" rel="stylesheet"> -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css"/>
 

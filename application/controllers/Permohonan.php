@@ -534,9 +534,16 @@ class Permohonan extends CI_Controller {
 
 			$replace = [$kode_dokumen, $data->nama_customer, $data->instansi, $data->alamat,$dataKalab->nip, $dataKalab->nama_pegawai, $html, number_format($data->total_harga,0,',','.'), $ttd];
 		}else{
+			$jenis_analisa = '';
+			$kode_sample = '';
+
+			foreach ($detail as $key => $value) {
+				$jenis_analisa .= $value->jenis_analisa.',';
+				$kode_sample .= $value->kode_sample.',';
+			}
 			$terbilang = ucwords(terbilang($data->total_harga));
-			$find = ['{kode_dokumen}','{nama_customer}','{terbilang}','{total}','{nip_kalab}', '{nama_kalab}', '{jml_sample}','{jenis_analisa}', '{ttd}'];
-			$replace = [$kode_dokumen, $data->nama_customer, $terbilang, number_format($data->total_harga,0,',','.'),$dataKalab->nip, $dataKalab->nama_pegawai, $data->jml_sample, $jenis_analisa, $ttd];
+			$find = ['{kode_dokumen}','{nama_customer}','{terbilang}','{total}','{nip_kalab}', '{nama_kalab}', '{jml_sample}','{jenis_analisa}', '{ttd}', '{kode_sample}'];
+			$replace = [$kode_dokumen, $data->nama_customer, $terbilang, number_format($data->total_harga,0,',','.'),$dataKalab->nip, $dataKalab->nama_pegawai, $data->jml_sample, $jenis_analisa, $ttd, $kode_sample];
 		}
 		$template_surat = str_replace($find,$replace,$template_surat);
 

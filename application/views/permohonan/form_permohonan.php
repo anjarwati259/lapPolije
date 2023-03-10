@@ -112,14 +112,14 @@
 				                  	<tr id="tr1">
 					                	<th scope="row">1</th>
 					                    <td>
-					                    	<select name="jenis_analisa1" id="jenis_analisa1" class="form-select" onchange="setMetode('1','1')">
+					                    	<select name="jenis_analisa1" id="jenis_analisa1" class="form-select select2" onchange="setMetode('1','1')">
 					                    		<?php foreach ($jenis_analisa as $key => $value) { ?>
 					                    			<option value="<?= $value->id ?>"><?= $value->jenis_analisa ?></option>
 					                    		<?php } ?>
 					                    	</select>
 					                    </td>
 					                    <td>
-					                    	<select name="metode_analisa1" id="metode_analisa1" class="form-select">
+					                    	<select name="metode_analisa1" id="metode_analisa1" class="form-select select2">
 					                    		
 					                    	</select>
 					                    </td>
