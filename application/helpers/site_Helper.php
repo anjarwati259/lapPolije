@@ -70,6 +70,22 @@ function generateKode($jenis, $id){
 	return $kode;
 }
 
+function generateSurat($jenis){
+	$CI = get_instance();
+	$tempNomor = $CI->permohonan_model->getTempNomor($jenis);
+	$last_id = $CI->permohonan_model->lastNoSurat();
+	$id = $last_id->no_surat + 1;
+
+	$findWord = ['{nomor}', '{tahun}'];
+	$replace = [$id, date('Y')];
+	$kode = str_replace($findWord, $replace, $tempNomor->temp_nomor);
+
+	$data = array('kode_surat' => $kode,
+				 'id' => $id);
+	
+	return $data;
+}
+
 function generateSuratTugas(){
 	$CI = get_instance();
 	// $tempNomor = $CI->permohonan_model->getTempNomor('surat_tugas');

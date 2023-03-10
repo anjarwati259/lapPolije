@@ -155,7 +155,7 @@
               </table>
               <div class="row">
                 <label for="inputEmail3" class="col-sm-4 col-form-label"><b>Catatan:</b></label>
-                <label><?= $detailPermohonan[$no_sampel]->catatan; ?></label>
+                <label><?= $detailPermohonan[$no_sampel-1]->catatan; ?></label>
               </div>
             </div>
           </div>

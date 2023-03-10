@@ -46,7 +46,7 @@ class analis_model extends CI_Model
 		$this->db->join('tb_metode_analisa d','d.id = b.id_metode_analisa', 'left');
 		$this->db->join('tb_detail_sample e','e.id = b.id_sampel', 'left');
 		$this->db->where('b.id_analist', $id_analist);
-		$this->db->order_by('b.update_at','asc');
+		$this->db->order_by('b.update_at','desc');
 		$query = $this->db->get();
 		return $query->result();
 	}

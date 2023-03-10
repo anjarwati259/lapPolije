@@ -15,12 +15,15 @@ class Admin extends CI_Controller {
 		$this->load->model('permohonan_model');
 		$this->load->model('analis_model');
 		$this->load->model('datatables_model');
+		$this->load->model('Variabel_content_model');
 		$this->load->library('form_validation');
 	}
 
 	public function index()
 	{
+		$dashboard = $this->Variabel_content_model->getContent('dashboard_admin');
 		$data = array('title' => 'Dashboard Admin',
+						'dashboard' => $dashboard,
                       'isi' => 'admin/dashboard' );
         $this->load->view('layout/wrapper',$data, FALSE);
 	}

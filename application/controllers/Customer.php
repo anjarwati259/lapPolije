@@ -9,13 +9,26 @@ class Customer extends CI_Controller {
 		//proteksi halaman
 		$this->simple_login->cek_login();
 		$this->load->model('customer_model');
+		$this->load->model('permohonan_model');
 		$this->load->model('datatables_model');
+		$this->load->model('Variabel_content_model');
 		$this->load->library('form_validation');
 	}
 
 	public function index()
 	{
+		$id_customer = $this->session->userdata('id');
+		$total = $this->permohonan_model->totalDashCust($id_customer);
+		$proses = $this->permohonan_model->prosesDashCust($id_customer);
+		$finish = $this->permohonan_model->finishDashCust($id_customer);
+
+		$dashboard = $this->Variabel_content_model->getContent('dashboard_customer');
+		// var_dump($total);exit;
 		$data = array('title' => 'Dashboard Customer',
+						'total' => $total,
+						'proses' => $proses,
+						'finish' => $finish,
+						'dashboard' => $dashboard,
                       'isi' => 'customer/dashboard' );
         $this->load->view('layout/wrapper',$data, FALSE);
 	}

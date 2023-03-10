@@ -401,9 +401,10 @@ class Permohonan extends CI_Controller {
 			$result = $this->permohonan_model->editpermohonan($dataPermohonan);
 			foreach ($dataAnalist as $key => $value) {
 				$this->permohonan_model->addJmlAnalist($value['id_analist']);
-				$surat_tugas = generateKode('surat_tugas',$value['id']);
+				$surat_tugas = generateSurat('surat_tugas');
 				$data = array('id' => $value['id'],
-                      			'surat_tugas' => $surat_tugas,
+                      			'surat_tugas' => $surat_tugas['kode_surat'],
+                      			'no_surat' => $surat_tugas['id']
                     );
 				$this->analis_model->upDetailPermohonan($data);
 			}
@@ -448,7 +449,7 @@ class Permohonan extends CI_Controller {
 	}
 
 	public function sertifikat($kode,$no_sertifikat){
-		$no_sertifikat = urldecode(base64_decode($no_sertifikat));
+		$no_sertifikat = base64_decode(urldecode($no_sertifikat));
 		$tempSurat = $this->permohonan_model->getTemplateSurat('sertifikat');
 		$template_surat = ($kode == 'in') ? ($tempSurat->template_surat) : ($tempSurat->template_eng);
 		$sertifikat = str_replace(['{base_url}', '{title}','{date}'],[base_url(),'Blanko Permohonan', dateDefault(date('Y-m-d'))],$template_surat);

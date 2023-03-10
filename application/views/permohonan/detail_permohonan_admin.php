@@ -99,7 +99,7 @@
                   <?php if($daftarDocument){ ?>
                   <?php $no=1; foreach ($daftarDocument as $key => $value) { ?>
                     <tr>
-                      <td><a href="<?= base_url('permohonan/cetakDoc/').urlencode(base64_encode($value->kode_dokumen)); ?>"><?= $value->kode_dokumen; ?></a></td>
+                      <td><a href="<?= base_url('permohonan/cetakDoc/').urlencode(base64_encode($value->kode_dokumen)); ?>" target="_blank"><?= $value->kode_dokumen; ?></a></td>
                       <td><?= $value->type; ?></td>
                     </tr>
                   <?php } ?>
@@ -159,7 +159,9 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                               <li><a class="dropdown-item" href="<?= base_url('permohonan/suratTugas/').urlencode(base64_encode($value->surat_tugas)) ?>" target="_blank">Surat Tugas</a></li>
+                              <?php if($dataPermohonan->status == "7" || $dataPermohonan->status=="8"){ ?>
                               <li><a class="dropdown-item" href="<?= base_url('permohonan/selesaiTugas/').urlencode(base64_encode($value->selesai_tugas)) ?>" target="_blank">Selesai Tugas</a></li>
+                            <?php } ?>
                             </ul>
                           </div>
                         </div>
@@ -171,19 +173,21 @@
               <div class="row">
                 <div class="col-md-6">
                   <label for="inputEmail3" class="col-form-label"><b>Catatan:</b></label><br>
-                  <label><?= $detailPermohonan[$no_sampel]->catatan; ?></label>
+                  <label><?= $detailPermohonan[$no_sampel-1]->catatan; ?></label>
                 </div>
+                <?php if($dataPermohonan->status == '8'){ ?>
                 <div class="col-md-6">
                   <label for="inputEmail3" class="col-form-label"><b>Sertifikat:</b></label>
                   <table class="table">
                     <thead>
                       <tr>
-                        <td><a href="<?= base_url('permohonan/sertifikat/en/').base64_encode(urlencode($detailPermohonan[$no_sampel]->no_sertifikat)); ?>" target="_blank">Bahasa Inggris</a></td>
-                        <td><a href="<?= base_url('permohonan/sertifikat/in/').base64_encode(urlencode($detailPermohonan[$no_sampel]->no_sertifikat)); ?>" target="_blank">Bahasa Indonesia</a></td>
+                        <td><a href="<?= base_url('permohonan/sertifikat/en/').urlencode(base64_encode($detailPermohonan[$no_sampel]->no_sertifikat)); ?>" target="_blank">Bahasa Inggris</a></td>
+                        <td><a href="<?= base_url('permohonan/sertifikat/in/').urlencode(base64_encode($detailPermohonan[$no_sampel]->no_sertifikat)); ?>" target="_blank">Bahasa Indonesia</a></td>
                       </tr>
                     </thead>
                   </table>
                 </div>
+              <?php } ?>
                 <!-- <label for="inputEmail3" class="col-sm-4 col-form-label"><b>Catatan:</b></label>
                 <label><?= $detailPermohonan[$no_sampel]->catatan; ?></label> -->
               </div>

@@ -98,7 +98,7 @@
                   <?php if($daftarDocument){ ?>
                   <?php $no=1; foreach ($daftarDocument as $key => $value) { ?>
                     <tr>
-                      <td><a href="<?= base_url('permohonan/cetakDoc/').urlencode(base64_encode($value->kode_dokumen)); ?>"><?= $value->kode_dokumen; ?></a></td>
+                      <td><a href="<?= base_url('permohonan/cetakDoc/').urlencode(base64_encode($value->kode_dokumen)); ?>" target="_blank"><?= $value->kode_dokumen; ?></a></td>
                       <td><?= $value->type; ?></td>
                     </tr>
                   <?php } ?>
@@ -159,8 +159,8 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <td><a href="<?= base_url('permohonan/sertifikat/en/').base64_encode(urlencode($detailPermohonan[$no_sampel]->no_sertifikat)); ?>" target="_blank">Bahasa Inggris</a></td>
-                      <td><a href="<?= base_url('permohonan/sertifikat/in/').base64_encode(urlencode($detailPermohonan[$no_sampel]->no_sertifikat)); ?>" target="_blank">Bahasa Indonesia</a></td>
+                      <td><a href="<?= base_url('permohonan/sertifikat/en/').urlencode(base64_encode($detailPermohonan[$no_sampel]->no_sertifikat)); ?>" target="_blank">Bahasa Inggris</a></td>
+                      <td><a href="<?= base_url('permohonan/sertifikat/in/').urlencode(base64_encode($detailPermohonan[$no_sampel]->no_sertifikat)); ?>" target="_blank">Bahasa Indonesia</a></td>
                     </tr>
                   </thead>
                 </table>

@@ -33,7 +33,7 @@
               </tr>
               <tr>
                 <th style="width: 250px;">Tanggal Selesai</th>
-                <td>: <?= ($dataPermohonan->tgl_selesai) ? ($dataPermohonan->tgl_selesai) : '-' ?></td>
+                <td>: <?= ($dataPermohonan->tgl_selesai) ? (dateDefault($dataPermohonan->tgl_selesai)) : '-' ?></td>
               </tr>
               <tr>
                 <th style="width: 250px;">Jenis Sampel</th>
@@ -103,7 +103,7 @@
                   <?php if($daftarDocument){ ?>
                   <?php $no=1; foreach ($daftarDocument as $key => $value) { ?>
                     <tr>
-                      <td><a href="<?= base_url('permohonan/cetakDoc/').urlencode(base64_encode($value->kode_dokumen)); ?>"><?= $value->kode_dokumen; ?></a></td>
+                      <td><a href="<?= base_url('permohonan/cetakDoc/').urlencode(base64_encode($value->kode_dokumen)); ?>" target="_blank"><?= $value->kode_dokumen; ?></a></td>
                       <td><?= $value->type; ?></td>
                     </tr>
                   <?php } ?>

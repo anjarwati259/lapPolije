@@ -11,12 +11,23 @@ class Analist extends CI_Controller {
 		$this->load->model('analis_model');
         $this->load->model('permohonan_model');
         $this->load->model('pegawai_model');
-		$this->load->model('datatables_model');
+        $this->load->model('datatables_model');
+		$this->load->model('Variabel_content_model');
 		$this->load->library('form_validation');
 	}
 
 	public function index(){
+        $id_pegawai = $this->session->userdata('id');
+        $total = $this->permohonan_model->totalDashAnalist($id_pegawai);
+        $proses = $this->permohonan_model->prosesDashAnalist($id_pegawai);
+        $finish = $this->permohonan_model->finishDashAnalist($id_pegawai);
+
+        $dashboard = $this->Variabel_content_model->getContent('dashboard_analist');
 		$data = array('title' => 'Dashboard Analist',
+                        'total' => $total,
+                        'proses' => $proses,
+                        'finish' => $finish,
+                        'dashboard' => $dashboard,
                       'isi' => 'analist/dashboard');
         $this->load->view('layout/wrapper',$data, FALSE);
 	}
@@ -153,10 +164,11 @@ class Analist extends CI_Controller {
         $id = $this->input->post('id');
         $no_permohonan = $this->input->post('no_permohonan');
         $dataDetail = $this->analis_model->dataDetailByID($id);
-        $kode_doc = generateKode('selesai_tugas', $dataDetail->no_surat);
+        $kode_doc = generateSurat('selesai_tugas', $dataDetail->no_surat);
         
         $data = array('id' => $id,
-                      'selesai_tugas' => $kode_doc,
+                      'selesai_tugas' => $kode_doc['kode_surat'],
+                      'no_surat' => $kode_doc['id'],
                       'status' => '3',
                     );
         $result = $this->analis_model->upDetailPermohonan($data);
@@ -169,13 +181,14 @@ class Analist extends CI_Controller {
                             );
             // var_dump($dataUp);exit;
             $hasil = $this->analis_model->updateStatus($dataUp);
-            if($hasil == true){
+            // var_dump($hasil);exit;
+            // if($hasil == true){
                 $sertifikat = generateKode('sertifikat', $dataDetail->id_sampel);
                 $dataDoc = array('id' => $dataDetail->id_sampel,
                                  'no_sertifikat' => $sertifikat,
                             );
                 $this->permohonan_model->updateDetailSample($dataDoc);
-            }
+            // }
         }
 
         echo json_encode($result);

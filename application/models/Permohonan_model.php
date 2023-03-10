@@ -520,4 +520,64 @@ class Permohonan_model extends CI_Model
        	$query = $this->db->get()->result();
 		return $query;
 	}
+	// dashboard customer
+	public function totalDashCust($id){
+		$this->db->select('count(*) as total');
+		$this->db->from('tb_permohonan');
+		$this->db->where('id_customer', $id);
+		$query = $this->db->get()->row();
+		return $query->total;
+	}
+
+	public function prosesDashCust($id){
+		$this->db->select('count(*) as total');
+		$this->db->from('tb_permohonan');
+		$this->db->where('id_customer', $id);
+		$this->db->where('status <=', '7');
+		$query = $this->db->get()->row();
+		return $query->total;
+	}
+
+	public function finishDashCust($id){
+		$this->db->select('count(*) as total');
+		$this->db->from('tb_permohonan');
+		$this->db->where('id_customer', $id);
+		$this->db->where('status', '8');
+		$query = $this->db->get()->row();
+		return $query->total;
+	}
+
+	// dashboard analist
+	public function totalDashAnalist($id){
+		$this->db->select('count(*) as total');
+		$this->db->from('tb_detail_permohonan');
+		$this->db->join('tb_analist','tb_analist.id = tb_detail_permohonan.id_analist', 'left');
+		$this->db->join('tb_pegawai','tb_pegawai.id = tb_analist.id_pegawai', 'left');
+		$this->db->where('tb_pegawai.id', $id);
+		$query = $this->db->get()->row();
+		return $query->total;
+	}
+
+	public function prosesDashAnalist($id){
+		$this->db->select('count(*) as total');
+		$this->db->from('tb_detail_permohonan');
+		$this->db->join('tb_analist','tb_analist.id = tb_detail_permohonan.id_analist', 'left');
+		$this->db->join('tb_pegawai','tb_pegawai.id = tb_analist.id_pegawai', 'left');
+		$this->db->where('tb_pegawai.id', $id);
+		$this->db->where('tb_detail_permohonan.status', '0');
+		$query = $this->db->get()->row();
+		return $query->total;
+	}
+
+	public function finishDashAnalist($id){
+		$this->db->select('count(*) as total');
+		$this->db->from('tb_detail_permohonan');
+		$this->db->join('tb_analist','tb_analist.id = tb_detail_permohonan.id_analist', 'left');
+		$this->db->join('tb_pegawai','tb_pegawai.id = tb_analist.id_pegawai', 'left');
+		$this->db->where('tb_pegawai.id', $id);
+		// $this->db->where('tb_detail_permohonan.status', '1');
+		$this->db->where("tb_detail_permohonan.status BETWEEN 1 AND 3");
+		$query = $this->db->get()->row();
+		return $query->total;
+	}
 }

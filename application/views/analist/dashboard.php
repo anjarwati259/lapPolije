@@ -17,7 +17,7 @@
                   <i class="bi bi-cart"></i>
                 </div>
                 <div class="ps-3">
-                  <h6>145</h6>
+                  <h6><?= $total; ?></h6>
 
                 </div>
               </div>
@@ -38,7 +38,7 @@
                   <i class="bi bi-currency-dollar"></i>
                 </div>
                 <div class="ps-3">
-                  <h6>$3,264</h6>
+                  <h6><?= $proses; ?></h6>
 
                 </div>
               </div>
@@ -59,7 +59,7 @@
                   <i class="bi bi-currency-dollar"></i>
                 </div>
                 <div class="ps-3">
-                  <h6>$3,264</h6>
+                  <h6><?= $finish; ?></h6>
 
                 </div>
               </div>
@@ -78,12 +78,7 @@
 
               <div class="d-flex align-items-center">
                 <div class="ps-3">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                  <?= $dashboard->content; ?>
 
                 </div>
               </div>
