@@ -86,4 +86,57 @@ class User_model extends CI_Model
 		$query = $this->db->get()->row();
 		return $query;
 	}
+
+	public function getManagementUser(){
+		$this->db->select('user.*, tb_pegawai.nip, tb_pegawai.nama_pegawai, tb_role.role_name');
+		$this->db->from('user');
+		$this->db->join('tb_pegawai','tb_pegawai.id_user = user.id', 'left');
+		$this->db->join('tb_role','tb_role.id = user.hak_akses', 'left');
+		$this->db->where('user.hak_akses !=','3');
+		$this->db->order_by('user.updated_at','desc');
+		$query = $this->db->get()->result();
+		return $query;
+	}
+
+	public function getRole(){
+		$this->db->select('*');
+		$this->db->from('tb_role');
+		$this->db->where('status', '1');
+		$this->db->order_by('id','asc');
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function getUserById($id){
+		$this->db->select('user.*, tb_pegawai.nama_pegawai, tb_pegawai.nip, tb_pegawai.id as pegawai_id');
+		$this->db->from('user');
+		$this->db->join('tb_pegawai','tb_pegawai.id_user = user.id', 'left');
+		$this->db->where('user.id', $id);
+		$this->db->order_by('user.id','asc');
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function editUser($data){
+		try {
+	        $this->db->trans_begin();
+	        $this->db->where('id', $data['id']);
+			$this->db->update('user',$data);
+
+	        $db_error = $this->db->error();
+	        if (!empty($db_error['message'])) {
+	            throw new Exception($db_error['message']);
+	        }
+	        $this->db->trans_commit();
+	        $result = array('status' => 'success',
+	    					'message' => 'Data Berhasil Disimpan',
+	    					'atribute' => '');
+	    }catch (Exception $e) {
+	    	$this->db->trans_rollback();
+	    	$result = array('status' => 'error',
+	    					'message' => $e->getMessage(),
+	    					'atribute' => '');
+	    }
+	    return $result;
+	}
 }

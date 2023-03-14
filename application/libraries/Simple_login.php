@@ -17,6 +17,7 @@ class Simple_login
   public function login($username, $password)
   {
       $check = $this->CI->user_model->login($username, $password);
+      $role = $this->CI->user_model->getRole();
       //jika ada data user, maka create session login
       if($check){
         $user = $this->CI->user_model->getUser($check->id);
@@ -31,13 +32,18 @@ class Simple_login
           redirect(base_url('login'),'refresh');
         }
       //redirect ke halaman admin yang diproteksi
-      if($user['hak_akses']=='1'){
-        redirect(base_url('admin'),'refresh');
-      }else  if($user['hak_akses']=='2'){
-        redirect(base_url('analist'),'refresh');
-      }else  if($user['hak_akses']=='3'){
-        redirect(base_url('customer'),'refresh');
-      }
+        foreach ($role as $key => $value) {
+          if($user['hak_akses'] = $value->role_name){
+            redirect(base_url($value->url),'refresh');
+          }
+        }
+      // if($user['hak_akses']=='1'){
+      //   redirect(base_url('admin'),'refresh');
+      // }else  if($user['hak_akses']=='2'){
+      //   redirect(base_url('analist'),'refresh');
+      // }else  if($user['hak_akses']=='3'){
+      //   redirect(base_url('customer'),'refresh');
+      // }
     }else{
       //kalau tidak ada, maka suruh login lagi
       $this->CI->session->set_flashdata('error','Username atau password salah');

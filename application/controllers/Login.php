@@ -9,6 +9,8 @@ class Login extends CI_Controller {
 	    $this->load->model('customer_model');
 	    $this->load->model('pegawai_model');
 	    $this->load->library('Ciqrcode');
+	    $this->load->model('jabatan_model');
+		$this->load->model('unit_model');
   	}
 
 	public function index()
@@ -32,6 +34,15 @@ class Login extends CI_Controller {
 
 	public function register(){
 		$this->load->view('login/formRegister');
+	}
+
+	public function registerLab(){
+		$jabatan = $this->jabatan_model->listJabatan();
+		$unit = $this->unit_model->listUnit();
+		$data = array('title' => 'Registrasi Laboratorium',
+                      'jabatan' => $jabatan,
+                      'unit' => $unit );
+		$this->load->view('login/registerLab', $data, FALSE);
 	}
 
 	public function Addregister(){
@@ -70,6 +81,45 @@ class Login extends CI_Controller {
 			}else{
 				$this->session->set_flashdata('error','Registrasi Tidak Berhasil Silahkan Hubungi Layanan Administrator');
       			redirect(base_url('register'),'refresh');
+			}
+		}
+	}
+
+	public function AddregisterLab(){
+		$nama_customer = $this->input->post('nama_customer');
+		$nip = $this->input->post('nip');
+		$id_unit = $this->input->post('id_unit');
+		$id_jabatan = $this->input->post('id_jabatan');
+		$alamat = $this->input->post('alamat');
+		$no_telp = $this->input->post('no_telp');
+		$email = $this->input->post('email');
+		$username = $this->input->post('username');
+		$password = $this->input->post('password');
+
+		$dataUser = array('username' => $username,
+						  'password' => sha1($password),
+						  'created_at' => date('Y-m-d H:i:sa')
+						);
+		$userId = $this->user_model->register($dataUser);
+		if($userId){
+			$dataCus = array(	'nama_pegawai' => $nama_customer,
+								'id_user'		=> $userId,
+								'alamat'		=> $alamat,
+								'no_telp'		=> $no_telp,
+								'email'			=> $email,
+								'nip'			=> $nip,
+								'id_jabatan'	=> $id_jabatan,
+								'id_unit'		=> $id_unit,
+								'status'		=> '1',
+								'created_at'	=> date('Y-m-d H:i:sa')
+							);
+			$result = $this->pegawai_model->insertpegawai($dataCus);
+			if($result['status'] == 'success'){
+				$this->session->set_flashdata('success','Registrasi Berhasil, Silahkan Tunggu Untuk Mendapatkan Hak Akses atau Bisa Hubungi Kalab');
+      			redirect(base_url('login/registerLab'),'refresh');
+			}else{
+				$this->session->set_flashdata('error','Registrasi Tidak Berhasil Silahkan Hubungi Layanan Administrator');
+      			redirect(base_url('login/registerLab'),'refresh');
 			}
 		}
 	}

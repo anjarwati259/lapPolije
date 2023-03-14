@@ -11,6 +11,7 @@ class Admin extends CI_Controller {
 		$this->load->model('customer_model');
 		$this->load->model('jabatan_model');
 		$this->load->model('unit_model');
+		$this->load->model('user_model');
 		$this->load->model('pegawai_model');
 		$this->load->model('permohonan_model');
 		$this->load->model('analis_model');
@@ -121,5 +122,68 @@ class Admin extends CI_Controller {
 					  'dataBayar'		=> $dataBayar,
                       'isi' => 'permohonan/detail_pembayaran');
         $this->load->view('layout/wrapper',$data, FALSE);
+	}
+
+	public function managementUser(){
+		$role = $this->user_model->getRole();
+		$data = array('title' => 'Management User',
+						'role' => $role,
+                      'isi' => 'admin/management_user');
+        $this->load->view('layout/wrapper',$data, FALSE);
+	}
+
+	public function getManagementUser(){
+		$fetch_data = $this->user_model->getManagementUser();
+        $data = array(); 
+        $no=1; 
+        foreach($fetch_data as $row)  
+        {  
+            $sub_array = array(); 
+            $sub_array[] = $no;               
+            $sub_array[] = $row->nip;               
+            $sub_array[] = $row->nama_pegawai;  
+            $sub_array[] = $row->username;
+            $sub_array[] = ($row->hak_akses) ? ($row->role_name) : ('-');
+            $sub_array[] = '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#largeModal" onclick="edituser('.$row->id.')">Edit</button>';
+            $data[] = $sub_array;
+            $no++;  
+        }  
+        $output = array(  
+            "draw"				=> intval($_POST["draw"]),  
+            "recordsTotal"		=> $this->datatables_model->get_all_data('tb_pegawai'),  
+            "recordsFiltered"	=> count($data),
+            "data"				=> $data  
+        );  
+        echo json_encode($output);
+	}
+
+	public function getUserById(){
+		$id = $this->input->post('id');
+		$dataUser = $this->user_model->getUserById($id);
+		echo json_encode($dataUser);
+	}
+
+	public function submitManagementUser(){
+		$id = $this->input->post('id');
+		$dataUser = $this->user_model->getUserById($id);
+		$hak_akses = $this->input->post('hak_akses');
+		if($hak_akses == '2'){
+			$cekAnalist = $this->analis_model->cekAnalist2($dataUser->pegawai_id);
+			
+			if(empty($cekAnalist)){
+				$dataAnalist = array('id_pegawai' => $dataUser->pegawai_id, 'jml_analist' => '0', 'status' => '1', 'created_at' => date('Y-m-d H:i:sa'));
+				$result = $this->analis_model->insertAnalist($dataAnalist);
+			}
+		}else{
+			$cekAnalist = $this->analis_model->cekAnalist2($dataUser->pegawai_id);
+
+			if(!empty($cekAnalist)){
+				$result = $this->analis_model->delete($cekAnalist->id);
+			}
+		}
+		$data = array('id' => $id, 'hak_akses' => $hak_akses);
+		$result = $this->user_model->editUser($data);
+
+		echo json_encode($result);
 	}
 }

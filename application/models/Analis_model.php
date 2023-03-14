@@ -147,13 +147,12 @@ class analis_model extends CI_Model
 		$this->db->where('id_pegawai', $id);
 		$this->db->where('status', '1');
 		$query = $this->db->get()->row();
-
 		if($query->total > 0){
 			return true;
 		}else{
 			return false;
 		}
-		// return $query->result();
+		// return $query;
 	}
 
 	public function insertAnalist($data){
@@ -231,5 +230,24 @@ class analis_model extends CI_Model
 	    					'atribute' => '');
 	    }
 	    return $result;
+	}
+
+	public function cekAnalist2($id_pegawai){
+		$this->db->select('*');
+		$this->db->from('tb_analist');
+		$this->db->where('id_pegawai', $id_pegawai);
+		$query = $this->db->get()->row();
+
+		return $query;
+
+		// if($query){
+		// 	return true;
+		// }else{
+		// 	return false;
+		// }
+	}
+
+	public function delete($id){
+		$this->db->delete('tb_analist', array('id' => $id));
 	}
 }

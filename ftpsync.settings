@@ -4,10 +4,19 @@
 
 	"default": {
 
-		"host": "files.000webhost.com",
-		"username": "devlappengujian",  // or null for anonymous login
-		"password": "aA)gU$8JZhh6E(r)pXXr",
-		"path": "/public_html",
+		//prod
+		//"host": "labtppolije.com",
+		"username": "prod_labanalist@labtppolije.com",  // or null for anonymous login
+		"password": "ou4xFR8t%pMK",
+		"path": "/",
+
+		//dev
+		/*"host": "labtppolije.com",
+		"username": "dev_labanalist@labtppolije.com",  // or null for anonymous login
+		"password": "918d!O(%oQm,",
+		"path": "/",*/
+
+		//&JK,&Uiu$IO&
 
 		"upload_on_save": true, // set *false* if you do not want to upload on save!
 
