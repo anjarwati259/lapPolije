@@ -33,7 +33,7 @@ class Simple_login
         }
       //redirect ke halaman admin yang diproteksi
         foreach ($role as $key => $value) {
-          if($user['hak_akses'] = $value->role_name){
+          if($user['hak_akses'] == $value->id){
             redirect(base_url($value->url),'refresh');
           }
         }
@@ -61,15 +61,15 @@ class Simple_login
     }
   }
   //fungsi cek hak akses
-  public function admin()
-  {
-    //memeriksa apakah session sudah atau belum, jika belum alihkan ke halaman login
-    if($this->CI->session->userdata('hak_akses')!="1"){
-      $this->CI->session->set_flashdata('warning','Anda Tidak Memiliki Akses');
-      redirect(base_url('login'),'refresh');
-      //echo "anda tidak memiliki akses";
-    }
-  }
+  // public function admin()
+  // {
+  //   //memeriksa apakah session sudah atau belum, jika belum alihkan ke halaman login
+  //   if($this->CI->session->userdata('hak_akses')!="4"){
+  //     $this->CI->session->set_flashdata('warning','Anda Tidak Memiliki Akses');
+  //     redirect(base_url('login'),'refresh');
+  //     //echo "anda tidak memiliki akses";
+  //   }
+  // }
   //fungsi logout
   public function logout()
   {
