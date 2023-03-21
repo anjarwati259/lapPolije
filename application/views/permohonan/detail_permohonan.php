@@ -151,7 +151,7 @@
             <div class="row">
               <div class="col-md-6">
                 <label for="inputEmail3" class="col-form-label"><b>Catatan:</b></label><br>
-                <label><?= $detailPermohonan[$no_sampel]->catatan; ?></label>
+                <label><?= $detailPermohonan[$no_sampel-1]->catatan; ?></label>
               </div>
               <?php if($dataPermohonan->status == '8'){ ?>
               <div class="col-md-6">

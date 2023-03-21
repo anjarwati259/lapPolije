@@ -181,8 +181,8 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <td><a href="<?= base_url('permohonan/sertifikat/en/').urlencode(base64_encode($detailPermohonan[$no_sampel]->no_sertifikat)); ?>" target="_blank">Bahasa Inggris</a></td>
-                        <td><a href="<?= base_url('permohonan/sertifikat/in/').urlencode(base64_encode($detailPermohonan[$no_sampel]->no_sertifikat)); ?>" target="_blank">Bahasa Indonesia</a></td>
+                        <td><a href="<?= base_url('permohonan/sertifikat/en/').urlencode(base64_encode($detailPermohonan[$no_sampel-1]->no_sertifikat)); ?>" target="_blank">Bahasa Inggris</a></td>
+                        <td><a href="<?= base_url('permohonan/sertifikat/in/').urlencode(base64_encode($detailPermohonan[$no_sampel-1]->no_sertifikat)); ?>" target="_blank">Bahasa Indonesia</a></td>
                       </tr>
                     </thead>
                   </table>

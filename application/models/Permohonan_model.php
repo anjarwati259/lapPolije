@@ -580,4 +580,7 @@ class Permohonan_model extends CI_Model
 		$query = $this->db->get()->row();
 		return $query->total;
 	}
+
+	// dahsboard admin
+	
 }

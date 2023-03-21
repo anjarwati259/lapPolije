@@ -17,7 +17,7 @@
                   <i class="bi bi-cart"></i>
                 </div>
                 <div class="ps-3">
-                  <h6><?= $total; ?></h6>
+                  <h6><?= (empty($total)) ? (0) : ($total); ?></h6>
 
                 </div>
               </div>
@@ -38,7 +38,7 @@
                   <i class="bi bi-currency-dollar"></i>
                 </div>
                 <div class="ps-3">
-                  <h6><?= $proses; ?></h6>
+                  <h6><?= (empty($proses)) ? (0) : ($proses); ?></h6>
 
                 </div>
               </div>
@@ -59,7 +59,7 @@
                   <i class="bi bi-currency-dollar"></i>
                 </div>
                 <div class="ps-3">
-                  <h6><?= $finish; ?></h6>
+                  <h6><?= ($finish) ? ($finish) : (0); ?></h6>
 
                 </div>
               </div>
@@ -78,7 +78,7 @@
 
               <div class="d-flex align-items-center">
                 <div class="ps-3">
-                  <?= $dashboard->content; ?>
+                  <?= (empty($dashboard->content)) ? ('') : ($dashboard->content); ?>
 
                 </div>
               </div>

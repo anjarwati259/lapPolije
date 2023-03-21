@@ -5,20 +5,11 @@
 	"default": {
 
 		//prod
-		//"host": "labtppolije.com",
+		"host": "156.67.211.45",
 		"username": "prod_labanalist@labtppolije.com",  // or null for anonymous login
-		"password": "ou4xFR8t%pMK",
+		"password": "-4BG]]dk_ZGA",
 		"path": "/",
-
-		//dev
-		/*"host": "labtppolije.com",
-		"username": "dev_labanalist@labtppolije.com",  // or null for anonymous login
-		"password": "918d!O(%oQm,",
-		"path": "/",*/
-
-		//&JK,&Uiu$IO&
-
-		"upload_on_save": true, // set *false* if you do not want to upload on save!
+		"upload_on_save": false, // set *false* if you do not want to upload on save!
 
 		// "port": 21,
 		// "tls": false,

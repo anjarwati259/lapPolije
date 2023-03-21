@@ -155,7 +155,7 @@
                       <td><?= ($value->rata_rata) ? ($value->rata_rata) : '-' ?></td>
                       <td><?= ($value->standart_deviasi) ? ($value->standart_deviasi) : '-' ?></td>
                       <td>
-                        <?php $disabled = ($value->status == 1) ? '':('disabled'); ?>
+                        <?php $disabled = ($value->status == 1 && ($this->session->userdata('hak_akses')) != 1) ? '':('disabled'); ?>
                         <button type="submit" class="btn btn-primary btn-sm" onclick="appAnalist('<?= $value->id ?>', '<?= $value->id_permohonan ?>');" <?= $disabled; ?>>Approved</button>
                       </td>
                     </tr>
@@ -164,7 +164,7 @@
               </table>
               <div class="row">
                 <label for="inputEmail3" class="col-sm-4 col-form-label"><b>Catatan:</b></label>
-                <label><?= $detailPermohonan[$no_sampel]->catatan; ?></label>
+                <label><?= $detailPermohonan[$no_sampel-1]->catatan; ?></label>
               </div>
             </div>
           </div>

@@ -186,4 +186,12 @@ class Admin extends CI_Controller {
 
 		echo json_encode($result);
 	}
+
+	public function kalab(){
+		$dashboard = $this->Variabel_content_model->getContent('dashboard_kalab');
+		$data = array('title' => 'Dashboard Ketua Laboratorium',
+					  'dashboard' => $dashboard,
+                      'isi' => 'kalab/dashboard');
+        $this->load->view('layout/wrapper',$data, FALSE);
+	}
 }

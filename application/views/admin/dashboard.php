@@ -6,7 +6,7 @@
       <div class="row">
 
         <!-- Sales Card -->
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
           <div class="card info-card revenue-card">
 
             <div class="card-body">
@@ -24,10 +24,11 @@
             </div>
 
           </div>
-        </div><!-- End Sales Card -->
+        </div> -->
+        <!-- End Sales Card -->
 
         <!-- Revenue Card -->
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
           <div class="card info-card revenue-card">
 
             <div class="card-body">
@@ -45,9 +46,10 @@
             </div>
 
           </div>
-        </div><!-- End Revenue Card -->
+        </div> -->
+        <!-- End Revenue Card -->
         <!-- Revenue Card -->
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
           <div class="card info-card revenue-card">
 
             <div class="card-body">
@@ -65,7 +67,8 @@
             </div>
 
           </div>
-        </div><!-- End Revenue Card -->
+        </div> -->
+        <!-- End Revenue Card -->
 
         <!-- Customers Card -->
         <div class="col-md-12">
@@ -73,7 +76,7 @@
           <div class="card info-card customers-card">
 
             <div class="card-body">
-              <h5 class="card-title">Pengantar</h5>
+              <h5 class="card-title">Pengumuman</h5>
 
               <?= $dashboard->content; ?>
 
