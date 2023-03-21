@@ -582,5 +582,18 @@ class Permohonan_model extends CI_Model
 	}
 
 	// dahsboard admin
-	
+	public function totalAdmin(){
+		$this->db->select('count(*) as total');
+		$this->db->from('tb_permohonan');
+		$query = $this->db->get()->row();
+		return $query->total;
+	}
+
+	public function totalPendapatan(){
+		$this->db->select('sum(tb_metode_analisa.harga) as total');
+		$this->db->from('tb_detail_permohonan');
+		$this->db->join('tb_metode_analisa','tb_metode_analisa.id = tb_detail_permohonan.id_metode_analisa', 'left');
+		$query = $this->db->get()->row();
+		return $query->total;
+	}
 }

@@ -37,7 +37,7 @@ class User_model extends CI_Model
 		$this->db->order_by('id','desc');
 		$query = $this->db->get()->row();
 
-		if($query->hak_akses == '1' || $query->hak_akses == '2' || $query->hak_akses == '4' || $query->hak_akses == '5' || $query->hak_akses == '6'){
+		if($query->hak_akses == '1' || $query->hak_akses == '2' || $query->hak_akses == '4' || $query->hak_akses == '5' || $query->hak_akses == '6' || $query->hak_akses == '7'){
 			$data = array('status' => 'success',
 						  'id_user' => $query->id_pegawai, 
 						  'nama' => $query->nama_pegawai,

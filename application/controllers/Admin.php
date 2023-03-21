@@ -188,9 +188,37 @@ class Admin extends CI_Controller {
 	}
 
 	public function kalab(){
+		$total = $this->permohonan_model->totalAdmin();
+		$pendapatan = $this->permohonan_model->totalPendapatan();
 		$dashboard = $this->Variabel_content_model->getContent('dashboard_kalab');
 		$data = array('title' => 'Dashboard Ketua Laboratorium',
 					  'dashboard' => $dashboard,
+					  'pendapatan' => $pendapatan,
+					  'total' => $total,
+                      'isi' => 'kalab/dashboard');
+        $this->load->view('layout/wrapper',$data, FALSE);
+	}
+
+	public function kajur(){
+		$total = $this->permohonan_model->totalAdmin();
+		$pendapatan = $this->permohonan_model->totalPendapatan();
+		$dashboard = $this->Variabel_content_model->getContent('dashboard_kalab');
+		$data = array('title' => 'Dashboard Ketua Jurusan',
+					  'dashboard' => $dashboard,
+					  'pendapatan' => $pendapatan,
+					  'total' => $total,
+                      'isi' => 'kalab/dashboard');
+        $this->load->view('layout/wrapper',$data, FALSE);
+	}
+
+	public function direktur(){
+		$total = $this->permohonan_model->totalAdmin();
+		$pendapatan = $this->permohonan_model->totalPendapatan();
+		$dashboard = $this->Variabel_content_model->getContent('dashboard_kalab');
+		$data = array('title' => 'Dashboard Direktur',
+					  'dashboard' => $dashboard,
+					  'pendapatan' => $pendapatan,
+					  'total' => $total,
                       'isi' => 'kalab/dashboard');
         $this->load->view('layout/wrapper',$data, FALSE);
 	}
